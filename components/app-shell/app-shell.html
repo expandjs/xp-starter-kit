@@ -1,0 +1,35 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/expandjs/expandjs.html">
+<link rel="import" href="../app-common-behavior/app-common-behavior.html">
+
+<dom-module id="app-shell">
+
+    <template>
+
+        <style>
+            :host {
+                @apply(--layout-fit);
+                display: block;
+                overflow: visible;
+                text-align: left;
+            }
+        </style>
+
+        <h1>Hello world!</h1>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'app-shell',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.AppCommonBehavior
+            ]
+        });
+    </script>
+
+</dom-module>
