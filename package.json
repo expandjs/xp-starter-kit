@@ -25,7 +25,8 @@
     "build:vulcanize": "vulcanize static/components.html --exclude \"bower_components/polymer/polymer.html\" --inline-css --inline-scripts --strip-comments > static/vulcanized.html",
     "build:crisp": "crisper --source static/vulcanized.html --html static/vulcanized.html --js static/vulcanized.js",
     "build:minify": "uglifyjs static/vulcanized.js --mangle --output static/vulcanized.js",
-    "start": "SET NODE_ENV=production && node server.js",
-    "start-dev": "node server.js"
+    "start": "NODE_ENV=production forever start server.js",
+    "start-dev": "forever start server.js",
+    "stop": "forever stop server.js"
   }
 }
