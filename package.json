@@ -27,6 +27,7 @@
     "build:minify": "uglifyjs static/vulcanized.js --mangle --output static/vulcanized.js",
     "start": "NODE_ENV=production forever start server.js",
     "start-dev": "forever start server.js",
+    "start-win": "SET NODE_ENV=production && forever start server.js",
     "stop": "forever stop server.js"
   }
 }
