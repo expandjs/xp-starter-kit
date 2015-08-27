@@ -31,7 +31,7 @@
     routes.schema  = routes.redirect.bind(function (req, res) { res.jsonp(schema); });
     routes.cookies = routes.redirect.bind(function (req, res) { res.render('cookies'); });
     routes.index   = routes.redirect.bind(function (req, res) { res.render('index', {dev: dev}); });
-    routes.partial = routes.redirect.bind(function (req, res) { res.render('partial/' + req.params.name, {}, function (err, html) { return err ? routes.error(req, res) : res.end(html); }); });
+    routes.partial = routes.redirect.bind(function (req, res) { res.render('partial/' + req.params.name, {}, function (error, html) { return error ? routes.error(req, res) : res.end(html); }); });
 
     /***********************************************************************/
     /* APP */
