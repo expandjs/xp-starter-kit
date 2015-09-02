@@ -1,3 +1,5 @@
 bower_components
+gitinit.bat
+gitinit.sh
 node_modules
 npm-debug.log
