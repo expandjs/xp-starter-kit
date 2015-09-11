@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "dependencies": {
-    "mat-elements": "ExpandJS/mat-elements",
-    "xp-elements": "ExpandJS/xp-elements"
+    "mat-elements": "ExpandJS/mat-elements#0.9.9",
+    "xp-elements": "ExpandJS/xp-elements#0.9.9"
   }
 }
