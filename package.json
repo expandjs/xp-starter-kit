@@ -5,15 +5,15 @@
   "main": "server.js",
   "dependencies": {
     "ejs": "^2.2.0",
-    "expandjs": "^0.9.10",
+    "expandjs": "^0.9.11",
     "express": "^4.11.0",
     "express-slash": "^2.0.0",
     "serve-favicon": "^2.2.0",
-    "xp-emitter": "^0.9.10",
-    "xp-fs": "^0.9.10",
-    "xp-observer": "^0.9.10",
-    "xp-request": "^0.9.10",
-    "xp-schema": "^0.9.10"
+    "xp-emitter": "^0.9.11",
+    "xp-fs": "^0.9.11",
+    "xp-observer": "^0.9.11",
+    "xp-request": "^0.9.11",
+    "xp-schema": "^0.9.11"
   },
   "devDependencies": {
     "crisper": "*",
