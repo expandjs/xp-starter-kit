@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <!-- HEAD -->
     <head>
 
         <!-- META -->
@@ -15,17 +14,15 @@
         <title>APP</title>
 
         <!-- POLYFILL -->
-        <script type="text/javascript" src="/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        <script type="text/javascript" src="/bower_components/webcomponentsjs/webcomponents-lite.js" async></script>
 
         <!-- LINKS -->
-        <link rel="stylesheet" href="/styles/main.css">
-        <link rel="import" href="/bower_components/polymer/polymer.html">
-        <link rel="import" href="<%= dev ? '/components.html' : '/vulcanized.html' %>">
+        <link rel="stylesheet" href="/styles/reset.css">
+        <link rel="import" href="<%= (dev ? '/components/app-shell' : '/vulcanized') + '/app-shell.html' %>" async>
 
     </head>
 
-    <!-- BODY -->
-    <body fullbleed>
+    <body>
 
         <!-- SHELL -->
         <app-shell></app-shell>

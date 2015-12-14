@@ -1,2 +1,3 @@
 # expandjs-starter-kit
-A starting point for ExpandJS apps
+
+A starting point for ExpandJS based apps.
