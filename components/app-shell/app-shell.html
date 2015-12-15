@@ -7,13 +7,18 @@
 <link rel="import" href="../../bower_components/mat-shell-behavior/mat-shell-styles.html">
 <link rel="import" href="../../bower_components/mat-tabs/mat-tabs.html">
 <link rel="import" href="../../bower_components/mat-toolbar/mat-toolbar.html">
-<link rel="import" href="../../bower_components/xp-common-behavior/xp-common-behavior.html">
+<link rel="import" href="../../bower_components/xp-script/xp-script.html">
+<link rel="import" href="../../components/app-behaviors/app-common-behavior.html">
+<link rel="import" href="../../components/app-locales/app-locale-en-us.html">
 
 <dom-module id="app-shell">
 
     <template strip-whitespace>
 
         <style include="mat-shell-styles"></style>
+
+        <!-- SCRIPTS -->
+        <xp-script callback="schema" src="/schema?callback=schema"></xp-script>
 
         <!-- DRAWER PANEL -->
         <mat-drawer-panel>
@@ -26,7 +31,7 @@
 
                     <!-- LABEL -->
                     <mat-header>
-                        <span class="label">Label</span>
+                        <span class="label">[[localize('helloWorld', locale)]]</span>
                     </mat-header>
 
                 </mat-header-panel>
@@ -71,8 +76,17 @@
             // BEHAVIORS
             behaviors: [
                 Polymer.MatShellBehavior,
-                Polymer.XPCommonBehavior
-            ]
+                Polymer.AppCommonBehavior
+            ],
+
+            /*********************************************************************/
+
+            // LISTENER
+            ready: function () {
+
+                // Localizing
+                this.setLanguage('en-us');
+            }
         });
     </script>
 
