@@ -11,24 +11,6 @@
     zoom: 1;
 }
 
-@-ms-viewport {
-    height: device-height;
-    max-zoom: 1;
-    min-zoom: 1;
-    user-zoom: fixed;
-    width: device-width;
-    zoom: 1;
-}
-
-@-o-viewport {
-    height: device-height;
-    max-zoom: 1;
-    min-zoom: 1;
-    user-zoom: fixed;
-    width: device-width;
-    zoom: 1;
-}
-
 /*********************************************************************/
 /* RESET */
 /*********************************************************************/
@@ -38,7 +20,6 @@ html {
     color: hsla(0, 0%, 0%, 0.87);
     font-family: RobotoDraft, Roboto, sans-serif;
     font-size: 16px;
-    -webkit-font-smoothing: antialiased;
     font-weight: 400;
     letter-spacing: 0.01em;
     line-height: 24px;
