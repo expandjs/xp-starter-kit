@@ -8,7 +8,7 @@
 <link rel="import" href="../../bower_components/mat-toolbar/mat-toolbar.html">
 <link rel="import" href="../../bower_components/xp-script/xp-script.html">
 <link rel="import" href="../../components/app-behaviors/app-common-behavior.html">
-<link rel="import" href="../../components/app-locales/app-locale-en-us.html">
+<link rel="import" href="../../components/app-locale/app-locale-en-US.html">
 
 <dom-module id="app-shell">
 
@@ -24,7 +24,7 @@
         <xp-script callback="schema" src="/schema?callback=schema"></xp-script>
 
         <!-- SHELL -->
-        <mat-shell theme="light">
+        <mat-shell language="en-us" theme="light">
 
             <!-- DRAWER PANEL -->
             <mat-drawer-panel>
@@ -84,16 +84,7 @@
             // BEHAVIORS
             behaviors: [
                 Polymer.AppCommonBehavior
-            ],
-
-            /*********************************************************************/
-
-            // LISTENER
-            ready: function () {
-
-                // Localizing
-                this.setLanguage('en-us');
-            }
+            ]
         });
     </script>
 
