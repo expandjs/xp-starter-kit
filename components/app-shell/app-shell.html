@@ -8,7 +8,7 @@
 <link rel="import" href="../../bower_components/mat-toolbar/mat-toolbar.html">
 <link rel="import" href="../../bower_components/xp-script/xp-script.html">
 <link rel="import" href="../../components/app-behaviors/app-common-behavior.html">
-<link rel="import" href="../../components/app-locale/app-locale-en-US.html">
+<link rel="import" href="../../components/app-locale/app-locale-en.html">
 
 <dom-module id="app-shell">
 
@@ -24,20 +24,20 @@
         <xp-script callback="schema" src="/schema?callback=schema"></xp-script>
 
         <!-- SHELL -->
-        <mat-shell language="en-us" theme="light">
+        <mat-shell language="en" theme="light">
 
             <!-- DRAWER PANEL -->
             <mat-drawer-panel>
 
                 <!-- DRAWER -->
-                <mat-drawer id="drawer" raised>
+                <mat-drawer id="drawer">
 
                     <!-- HEADER PANEL -->
                     <mat-header-panel mode="seamed">
 
                         <!-- LABEL -->
                         <mat-header>
-                            <span class="label">[[localize('helloWorld', locale)]]</span>
+                            <span class="label">[[localize('hello-world', locale)]]</span>
                         </mat-header>
 
                     </mat-header-panel>

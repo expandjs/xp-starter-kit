@@ -4,16 +4,15 @@
     "use strict";
 
     // Vars
-    var dir     = __dirname,
+    var dir      = __dirname,
 
-        ejs     = require('ejs'),
-        express = require('express'),
-        favicon = require('serve-favicon'),
-        fs      = require('fs'),
-        slash   = require('express-slash'),
-        XP      = require('expandjs'),
-        locales = require(dir + '/locales'),
-        schema  = require(dir + '/schema'),
+        ejs      = require('ejs'),
+        express  = require('express'),
+        favicon  = require('serve-favicon'),
+        fs       = require('fs'),
+        slash    = require('express-slash'),
+        XP       = require('expandjs'),
+        schema   = require(dir + '/schema'),
 
         app      = express(),
         domain   = '',
@@ -65,9 +64,6 @@
     // Middleware
     app.use(router);
     app.use(slash());
-
-    // Localizing
-    XP.forOwn(locales, function (json, lang) { router.get('/locales/' + lang, function (req, res) { res.jsonp(json); }); });
 
     // Routing
     router.get('/', routes.index);
