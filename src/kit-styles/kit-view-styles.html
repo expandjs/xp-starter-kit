@@ -1,0 +1,37 @@
+<link rel="import" href="../../bower_components/mat-elements/mat-spacing.html">
+<link rel="import" href="kit-base-styles.html">
+
+<dom-module id="kit-view-styles">
+
+    <template strip-whitespace>
+
+        <style include="kit-base-styles">
+
+            :host {
+                box-sizing: border-box;
+                height: 100%;
+                padding: var(--mat-padding);
+            }
+
+            :host .wrapper {
+                padding: var(--mat-padding);
+            }
+
+            /* TABLET */
+
+            @media (max-width: 960px) {
+
+                :host {
+                    padding: var(--mat-padding-mobile);
+                }
+
+                :host .wrapper {
+                    padding: var(--mat-padding-mobile);
+                }
+            }
+
+        </style>
+
+    </template>
+
+</dom-module>

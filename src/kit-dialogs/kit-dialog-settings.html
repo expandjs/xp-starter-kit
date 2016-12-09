@@ -1,0 +1,67 @@
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/xp-elements/xp-selector.html">
+<link rel="import" href="../../bower_components/mat-elements/mat-button.html">
+<link rel="import" href="../../bower_components/mat-elements/mat-button.html">
+<link rel="import" href="../../bower_components/mat-elements/mat-dialog.html">
+<link rel="import" href="../../bower_components/mat-elements/mat-dropdown.html">
+<link rel="import" href="../../bower_components/mat-elements/mat-label.html">
+<link rel="import" href="../../bower_components/mat-elements/mat-radio.html">
+<link rel="import" href="../kit-behaviors/kit-dialog-behavior.html">
+<link rel="import" href="../kit-styles/kit-base-styles.html">
+
+<dom-module id="kit-dialog-settings">
+
+    <template strip-whitespace>
+
+        <style include="kit-base-styles">
+
+            :host .radios {
+                @apply --layout-horizontal;
+                padding-top: 8px;
+            }
+
+            :host .radios .radio {
+                @apply --layout-flex;
+                min-width: 0;
+            }
+
+        </style>
+
+        <!-- DIALOG -->
+        <mat-dialog label="[[localize('settings')]]" width="320">
+
+            <!-- THEME -->
+            <mat-label><span>[[localize('theme')]]</span></mat-label>
+            <xp-selector class="radios" index-attribute="value" item-selector=".radio" selected-attribute="checked" selected-index="{{app.theme}}" selectable>
+                <mat-radio name="theme" label="[[localize('light')]]" value="light"></mat-radio>
+                <mat-radio name="theme" label="[[localize('dark')]]" value="dark"></mat-radio>
+            </xp-selector>
+
+            <!-- LANGUAGE -->
+            <mat-dropdown name="language" bind-value="{{app.locale}}" label="[[localize('language')]]" float-always>
+                <template is="dom-repeat" items="[[app.meta.locales]]" as="option">
+                    <mat-option label="[[option.label]]" value="[[option.value]]"></mat-option>
+                </template>
+            </mat-dropdown>
+
+            <!-- ACTIONS -->
+            <mat-button slot="actions" action="toggle" label="[[localize('close')]]"></mat-button>
+
+        </mat-dialog>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'kit-dialog-settings',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.KITDialogBehavior
+            ]
+        });
+    </script>
+
+</dom-module>

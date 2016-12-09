@@ -1,78 +1,59 @@
-/*jslint browser: true, devel: true, node: true, ass: true, nomen: true, unparam: true, indent: 4 */
+/*********************************************************************/
+/* PROCESS */
+/*********************************************************************/
+process.chdir(__dirname);
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
-(function () {
-    "use strict";
+/*********************************************************************/
+/* CONST */
+/*********************************************************************/
+const ejs      = require('ejs'),
+    finalizer  = require('finalhandler'),
+    fs         = require('xp-fs'),
+    https      = require('http2'),
+    Responder  = require('xp-responder'),
+    Router     = require('router'),
+    Static     = require('serve-static'),
+    XP         = require('expandjs'),
+    config     = require('./config'),
+    tls        = require('./tls'),
+    production = fs.find('./production.on.html'),
+    views      = fs.export('./views', 'html', ejs.compile);
 
-    // Vars
-    var dir      = __dirname,
+/***********************************************************************/
+/* ROUTER */
+/***********************************************************************/
 
-        ejs      = require('ejs'),
-        express  = require('express'),
-        favicon  = require('serve-favicon'),
-        fs       = require('fs'),
-        slash    = require('express-slash'),
-        XP       = require('expandjs'),
-        schema   = require(dir + '/schema'),
+// Let
+let router = Router({caseSensitive: true, strict: true});
 
-        app      = express(),
-        domain   = '',
-        port     = '3000',
-        protocol = 'http',
-        router   = express.Router({caseSensitive: true, strict: true}),
-        routes   = {};
+// Routing
+router.get('/cookies', (req, res) => new Responder({data: views.cookies(), mode: 'html', response: res}).send());
+config.routes.forEach(route => router.get(route, (req, res) => new Responder({data: views.index(), mode: 'html', response: res}).send()));
 
-    /***********************************************************************/
-    /* ROUTES */
-    /***********************************************************************/
+// Production
+if (production) { router.use('/', Static('./build/unbundled')); }
 
-    // Main
-    routes.error    = function (req, res) { res.status(404); res.render('404', {url: req.url}); };
-    routes.redirect = function (req, res) { if (domain && req.hostname === 'www.' + domain) { res.redirect(301, protocol + '://' + domain + '/' + XP.trim(req.url, '/')); } else if (req.url.length > 1 && XP.endsWith(req.url, '/')) { res.redirect(XP.trimRight(req.url, '/')); } else { this(req, res); } };
+// Development
+router.use('/bower_components', Static('../bower_components'));
+router.use('/bower_components', Static('../node_modules'));
+router.use('/bower_components', Static('./bower_components'));
+router.use('/src', Static('./src'));
 
-    // Others
-    routes.schema  = routes.redirect.bind(function (req, res) { res.jsonp(schema); });
-    routes.cookies = routes.redirect.bind(function (req, res) { res.render('cookies'); });
-    routes.index   = routes.redirect.bind(function (req, res) { res.render('index', {dev: app.get('development')}); });
-    routes.partial = routes.redirect.bind(function (req, res) { res.render('partial/' + req.params.name, {}, function (error, html) { return error ? routes.error(req, res) : res.end(html); }); });
+// Fallback
+router.get('/service-worker.js', (req, res) => new Responder({data: '', mode: 'js', response: res}).send());
+router.use((req, res) => new Responder({error: XP.error(404), mode: 'html', response: res}).send());
 
-    /***********************************************************************/
-    /* APP */
-    /***********************************************************************/
+/*********************************************************************/
+/* SERVER */
+/*********************************************************************/
 
-    // Settings
-    app.set('case sensitive routing', true);
-    app.set('development', app.get('env') === 'development');
-    app.set('strict routing', true);
-    app.set('view engine', 'html');
-    app.set('views', dir + '/views');
+// Let
+let server = https.createServer({cert: tls.cert, key: tls.key});
 
-    // Engine
-    app.engine('html', ejs.renderFile);
+// Handling
+server.on('request', (req, res) => router(req, res, finalizer(req, res)));
 
-    // Static (development)
-    if (app.get('development')) { app.use('/bower_components', express.static(dir + '/../bower_components')); }
-    if (app.get('development')) { app.use('/bower_components', express.static(dir + '/../node_modules')); }
-
-    // Static (favicon)
-    if (fs.existsSync(dir + '/static/favicon.png')) { app.use(favicon(dir + '/static/favicon.png')); }
-
-    // Static (production)
-    app.use(express.static(dir + '/static'));
-    app.use('/bower_components', express.static(dir + '/bower_components'));
-    app.use('/components', express.static(dir + '/components'));
-
-    // Middleware
-    app.use(router);
-    app.use(slash());
-
-    // Routing
-    router.get('/', routes.index);
-    router.get('/cookies', routes.cookies);
-    router.get('/partial/:name', routes.partial);
-    router.get('/schema', routes.schema);
-    router.get('/*', routes.error);
-
-    // Listening
-    app.listen(port, function () { console.log('App listening on port ' + port); });
-
-}());
+// Listening
+server.listen(config.port, error => console.log(error || `API listening on port ${config.port}`));

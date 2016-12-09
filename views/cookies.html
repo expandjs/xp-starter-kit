@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en_US">
+
+    <head>
+
+        <!-- META -->
+        <meta charset="UTF-8">
+        <meta name="description" content="">
+        <meta name="keywords" content="expandjs, material design, web app, web components, javascript, nodejs">
+        <meta name="theme-color" content="#F15A29">
+        <meta name="robots" content="noindex,nofollow">
+        <meta name="viewport" content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+
+        <!-- TITLE -->
+        <title>Cookies - expand.js</title>
+
+        <!-- STYLE -->
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+
+            html{
+                font-size: 100%;
+                overflow-y: scroll;
+            }
+
+            h1, h2, h3, h4, p, pre, a, abbr, acronym, address, cite, code, del, dfn, q, s, samp, strike, strong, tt, var, li, ol, ul, fieldset, form, label, legend, caption, tbody, tfoot, thead, tr, th, td {
+                border: 0;
+                font-family: inherit;
+                font-size: 100%;
+                font-style: normal;
+                font-weight: normal;
+                line-height: 1;
+                margin: 0;
+                padding: 0;
+            }
+
+            ol, ul {
+                list-style: none;
+            }
+
+            a:focus {
+                outline: thin dotted;
+            }
+
+            a:hover, a:active {
+                outline: 0;
+            }
+
+            p {
+                font-size: 13px;
+                font-weight: normal;
+                line-height: 18px;
+                margin-bottom: 9px;
+            }
+
+            h1 {
+                color: #59636D;
+                font-size: 30px;
+                font-weight: bold;
+                line-height: 36px;
+                margin-bottom: 18px;
+            }
+
+            h2 {
+                color: #59636D;
+                font-size: 24px;
+                font-weight: bold;
+                line-height: 27px;
+                margin-bottom: 18px;
+            }
+
+            h3 {
+                color: #59636D;
+                font-size: 18px;
+                font-weight: bold;
+                margin-bottom: 9px;
+            }
+
+            h4 {
+                color: #59636D;
+                font-size: 16px;
+                font-weight: bold;
+                margin-bottom: 9px;
+            }
+
+            ul, ol {
+                margin: 0 0 18px 25px;
+            }
+
+            strong {
+                font-style: inherit;
+                font-weight: bold;
+            }
+
+            .box_primary {
+                border: 1px solid #c0c1c1;
+                border-bottom-color: #a8aaab;
+                -moz-box-shadow: 0 1px 0 #ebebec;
+                box-shadow: 0 1px 0 #ebebec;
+                -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+                box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+                background: #FFFFFF;
+            }
+
+            .box_10 {
+                padding: 10px;
+                -moz-border-radius: 3px;
+                border-radius: 3px;
+                margin-bottom: 15px;
+            }
+
+            .box_10 > .w_icon_24,
+            .box_10.expand > .w_icon_24,
+            .box_10 > .w_icon_24.expand-click,
+            .box_10.expand > .w_icon_24.expand-click {
+                padding-left: 45px;
+                background-repeat: no-repeat;
+                background-color: transparent;
+                background-position-x: 10px;
+                background-position-y: 10px;
+                background-position: 10px 10px;
+            }
+
+            .box_10.expand .expand-click {
+                margin: -10px;
+                padding: 12px 25px 13px 10px;
+            }
+
+            .box_10.expand .expand-content {
+                margin-top: 10px;
+            }
+
+            .box_10.expand .expand-content > *:first-child {
+                margin-top: 0;
+                padding-top: 0;
+            }
+
+            .expand .expand-click,
+            .box_10.expand .expand-click,
+            .expand.expanded .expand-click,
+            .box_10.expand.expanded .expand-click {
+                border-bottom: 1px dotted #DDDDDD;
+                margin-bottom: 10px;
+                transition: .2s linear all;
+            }
+
+            .expand.collapsed .expand-click {
+                border-bottom: 0;
+                margin-bottom: -10px;
+            }
+
+            html,
+            body {
+                background-color: #FFFFFF;
+            }
+
+            html {
+                font-family: "Helvetica Neue", Helvetica, Arial, FreeSans, sans-serif;
+                font-size: 13px;
+                font-weight: normal;
+                line-height: 18px;
+                color: #59636D;
+            }
+
+            body {
+                margin: 0;
+            }
+
+            a {
+                text-decoration: none;
+                line-height: inherit;
+                font-weight: bold;
+                border-bottom: 1px solid #F6F6F6;
+                color: #333B43;
+            }
+
+            a:hover:not(.btn) {
+                color: #121518;
+                border-bottom-color: #D6D6D6;
+                transition: .1s linear all;
+            }
+
+            a:focus {
+                outline: 0
+            }
+
+            [class*="policyicon_"] {
+                background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYBAMAAAASWSDLAAAAGFBMVEUAAAA%2FPz8%2FPz8%2FPz8%2FPz8%2FPz8%2FPz8%2FPz9%2BjSc3AAAAB3RSTlMAEEBQgMzQxeXuPgAAADJJREFUGFdjYMAJWEPhIAAPh70cDgoGK6cI5B8Yp6S8TACJk4gkA5RAcBKR9BQLoAUOAATNYYOCulUNAAAAAElFTkSuQmCC);
+            }
+
+            p {
+                line-height: 19px;
+                margin: 0;
+                padding-top: 11px;
+            }
+
+            a {
+                font-weight: normal;
+                border-bottom: 1px solid #F0F0F0;
+            }
+
+            .cookie-content {
+                position: relative;
+                padding: 25px 30px;
+                margin: 0 auto;
+                border-radius: 3px 3px 0 0;
+            }
+
+            .cookie-header {
+                border-bottom: 1px dotted #dfdfdf;
+                padding-bottom: 25px;
+                position: relative;
+            }
+
+            .cookie-header p {
+                margin: 0;
+                padding: 0;
+            }
+
+            h1,
+            h2,
+            h3 {
+                color: #3F3F3F;
+                margin: 0;
+            }
+
+            h1 + p,
+            h2 + p,
+            h3 + p {
+                padding-top: 5px;
+            }
+
+            h1 {
+                font-size: 19px;
+                font-weight: normal;
+                line-height: 23px;
+                margin-bottom: 5px;
+            }
+
+            h2 {
+                font-size: 17px;
+                font-weight: bold;
+                line-height: 21px;
+                padding-top: 21px;
+            }
+
+            h3 {
+                font-size: 13px;
+                line-height: 19px;
+                font-weight: bold;
+                padding-top: 24px;
+            }
+
+            h3 + p {
+                padding-top: 0;
+            }
+
+            h4 {
+                font-size: 13px;
+                font-weight: bold;
+                padding-top: 19px;
+                margin-bottom: 0;
+            }
+
+            h4:first-child {
+                padding-top: 0;
+            }
+
+            ul,
+            li {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            ul.for_boxes {
+                zoom: 1;
+            }
+
+            ul.for_boxes:before,
+            ul.for_boxes:after {
+                display: table;
+                content: "";
+                zoom: 1;
+            }
+
+            ul.for_boxes:after {
+                clear: both
+            }
+
+            .one_line_col {
+                zoom: 1;
+                float: left;
+                width: 100%;
+                border-bottom: 1px dotted #dfdfdf
+            }
+
+            .one_line_col:before,
+            .one_line_col:after {
+                display: table;
+                content: "";
+                zoom: 1;
+            }
+
+            .one_line_col:after {
+                clear: both
+            }
+
+            .one_line_col > ul.for_boxes > li:nth-child(2n) {
+                clear: right
+            }
+
+            .legal_pp .one_line_col {
+                float: none;
+                border-top: 0;
+                padding-bottom: 21px
+            }
+
+            .legal_pp .one_line_col > ul.for_boxes {
+                margin-top: 21px
+            }
+
+            @media (max-width: 767px) {
+                .legal_pp .one_line_col > ul.for_boxes > li {
+                    clear: both;
+                    width: 100%
+                }
+                .legal_pp .one_line_col > ul.for_boxes > li:nth-child(2n+1) > div {
+                    margin-right: 0
+                }
+                .legal_pp .one_line_col > ul.for_boxes > li:nth-child(2n) > div {
+                    margin-left: 0
+                }
+            }
+
+            @media (max-width: 480px) {
+                html{
+                    padding: 0
+                }
+                body {
+                    padding: 0
+                }
+                .one_line_col {
+                    width: 100%
+                }
+                .one_line_col > ul.for_boxes > li {
+                    clear: both;
+                    width: 100%
+                }
+                .one_line_col > ul.for_boxes > li:nth-child(2n+1) > div {
+                    margin-right: 0
+                }
+                .one_line_col > ul.for_boxes > li:nth-child(2n) > div {
+                    margin-left: 0
+                }
+                .cookie-content {
+                    padding-left: 20px;
+                    padding-right: 20px
+                }
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <div class="cookie-content legal_pp">
+            <div class="cookie-header">
+                <h1>Privacy Policy of <strong>expandjs.com</strong></h1>
+                <p>This Application collects some Personal Data from its Users.</p>
+            </div>
+            <div class="one_line_col">
+                <h2>Data Controller and Owner</h2>
+            </div>
+            <div class="one_line_col">
+                <h2>Types of Data collected</h2>
+                <p>Among the types of Personal Data that this Application collects, by itself or through third parties, there are: Cookie and Usage data.</p>
+                <p>Other Personal Data collected may be described in other sections of this privacy policy or by dedicated explanation text contextually with the Data collection.<br/>The Personal Data may be freely provided by the User, or collected automatically when using this Application.<br/>Any use of Cookies - or of other tracking tools - by this Application or by the owners of third party services used by this Application, unless stated otherwise, serves to identify Users and remember their preferences, for the sole purpose of providing the service required by the User.<br/>Failure to provide certain Personal Data may make it impossible for this Application to provide its services.</p>
+                <p>Users are responsible for any Personal Data of third parties obtained, published or shared through this Application and confirm that they have the third party's consent to provide the Data to the Owner.</p>
+            </div>
+            <div class="one_line_col">
+                <h2>Mode and place of processing the Data</h2>
+                <h3>Methods of processing</h3>
+                <p>The Data Controller processes the Data of Users in a proper manner and shall take appropriate security measures to prevent unauthorized access, disclosure, modification, or unauthorized destruction of the Data.<br/>The Data processing is carried out using computers and/or IT enabled tools, following organizational procedures and modes strictly related to the purposes indicated. In addition to the Data Controller, in some cases, the Data may be accessible to certain types of persons in charge, involved with the operation of the site (administration, sales, marketing, legal, system administration) or external parties (such as third party technical service providers, mail carriers, hosting providers, IT companies, communications agencies) appointed, if necessary, as Data Processors by the Owner. The updated list of these parties may be requested from the Data Controller at any time.</p>
+                <h3>Place</h3>
+                <p>The Data is processed at the Data Controller's operating offices and in any other places where the parties involved with the processing are located. For further information, please contact the Data Controller.</p>
+                <h3>Retention time</h3>
+                <p>The Data is kept for the time necessary to provide the service requested by the User, or stated by the purposes outlined in this document, and the User can always request that the Data Controller suspend or remove the data.</p>
+            </div>
+            <div class="one_line_col">
+                <h2>The use of the collected Data</h2>
+                <p>The Data concerning the User is collected to allow the Owner to provide its services, as well as for the following purposes: Analytics and Displaying content from external platforms.</p>
+                <p>The Personal Data used for each purpose is outlined in the specific sections of this document.</p>
+            </div>
+            <div class="one_line_col">
+                <h2>Detailed information on the processing of Personal Data</h2>
+                <p>Personal Data is collected for the following purposes and using the following services:</p>
+                <ul class="for_boxes">
+                    <li>
+                        <div class="box_primary box_10 expand expanded">
+                            <h3 class="expand-click w_icon_24 policyicon_purpose_615173">Analytics</h3>
+                            <div class="expand-content">
+                                <p>The services contained in this section enable the Owner to monitor and analyze web traffic and can be used to keep track of User behavior.</p>
+                                <h4>Google Analytics (Google Inc.)</h4>
+                                <p>Google Analytics is a web analysis service provided by Google Inc. (“Google”). Google utilizes the Data collected to track and examine the use of this Application, to prepare reports on its activities and share them with other Google services.<br/>Google may use the Data collected to contextualize and personalize the ads of its own advertising network.</p>
+                                <p>Personal Data collected: Cookie and Usage data.</p>
+                                <p>Place of processing : USA - <a href="http://www.google.com/intl/en/policies/privacy/" target="_blank">Privacy Policy</a> - <a href="http://tools.google.com/dlpage/gaoptout?hl=en" onclick="javascript:return tryFunc('tryGaOptOut',{href:'http://tools.google.com/dlpage/gaoptout?hl=en'})" target="_blank">Opt Out</a></p>
+                            </div>
+                        </div>
+                        <div class="box_primary box_10 expand collapsed">
+                            <h3 class="expand-click w_icon_24 policyicon_purpose_614659">Displaying content from external platforms</h3>
+                            <div class="expand-content">
+                                <p>These services allow you to view content hosted on external platforms directly from the pages of this Application and interact with them.<br/>If a service of this kind is installed, it may still collect web traffic data for the pages where the service is installed, even when users do not use it.</p>
+                                <h4>Youtube video widget (Google Inc.)</h4>
+                                <p>Youtube is a video content visualization service provided by Google Inc. that allows this Application to incorporate content of this kind on its pages.</p>
+                                <p>Personal Data collected: Cookie and Usage data.</p>
+                                <p>Place of processing : USA – <a href="http://www.google.it/intl/en/policies/privacy/" target="_blank">Privacy Policy</a></p>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="one_line_col">
+                <h2>Additional information about Data collection and processing</h2>
+                <h3>Legal action</h3>
+                <p>The User's Personal Data may be used for legal purposes by the Data Controller, in Court or in the stages leading to possible legal action arising from improper use of this Application or the related services.<br/>The User declares to be aware that the Data Controller may be required to reveal personal data upon request of public authorities.</p>
+                <h3>Additional information about User's Personal Data</h3>
+                <p>In addition to the information contained in this privacy policy, this Application may provide the User with additional and contextual information concerning particular services or the collection and processing of Personal Data upon request.</p>
+                <h3>System Logs and Maintenance</h3>
+                <p>For operation and maintenance purposes, this Application and any third party services may collect files that record interaction with this Application (System Logs) or use for this purpose other Personal Data (such as IP Address).</p>
+                <h3>Information not contained in this policy</h3>
+                <p>More details concerning the collection or processing of Personal Data may be requested from the Data Controller at any time. Please see the contact information at the beginning of this document.</p>
+                <h3>The rights of Users</h3>
+                <p>Users have the right, at any time, to know whether their Personal Data has been stored and can consult the Data Controller to learn about their contents and origin, to verify their accuracy or to ask for them to be supplemented, cancelled, updated or corrected, or for their transformation into anonymous format or to block any data held in violation of the law, as well as to oppose their treatment for any and all legitimate reasons. Requests should be sent to the Data Controller at the contact information set out above.</p>
+                <p>This Application does not support “Do Not Track” requests.<br/>To determine whether any of the third party services it uses honor the “Do Not Track” requests, please read their privacy policies.</p>
+                <h3>Changes to this privacy policy</h3>
+                <p>The Data Controller reserves the right to make changes to this privacy policy at any time by giving notice to its Users on this page. It is strongly recommended to check this page often, referring to the date of the last modification listed at the bottom. If a User objects to any of the changes to the Policy, the User must cease using this Application and can request that the Data Controller removes the Personal Data. Unless stated otherwise, the then-current privacy policy applies to all Personal Data the Data Controller has about Users.</p>
+                <h3>Information about this privacy policy</h3>
+                <p>The Data Controller is responsible for this privacy policy, prepared starting from the modules provided by Iubenda and hosted on Iubenda's servers.</p>
+            </div>
+        </div>
+
+    </body>
+
+</html>

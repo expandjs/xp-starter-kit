@@ -1,0 +1,71 @@
+<link rel="import" href="../bower_components/app-elements/app-route.html">
+<link rel="import" href="../bower_components/app-elements/app-router.html">
+<link rel="import" href="../bower_components/app-elements/app-store-behavior.html">
+<link rel="import" href="kit-behaviors/kit-base-behavior.html">
+
+<dom-module id="kit-store">
+
+    <template strip-whitespace>
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+        <!-- ROUTER -->
+        <app-router>
+            <template is="dom-repeat" items="[[app.meta.routes]]">
+                <app-route path="[[item.path]]" data-name$="[[item.name]]" data-view$="[[item.view]]"></app-route>
+            </template>
+        </app-router>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'kit-store',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.APPStoreBehavior,
+                Polymer.KITBaseBehavior
+            ],
+
+            /*********************************************************************/
+
+            // OBSERVERS
+            observers: [
+                '_routeChanged(app.route)'
+            ],
+
+            /*********************************************************************/
+
+            /**
+             * Initializes the application's store.
+             *
+             * @method initialize
+             */
+            initialize() {
+
+                // Registering
+                if (navigator.serviceWorker) { navigator.serviceWorker.register('/service-worker.js'); }
+
+                // Ensuring
+                this.ensure('app.theme', 'light');
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _routeChanged(route) {
+
+                // Ensuring
+                this.ensure('app.view', route && route.view || null);
+            }
+        });
+    </script>
+
+</dom-module>

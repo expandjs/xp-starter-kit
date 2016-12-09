@@ -1,36 +1,30 @@
 {
-  "name": "app",
-  "private": true,
-  "version": "0.0.1",
+  "name": "xp-starter-kit",
+  "description": "A starting point for expand.js based web applications",
+  "version": "1.0.0",
+  "license": "BSD-3-Clause",
   "main": "server.js",
+  "homepage": "https://expandjs.github.io/xp-starter-kit",
+  "author": "expandjs <dev@expandjs.com> (https://expandjs.com)",
+
+  "contributors": [
+    "Giuliano Rullo <g.rullo@expandjs.com>",
+    "Maurizio Stefàno <m.stefano@expandjs.com>",
+    "Robert Manolea <r.manolea@expandjs.com>"
+  ],
+
   "dependencies": {
-    "ejs": "^2.0.0",
-    "expandjs": "0.10.0",
-    "express": "^4.0.0",
-    "express-slash": "^2.0.0",
-    "serve-favicon": "^2.0.0",
-    "xp-emitter": "0.10.0",
-    "xp-fs": "0.10.0",
-    "xp-observer": "0.10.0",
-    "xp-request": "0.10.0",
-    "xp-schema": "0.10.0"
+    "expandjs": "^1.0.0",
+    "finalhandler": "^0.5.0",
+    "http2": "^3.0.0",
+    "router": "^1.0.0",
+    "serve-static": "^1.0.0",
+    "xp-fs": "^1.0.0",
+    "xp-responder": "^1.0.0"
   },
-  "devDependencies": {
-    "crisper": "*",
-    "uglifyjs": "*",
-    "vulcanize": "*"
-  },
+
   "scripts": {
-    "build": "npm run build:vulcanize && npm run build:crisp && npm run build:minify",
-    "build:vulcanize": "vulcanize components/app-shell/app-shell.html --inline-css --inline-scripts --strip-comments > static/vulcanized/app-shell.html",
-    "build:crisp": "crisper --source static/vulcanized/app-shell.html --html static/vulcanized/app-shell.html --js static/vulcanized/app-shell.js",
-    "build:minify": "uglifyjs static/vulcanized/app-shell.js --mangle --output static/vulcanized/app-shell.js",
-    "restart": "npm run stop && npm run start",
-    "restart-dev": "npm run stop && npm run start-dev",
-    "restart-win": "npm run stop && npm run start-win",
-    "start": "NODE_ENV=production forever start server.js",
-    "start-dev": "forever start server.js",
-    "start-win": "SET NODE_ENV=production && forever start server.js",
-    "stop": "forever stop server.js"
+    "build": "npm run build:polymer",
+    "build:polymer": "polymer build"
   }
 }
