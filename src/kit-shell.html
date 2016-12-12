@@ -12,8 +12,10 @@
 <link rel="import" href="../bower_components/app-behaviors/app-shell-behavior.html">
 <link rel="import" href="../bower_components/app-behaviors/app-view.html">
 <link rel="import" href="kit-behaviors/kit-base-behavior.html">
+<link rel="import" href="kit-dialogs/kit-dialog-settings.html">
 <link rel="import" href="kit-elements/kit-navigation.html">
 <link rel="import" href="kit-icons.html">
+<link rel="import" href="kit-menus/kit-menu-more.html">
 <link rel="import" href="kit-meta.html">
 <link rel="import" href="kit-store.html">
 <link rel="import" href="kit-styles/kit-base-styles.html">
@@ -188,16 +190,6 @@
 
                 // Ensuring
                 this.ensure('theme', post);
-            },
-
-            /*********************************************************************/
-
-            // LISTENER
-            ready() {
-
-                // Importing
-                this.importHref(this.resolveUrl(`kit-dialogs/kit-dialog-settings.html`));
-                this.importHref(this.resolveUrl(`kit-menus/kit-menu-more.html`));
             }
         });
     </script>

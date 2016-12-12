@@ -1,8 +1,13 @@
 {
+  "entrypoint": "index.html",
   "shell": "src/kit-shell.html",
 
   "fragments": [
-    "src/kit-views/kit-view-home.html"
+    "src/kit-i18n/kit-i18n-de_DE.html",
+    "src/kit-i18n/kit-i18n-en_US.html",
+    "src/kit-i18n/kit-i18n-it_IT.html",
+    "src/kit-views/kit-view-home.html",
+    "src/kit-views/kit-view-page.html"
   ],
 
   "includeDependencies": [
