@@ -1,0 +1,57 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPOverlayInjectorImp = {
+
+        /**
+         * Injects the overlay.
+         *
+         * @method inject
+         * @param {Element | string} element
+         * @param {Element} [context]
+         * @param {*} [data]
+         * @param {Function} [callback]
+         */
+        inject(element, context, data, callback) {
+
+            // Preparing
+            if (XP.isFunction(context)) { callback = context; data = undefined; context = undefined; }
+            if (XP.isFunction(data)) { callback = data; data = undefined; }
+
+            // Asserting
+            XP.assertArgument(XP.isElement(element) || XP.isString(element, true), 1, 'Element or string');
+            XP.assertArgument(XP.isVoid(context) || XP.isElement(context), 2, 'Element');
+            XP.assertArgument(XP.isVoid(callback) || XP.isFunction(callback), 4, 'Function');
+
+            // Let
+            let injected = XP.isString(element) ? document.createElement(element.toLowerCase()) : element,
+                listener = XP.debounce(() => !injected.showed && Polymer.dom(Polymer.dom(injected).parentNode).removeChild(XP.unlisten(injected, 'showed-changed', listener)), 500),
+                shell    = XP.matches(this, '.shell') ? this : XP.findParentElement(this, '.shell') || document.body;
+
+            // Ensuring
+            if (injected) { this.ensure('target', this, injected); }
+            if (context)  { this.ensure('context', context, injected); }
+            if (data)     { this.ensure('data', data, injected); }
+            if (callback) { this.ensure('callback', callback, injected); }
+
+            // Appending
+            Polymer.dom(shell.root || shell).appendChild(injected);
+
+            // Listening
+            XP.listen(injected, 'showed-changed', listener);
+
+            // Showing
+            requestAnimationFrame(() => requestAnimationFrame(() => XP.call(injected, 'show')));
+
+            return injected;
+        }
+    };
+
+    Polymer.XPOverlayInjector = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPOverlayInjectorImp
+    ];
+</script>
+</head><body></body></html>

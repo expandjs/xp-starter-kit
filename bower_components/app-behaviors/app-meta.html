@@ -1,0 +1,91 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-meta-behavior.html">
+
+</head><body><dom-module id="app-meta">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+        <slot></slot>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'app-meta',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPMetaBehavior
+            ],
+
+            /*********************************************************************/
+
+            /**
+             * Fired when the meta has been parsed.
+             *
+             * @event app-meta
+             * @param {string} name
+             * @param {string} namespace
+             * @param {Object} data
+             * @bubbles
+             */
+
+            /*********************************************************************/
+
+            // OBSERVERS
+            observers: [
+                '_dataChanged(data)'
+            ],
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The meta's name.
+                 *
+                 * @attribute name
+                 * @type string
+                 */
+                name: {
+                    type: String
+                },
+
+                /**
+                 * The meta's namespace.
+                 *
+                 * @attribute namespace
+                 * @type string
+                 */
+                namespace: {
+                    type: String
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _dataChanged() {
+
+                // Checking
+                if (!this.data || !this.name || !this.namespace) { return; }
+
+                // Setting
+                XP.set(window, `app.${this.namespace}.meta.${this.name}`, XP.freezeDeep(this.data));
+
+                // Firing
+                this.fire(`app-meta`, {data: this.data, name: this.name, namespace: this.namespace}, {node: window});
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

@@ -1,0 +1,22 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-selector-multi-behavior.html">
+
+</head><body><dom-module id="xp-selector">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: block;
+            }
+        </style>
+
+        <slot></slot>
+
+    </template>
+
+    <script>Polymer({is:"xp-selector",behaviors:[Polymer.XPSelectorMultiBehavior]});</script>
+
+</dom-module>
+</body></html>

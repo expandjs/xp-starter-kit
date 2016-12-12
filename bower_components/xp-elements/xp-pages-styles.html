@@ -1,0 +1,33 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+</head><body><dom-module id="xp-pages-styles">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                bottom: 0;
+                display: block;
+                left: 0;
+                overflow: hidden;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            /* SLOTTED */
+
+            :host .slider ::slotted(.page) {
+                box-sizing: border-box;
+                height: 100%;
+            }
+
+            :host .slider ::slotted(.page:not([active])) {
+                display: none !important;
+            }
+        </style>
+
+    </template>
+
+</dom-module>
+</body></html>

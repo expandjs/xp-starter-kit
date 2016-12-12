@@ -1,38 +1,28 @@
-<link rel="import" href="../../bower_components/mat-elements/mat-fab.html">
+<html><head><link rel="import" href="../../bower_components/mat-elements/mat-fab.html">
 <link rel="import" href="../../bower_components/mat-elements/mat-paper.html">
 <link rel="import" href="../kit-behaviors/kit-view-behavior.html">
 <link rel="import" href="../kit-styles/kit-view-styles.html">
 
-<dom-module id="kit-view-page">
+</head><body><dom-module id="kit-view-page">
 
-    <template strip-whitespace>
+    <template strip-whitespace="">
 
         <style include="kit-view-styles"></style>
 
-        <!-- WRAPPER -->
+        
         <mat-paper class="wrapper" z="2">
 
-            <!-- MESSAGE -->
+            
             <span class="message">[[localize(app.route.name)]]</span>
 
         </mat-paper>
 
-        <!-- FAB -->
+        
         <mat-fab icon="kit:add"></mat-fab>
 
     </template>
 
-    <script>
-        Polymer({
-
-            // ELEMENT
-            is: 'kit-view-page',
-
-            // BEHAVIORS
-            behaviors: [
-                Polymer.KITViewBehavior
-            ]
-        });
-    </script>
+    <script>Polymer({is:"kit-view-page",behaviors:[Polymer.KITViewBehavior]});</script>
 
 </dom-module>
+</body></html>

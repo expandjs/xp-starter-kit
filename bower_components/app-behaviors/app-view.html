@@ -1,0 +1,93 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="app-receiver-behavior.html">
+
+</head><body><dom-module id="app-view">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                box-sizing: border-box;
+                display: block;
+                height: 100%;
+                position: relative;
+            }
+        </style>
+
+        <slot></slot>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'app-view',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.APPReceiverBehavior
+            ],
+
+            // CLASSES
+            classes: ['view'],
+
+            /*********************************************************************/
+
+            // OBSERVERS
+            observers: [
+                '_contentChanged(content, shell)'
+            ],
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The `tagName` of the view to inject.
+                 *
+                 * @attribute content
+                 * @type string
+                 */
+                content: {
+                    reflectToAttribute: true,
+                    type: String
+                },
+
+                /**
+                 * The injected view.
+                 *
+                 * @attribute injected
+                 * @type Element
+                 * @notifies
+                 * @readonly
+                 */
+                injected: {
+                    notify: true,
+                    readOnly: true
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _contentChanged() {
+
+                // Let
+                let remove = this.injected && (!this.content || this.content.toUpperCase() !== this.injected.tagName),
+                    inject = this.content && this.shell && (remove || !this.injected) && document.createElement(this.content);
+
+                // Removing
+                if (remove) { Polymer.dom(this).removeChild(this.injected); }
+
+                // Injecting
+                if (inject) { Polymer.dom(this).appendChild(inject); }
+
+                // Ensuring
+                if (inject || remove) { this.ensure('injected', inject || null); }
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

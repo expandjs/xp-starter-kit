@@ -1,0 +1,102 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-master-slave-behavior.html">
+<link rel="import" href="xp-selector-multi-behavior.html">
+
+<script>
+    Polymer.XPListBehaviorImp = {
+
+        // CLASSES
+        classes: ['list'],
+
+        /*********************************************************************/
+
+        /**
+         * Fired when the anchor is clicked.
+         *
+         * @event xp-redirect
+         * @param {Element} anchor
+         * @param {string} href
+         * @bubbles
+         * @cancelable
+         */
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, when a sublist expands the siblings will collapse.
+             *
+             * @attribute auto-collapse
+             * @type boolean
+             * @default false
+             */
+            autoCollapse: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the items will be deep searched.
+             *
+             * @attribute find-deep
+             * @type boolean
+             * @default true
+             * @readonly
+             */
+            findDeep: {
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The selector used to recognize items.
+             *
+             * @attribute item-selector
+             * @type string
+             * @default ".item"
+             */
+            itemSelector: {
+                type: String,
+                value: '.item'
+            },
+
+            /**
+             * The slave sublists.
+             *
+             * @attribute sublists
+             * @type Array
+             * @readonly
+             */
+            sublists: {
+                readOnly: true,
+                slaves: '.sublist',
+                value() { return []; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __selectedItemChanged() {
+
+            // Let
+            let superlist = this.selectedItem && !this.multi && XP.findParentElement(this.selectedItem, '.sublist[collapsible]', this);
+
+            // Super
+            Polymer.XPSelectorBehaviorImp.__selectedItemChanged.apply(this, arguments);
+
+            // Expanding
+            if (superlist) { superlist.expand(); }
+        }
+    };
+
+    Polymer.XPListBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.XPSelectorMultiBehavior,
+        Polymer.XPListBehaviorImp
+    ];
+</script>
+</head><body></body></html>

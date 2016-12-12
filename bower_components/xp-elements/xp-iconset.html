@@ -1,0 +1,98 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-iconset-finder.html">
+
+</head><body><dom-module id="xp-iconset">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+        <slot></slot>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'xp-iconset',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPIconsetFinder
+            ],
+
+            /*********************************************************************/
+
+            /**
+             * Fired when the iconset name changes.
+             *
+             * @event xp-iconset
+             * @param {string} name
+             * @bubbles
+             */
+
+            /*********************************************************************/
+
+            /**
+             * Returns a copy of an iconset's icon.
+             *
+             * @method findIcon
+             * @param {string} name
+             * @returns {Node}
+             */
+            findIcon(name) {
+
+                // Asserting
+                XP.assertArgument(XP.isVoid(name) || XP.isString(name), 1, 'string');
+
+                // Let
+                let wrap  = name ? XP.findElement(Polymer.dom(this), `svg`) : null,
+                    icon  = wrap ? XP.getElement(Polymer.dom(wrap), `g[id="${name}"]`) : null,
+                    clone = icon ? icon.cloneNode(true) : null;
+
+                // Cleaning
+                if (clone) { clone.removeAttribute('id'); }
+
+                return clone;
+            },
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The iconset's name.
+                 *
+                 * @attribute name
+                 * @type string
+                 */
+                name: {
+                    observer: '_nameChanged',
+                    reflectToAttribute: true,
+                    type: String
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _nameChanged() {
+
+                // Setting
+                this.icons[this.name] = this;
+
+                // Firing
+                this.fire('xp-iconset', {name: this.name}, {node: window});
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

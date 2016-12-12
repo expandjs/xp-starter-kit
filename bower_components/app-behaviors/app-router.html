@@ -1,0 +1,248 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
+<link rel="import" href="app-route.html">
+
+</head><body><dom-module id="app-router">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+        <slot></slot>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'app-router',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPMasterSlaveBehavior
+            ],
+
+            // CLASSES
+            classes: ['router'],
+
+            /*********************************************************************/
+
+            /**
+             * Fired when an anchor has been clicked.
+             *
+             * @event app-anchor-click
+             * @param {Element} anchor
+             * @param {Function} delay
+             * @bubbles
+             * @cancelable
+             */
+
+            /**
+             * Fired when the active route changes.
+             *
+             * @event app-route
+             * @param {string} namespace
+             * @param {Object} route
+             * @bubbles
+             * @cancelable
+             */
+
+            /*********************************************************************/
+
+            /**
+             * Redirects to the provided `href`.
+             *
+             * @method redirect
+             * @param {string} href
+             */
+            redirect(href) {
+
+                // Asserting
+                XP.assertArgument(XP.isString(href, true), 1, 'string');
+
+                // Let
+                let url = document.baseURI ? new URL(href, document.baseURI) : new URL(href);
+
+                // Redirecting
+                if (url.origin !== location.origin) { location.href = url.href; return; }
+
+                // Checking
+                if (url.href === location.href) { return; }
+
+                // Pushing state
+                history.pushState({}, '', url.href);
+
+                // Handling
+                this._handleRoute();
+            },
+
+            /*********************************************************************/
+
+            // OBSERVERS
+            observers: [
+                '_routesChanged(routes.splices)'
+            ],
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * If set to true, the route change has been prevented.
+                 *
+                 * @attribute rollback
+                 * @type boolean
+                 * @readonly
+                 */
+                rollback: {
+                    readOnly: true,
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * The application's active route.
+                 *
+                 * @attribute route
+                 * @type Object
+                 * @notifies
+                 * @readonly
+                 */
+                route: {
+                    notify: true,
+                    readOnly: true,
+                    type: Object
+                },
+
+                /**
+                 * The application's routes.
+                 *
+                 * @attribute routes
+                 * @type Array
+                 * @readonly
+                 */
+                routes: {
+                    readOnly: true,
+                    slaves: '.route',
+                    type: Array,
+                    value() { return []; }
+                },
+
+                /**
+                 * The application's shell.
+                 *
+                 * @attribute shell
+                 * @type Element
+                 * @readonly
+                 */
+                shell: {
+                    master: '.shell',
+                    observer: '_shellChanged',
+                    readOnly: true
+                },
+
+                /**
+                 * The application's store.
+                 *
+                 * @attribute store
+                 * @type Element
+                 * @readonly
+                 */
+                store: {
+                    master: '.store',
+                    readOnly: true
+                }
+            },
+
+            /**
+             * The application's namespace.
+             *
+             * @property namespace
+             * @type string
+             * @readonly
+             */
+            get namespace() { return this.shell && this.shell.namespace; },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _routesChanged() {
+
+                // Routing
+                this.debounce('routing', this._handleRoute.bind(this));
+            },
+
+            // OBSERVER
+            _shellChanged(post, pre) {
+
+                // Listening
+                if (pre) { this.unlisten(pre, 'click', '_handleClick'); }
+                if (pre) { this.unlisten(window, 'popstate', '_handleRoute'); }
+                if (post) { this.listen(post, 'click', '_handleClick'); }
+                if (post) { this.listen(window, 'popstate', '_handleRoute'); }
+            },
+
+            /*********************************************************************/
+
+            // HANDLER
+            _handleClick(event) {
+
+                // Checking
+                if (event.button !== 0 || event.defaultPrevented || event.metaKey || event.ctrlKey) { return; }
+
+                // Let
+                let anchor = Polymer.dom(event).path.find(el => {
+                    if (el.tagName !== 'A' || !el.href || el.target === '_blank' || el.getAttribute('href').startsWith('#')) { return; }
+                    if (['_parent', '_top'].includes(el.target) && window.top !== window) { return; }
+                    return true;
+                });
+
+                // Preventing
+                if (anchor) { event.preventDefault(); } else { return; }
+
+                // Firing
+                let fired = this.fire('app-anchor-click', {anchor: anchor, delay: val => event.delay = val}, {cancelable: true});
+
+                // Redirecting
+                if (!fired.defaultPrevented) { this.wait(() => this.redirect(anchor.href), event.delay); }
+            },
+
+            // HANDLER
+            _handleRoute() {
+
+                // Preventing
+                if (this.rollback || !this.routes) { return this.ensure('rollback', false); }
+
+                // Matching
+                this.routes.find(element => {
+
+                    // Let
+                    let params = XP.parsePath(location.pathname, element.path),
+                        query  = XP.parseQueryString(location.search.slice(1)),
+                        opts   = params && {params: XP.freezeDeep(params), pathname: location.pathname, query: query},
+                        route  = params && Object.assign({}, XP.mapValues(element.dataset, val => XP.parsePrimitive(val)), opts),
+                        event  = params && this.fire('app-route', {namespace: this.namespace, route: route}, {cancelable: true});
+
+                    // Checking
+                    if (event) { this.ensure('rollback', event.defaultPrevented); } else { return; }
+
+                    // Rollback
+                    if (this.rollback) { history.forward(); this.wait(() => !this.rollback || history.back(), 3, true); return true; }
+
+                    // Redirecting
+                    if (element.redirect) { this.redirect(element.redirect); return true; }
+
+                    // Ensuring
+                    return !this.ensure('route', route);
+                });
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

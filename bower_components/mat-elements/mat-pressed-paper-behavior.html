@@ -1,0 +1,138 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="mat-paper-behavior.html">
+<link rel="import" href="mat-pressed-behavior.html">
+
+<script>
+    Polymer.MATPressedPaperBehaviorImp = {
+
+        /**
+         * Makes the paper fall.
+         *
+         * @method _fall
+         * @private
+         */
+        _fall() {
+
+            // Checking
+            if (this.zRaising || !this.z) { return; }
+
+            // Setting
+            this.z         = this.pressed ? this.z : this.zPrevious;
+            this.zPrevious = this.pressed ? this.zPrevious : 0;
+            this.zRaising  = false;
+        },
+
+        /**
+         * Makes the paper raise.
+         *
+         * @method _raise
+         * @private
+         */
+        _raise() {
+
+            // Checking
+            if (this.zRaising || !this.z) { return; }
+
+            // Setting
+            this.zRaising  = true;
+            this.zPrevious = this.z;
+            this.z         = Math.min(this.z + this.zElevation, this.zMax);
+
+            // Falling
+            this.async(() => { this.zRaising = false; this._fall(); }, 400);
+        },
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__backgroundChanged(active, activeBackground)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The paper's active background.
+             *
+             * @attribute active-background
+             * @type string
+             */
+            activeBackground: {
+                type: String
+            }
+        },
+
+        /**
+         * The elevation value of z.
+         *
+         * @property zElevation
+         * @type number
+         * @default 6
+         * @readonly
+         */
+        zElevation: 6,
+
+        /**
+         * The maximum value of z.
+         *
+         * @property zMax
+         * @type number
+         * @default 24
+         * @readonly
+         */
+        zMax: 24,
+
+        /**
+         * The previous value of z.
+         *
+         * @property zPrevious
+         * @type number
+         * @default 0
+         * @readonly
+         */
+        zPrevious: 0,
+
+        /**
+         * If set to true, the paper is raising from the rest position.
+         *
+         * @property zRaising
+         * @type boolean
+         * @default false
+         * @readonly
+         */
+        zRaising: false,
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __backgroundChanged() {
+
+            // Ensuring
+            this.ensure('currentBackground', (this.active && this.activeBackground) || this.background || null);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleTouch(event) {
+
+            // Super
+            Polymer.MATPressedBehaviorImp.__handleTouch.apply(this, arguments);
+
+            // Checking
+            if (event.pressed !== this) { return; }
+
+            // Raising
+            if (this.pressed) { this._raise(); } else { this._fall(); }
+        }
+    };
+
+    Polymer.MATPressedPaperBehavior = [
+        Polymer.MATPaperBehavior,
+        Polymer.MATPressedBehavior,
+        Polymer.MATPressedPaperBehaviorImp
+    ];
+</script>
+</head><body></body></html>

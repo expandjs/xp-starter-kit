@@ -1,0 +1,237 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-input-behavior.html">
+
+<script>
+    Polymer.XPInputValueBehaviorImp = {
+
+        /**
+         * Fired when the input's bindable value changes.
+         *
+         * @event xp-input-change
+         * @param {string} id
+         * @param {string} name
+         * @param {*} value
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Set the input's memento.
+         *
+         * @method memoize
+         */
+        memoize() {
+
+            // Ensuring
+            this.ensure('memento.value', this.value = XP.isDefined(this.bindValue) ? this._toValue(this.bindValue) : this.value || '');
+            this.ensure('memento.bindValue', XP.toDefined(this.bindValue));
+        },
+
+        /**
+         * Selects the input.
+         *
+         * @method select
+         */
+        select() {
+
+            // Focusing
+            this.focus();
+
+            // Selecting
+            this._select();
+        },
+
+        /*********************************************************************/
+
+        /**
+         * Returns `date` correctly formatted for `value`.
+         *
+         * @method _format
+         * @param {Date} date
+         * @param {boolean} [local = false]
+         * @returns {string}
+         * @private
+         */
+        _format(date, local) {
+
+            // Checking
+            if (!XP.isDate(date)) { return ''; }
+
+            // Let
+            let year    = String(date.getUTCFullYear()),
+                month   = String(date.getUTCMonth() + 1),
+                day     = String(date.getUTCDate()),
+                hours   = local ? String(date.getUTCHours()) : '',
+                minutes = local ? String(date.getUTCMinutes()) : '',
+                seconds = local ? String(date.getUTCSeconds()) : '';
+
+            // Overriding
+            month   = `${month[1] ? `` : `0`}${month}`;
+            day     = `${day[1] ? `` : `0`}${day}`;
+            hours   = `${hours[1] ? `` : `0`}${hours}`;
+            minutes = `${minutes[1] ? `` : `0`}${minutes}`;
+            seconds = `${seconds[1] ? `` : `0`}${seconds}`;
+
+            // Formatting
+            return `${year}-${month}-${day}${local ? `T${hours}:${minutes}:${seconds}` : ``}`;
+        },
+
+        /**
+         * Selects the native input.
+         *
+         * @method _select
+         * @private
+         */
+        _select() {
+            if (this.input && this.input.select) { this.input.select(); }
+        },
+
+        /**
+         * Returns bindValue representation of a native `value`.
+         *
+         * @method _toBindValue
+         * @param {string} value
+         * @returns {*}
+         * @private
+         */
+        _toBindValue(value) {
+            let from = XP.isInput(value) ? value : '';
+            if (from === this.memento.value) { return this.memento.bindValue; }
+            if (this.type === 'number' || this.type === 'range') { return XP.toDefined(XP.toFinite(from)); }
+            if (this.type !== 'date' && this.type !== 'datetime-local') { return String(from) || null; }
+            if (from = XP.toDate(from)) { return XP.toISODate(from.getTime() + (from.getTimezoneOffset() * 60000)); }
+            return null;
+        },
+
+        /**
+         * Returns native representation of a `bindValue`.
+         *
+         * @method _toValue
+         * @param {*} bindValue
+         * @returns {string}
+         * @private
+         */
+        _toValue(bindValue) {
+            if (!XP.isPrimitive(bindValue)) { return ''; }
+            if (this.type !== 'date' && this.type !== 'datetime-local') { return !XP.isVoid(bindValue) ? XP.toString(bindValue) : ''; }
+            if (bindValue = XP.toDate(bindValue)) { return XP.toISODate(bindValue.getTime() - (bindValue.getTimezoneOffset() * 60000)); }
+            return '';
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The input's character count.
+             *
+             * @attribute chars
+             * @type number
+             * @default 0
+             * @notifies
+             * @readonly
+             */
+            chars: {
+                notify: true,
+                readOnly: true,
+                type: Number,
+                value: 0
+            },
+
+            /**
+             * If set to true, the input is empty.
+             *
+             * @attribute empty
+             * @type boolean
+             * @default true
+             * @notifies
+             * @readonly
+             */
+            empty: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The native input's value.
+             *
+             * @attribute value
+             * @type string
+             * @notifies
+             */
+            value: {
+                notify: true,
+                observer: '__valueChanged',
+                type: String
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __bindValueChanged() {
+
+            // Casting
+            this.value = this._toValue(this.bindValue);
+
+            // Firing
+            this.fire('xp-input-change', {id: this.id, name: this.name, value: this.bindValue});
+        },
+
+        // OBSERVER
+        __hiddenChanged() {
+
+            // Super
+            Polymer.XPInputBehaviorImp.__hiddenChanged.apply(this, arguments);
+
+            // Setting
+            this.async(() => this.value = this.hidden ? '' : this.value);
+        },
+
+        // OBSERVER
+        __valueChanged() {
+
+            // Let
+            let value = this.value;
+
+            // Sanitizing
+            if (this.input) { this.sanitize(); }
+
+            // Checking
+            if (this.value !== value) { return; }
+
+            // Casting
+            this.bindValue = this._toBindValue(this.value);
+
+            // Ensuring
+            this.ensure('empty', !this.value);
+
+            // Committing
+            if (this.input) { this._commitTo(); }
+
+            // Validating
+            if (this.input) { this.validate(); }
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleSpace(event) {
+
+            // Focusing
+            if (event.keyCode === 32) { event.preventDefault(); }
+        }
+    };
+
+    Polymer.XPInputValueBehavior = [
+        Polymer.XPInputBehavior,
+        Polymer.XPInputValueBehaviorImp
+    ];
+</script>
+</head><body></body></html>

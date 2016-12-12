@@ -1,0 +1,119 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPAnchorBehaviorImp = {
+
+        /**
+         * Fired when the anchor is clicked.
+         *
+         * @event xp-redirect
+         * @param {string} href
+         * @bubbles
+         * @cancelable
+         */
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__anchorChanged(anchor, download, href, rel, target)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The element's anchor.
+             *
+             * @attribute anchor
+             * @type Element
+             * @readonly
+             */
+            anchor: {
+                readOnly: true,
+                selector: '.anchor'
+            },
+
+            /**
+             * The anchor's download property's value.
+             *
+             * @attribute download
+             * @type string
+             */
+            download: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The anchor's href property's value.
+             *
+             * @attribute href
+             * @type string
+             */
+            href: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The anchor's rel property's value.
+             *
+             * @attribute rel
+             * @type string
+             */
+            rel: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The anchor's target property's value.
+             *
+             * @attribute target
+             * @type Element | string
+             */
+            target: {
+                value: null
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __anchorChanged() {
+
+            // Checking
+            if (!this.anchor) { return; }
+
+            // Setting
+            XP.setAttribute(this.anchor, 'download', this.href && this.download);
+            XP.setAttribute(this.anchor, 'href', this.href);
+            XP.setAttribute(this.anchor, 'rel', this.href && this.rel);
+            XP.setAttribute(this.anchor, 'target', this.href && this.target);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleAnchor(event) {
+
+            // Checking
+            if (event.button || this.anchor !== event.currentTarget || !this.anchor.href) { return; }
+
+            // Firing
+            if (this.fire('xp-redirect', {anchor: this.anchor, href: this.anchor.href}, {cancelable: true}).defaultPrevented) { event.preventDefault(); }
+        }
+    };
+
+    Polymer.XPAnchorBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPAnchorBehaviorImp
+    ];
+</script>
+</head><body></body></html>

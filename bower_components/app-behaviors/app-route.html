@@ -1,0 +1,20 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
+
+</head><body><dom-module id="app-route">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+    </template>
+
+    <script>Polymer({is:"app-route",behaviors:[Polymer.XPMasterSlaveBehavior],classes:["route"],properties:{path:{reflectToAttribute:!0,type:String},redirect:{reflectToAttribute:!0,type:String},router:{master:".router",readOnly:!0}}});</script>
+
+</dom-module>
+</body></html>

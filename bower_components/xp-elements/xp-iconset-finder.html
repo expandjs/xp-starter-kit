@@ -1,0 +1,42 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPIconsetFinderImp = {
+
+        /**
+         * Returns an iconset.
+         *
+         * @method findIconset
+         * @param {string} name
+         * @returns {Element}
+         */
+        findIconset(name) {
+
+            // Asserting
+            XP.assertArgument(XP.isVoid(name) || XP.isString(name), 1, 'string');
+
+            // Finding
+            return (name && this.icons[name]) || null;
+        },
+
+        /*********************************************************************/
+
+        /**
+         * The icons' sets.
+         *
+         * @property icons
+         * @type Object
+         * @default {}
+         * @readonly
+         */
+        icons: {}
+    };
+
+    Polymer.XPIconsetFinder = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPIconsetFinderImp
+    ];
+</script>
+</head><body></body></html>

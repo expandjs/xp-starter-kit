@@ -1,0 +1,274 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPFinderBehaviorImp = {
+
+        /**
+         * Fired when the found items change.
+         *
+         * @event xp-items
+         * @param {Array} items
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Finds an item's index.
+         *
+         * @method findIndex
+         * @param {*} identity
+         * @param {boolean} [safe = false]
+         * @returns {number | string}
+         */
+        findIndex(identity, safe) {
+            let item = this.findItem(identity, safe), items = this.items || [];
+            if (item && this.indexAttribute) { return XP.getAttribute(item, this.indexAttribute); }
+            if (item) { let index = items.indexOf(item); return index >= 0 ? index : null; }
+            return null;
+        },
+
+        /**
+         * Finds an item.
+         *
+         * @method findItem
+         * @param {*} identity
+         * @param {boolean} [safe = false]
+         * @returns {Element}
+         */
+        findItem(identity, safe) {
+            return safe ? identity : Array.from(this.items || []).find(this._toDOMIdentity(identity)) || null;
+        },
+
+        /**
+         * Finds items filtered by predicate.
+         *
+         * @method findItems
+         * @param {Function} [predicate]
+         * @returns {Array}
+         */
+        findItems(predicate) {
+            return (this.items || []).filter(this._toDOMPredicate(predicate));
+        },
+
+        /**
+         * Finds an item's index, iterating from right to left.
+         *
+         * @method findLastIndex
+         * @param {*} identity
+         * @param {boolean} [safe = false]
+         * @returns {number | string}
+         */
+        findLastIndex(identity, safe) {
+            let item = this.findLastItem(identity, safe), items = this.items || [];
+            if (item && this.indexAttribute) { return XP.getAttribute(item, this.indexAttribute) || null; }
+            if (item) { let index = items.indexOf(item); return index >= 0 ? index : null; }
+            return null;
+        },
+
+        /**
+         * Finds an item, iterating from right to left.
+         *
+         * @method findLastItem
+         * @param {*} identity
+         * @param {boolean} [safe = false]
+         * @returns {Element}
+         */
+        findLastItem(identity, safe) {
+            return safe ? identity : XP.findLast(this.items || [], this._toDOMIdentity(identity)) || null;
+        },
+
+        /*********************************************************************/
+
+        /**
+         * Returns a DOM identity representation of `target`.
+         *
+         * @method _toDOMIdentity
+         * @param {*} target
+         * @returns {Function}
+         * @private
+         */
+        _toDOMIdentity(target) {
+
+            // Let
+            let attribute = this.indexAttribute,
+                index     = attribute ? target : XP.toFinite(target);
+
+            // Casting
+            if (XP.isIndex(index)) { return (element, i) => i === index; }
+            if (XP.isInput(target) && XP.isString(attribute, true)) { return element => XP.isElement(element) && element.getAttribute(attribute) === target.toString(); }
+            if (XP.isElement(target) || XP.isFunction(target) || XP.isString(target, false) || XP.isVoid(target)) { return XP.toDOMIdentity(target); }
+
+            // Asserting
+            throw new XP.ArgumentError(1, 'Element, Function, number or string');
+        },
+
+        /**
+         * Returns a DOM predicate representation of `target`.
+         *
+         * @method _toDOMPredicate
+         * @param {Function} [target]
+         * @returns {Function}
+         * @private
+         */
+        _toDOMPredicate(target) {
+
+            // Casting
+            if (XP.isVoid(target) || XP.isFunction(target)) { return XP.toDOMPredicate(target); }
+
+            // Asserting
+            throw new XP.ArgumentError(1, 'Function');
+        },
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__itemsChanged(items.splices)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the items will be searched deep.
+             *
+             * @attribute find-deep
+             * @type boolean
+             * @default false
+             * @readonly
+             */
+            findDeep: {
+                readOnly: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the items will be searched into the ShadowDOM.
+             *
+             * @attribute find-shadow
+             * @type boolean
+             * @default false
+             * @readonly
+             */
+            findShadow: {
+                readOnly: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, at least an item is found.
+             *
+             * @attribute found
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            found: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, only one item has been found.
+             *
+             * @attribute found-one
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            foundOne: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The attribute used as index.
+             *
+             * @attribute index-attribute
+             * @type string
+             */
+            indexAttribute: {
+                type: String
+            },
+
+            /**
+             * The selector used to recognize items.
+             *
+             * @attribute item-selector
+             * @type string
+             * @default ".item"
+             */
+            itemSelector: {
+                type: String,
+                value: '.item'
+            },
+
+            /**
+             * The found items.
+             *
+             * @attribute items
+             * @type Array
+             * @notifies
+             * @readonly
+             */
+            items: {
+                notify: true,
+                readOnly: true
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __itemsChanged() {
+
+            // Ensuring
+            this.ensure('found', this.items && this.items.length > 0);
+            this.ensure('foundOne', !!this.items && this.items.length === 1);
+
+            // Firing
+            this.fire('xp-items', {items: this.items});
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached() {
+
+            // Setting
+            if (!this.items) { this.items = []; } else { return; }
+
+            // Observing
+            Polymer.RenderStatus.afterNextRender(this, Polymer.XPFinderBehaviorImp.mutated);
+        },
+
+        // LISTENER
+        mutated() {
+
+            // Overwriting
+            this.overwrite('items', XP[this.findDeep ? 'getElements' : 'findElements'](Polymer.dom(this.findShadow ? this.root : this), this.itemSelector));
+
+            // Observing
+            XP.onMutation((this.findShadow && this.shadowRoot) || this, Polymer.XPFinderBehaviorImp.mutated.bind(this));
+        }
+    };
+
+    Polymer.XPFinderBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPFinderBehaviorImp
+    ];
+</script>
+</head><body></body></html>

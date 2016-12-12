@@ -1,0 +1,158 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-input-behavior.html">
+
+<script>
+    Polymer.XPInputCheckedBehaviorImp = {
+
+        /**
+         * Fired when the input's bindable value changes.
+         *
+         * @event xp-input-change
+         * @param {string} id
+         * @param {string} name
+         * @param {*} value
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Set the input's memento.
+         *
+         * @method memoize
+         */
+        memoize() {
+
+            // Ensuring
+            this.ensure('memento.checked', this.checked = XP.isDefined(this.bindValue) ? this._toValue(this.bindValue) : this.checked || false);
+            this.ensure('memento.bindValue', XP.toDefined(this.bindValue));
+        },
+
+        /**
+         * Toggles the `checked` state.
+         *
+         * @method toggle
+         */
+        toggle() {
+
+            // Setting
+            if (!this.disabled) { this.checked = !this.checked; }
+        },
+
+        /*********************************************************************/
+
+        /**
+         * Returns bindable representation of a native `value`.
+         *
+         * @method _toBindValue
+         * @param {boolean} value
+         * @returns {*}
+         * @private
+         */
+        _toBindValue(value) {
+            let from = XP.isBoolean(value) ? value : false;
+            return from === this.memento.checked ? this.memento.bindValue : from;
+        },
+
+        /**
+         * Returns native representation of a `bindValue`.
+         *
+         * @method _toValue
+         * @param {*} bindValue
+         * @returns {boolean}
+         * @private
+         */
+        _toValue(bindValue) {
+            return XP.isPrimitive(bindValue) ? !!bindValue : false;
+        },
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'keydown': '__handleSpace'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the input is checked.
+             *
+             * @attribute checked
+             * @type boolean
+             * @notifies
+             */
+            checked: {
+                notify: true,
+                observer: '__checkedChanged',
+                reflectToAttribute: true,
+                type: Boolean
+            },
+
+            /**
+             * The native input's value.
+             *
+             * @attribute value
+             * @type string
+             * @notifies
+             */
+            value: {
+                notify: true,
+                reflectToAttribute: true,
+                type: String
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __bindValueChanged() {
+
+            // Casting
+            this.checked = this._toValue(this.bindValue);
+
+            // Firing
+            this.fire('xp-input-change', {id: this.id, name: this.name, value: this.bindValue});
+        },
+
+        // OBSERVER
+        __checkedChanged() {
+
+            // Casting
+            this.bindValue = this._toBindValue(this.checked);
+
+            // Committing
+            if (this.input) { this._commitTo(); }
+
+            // Validating
+            if (this.input) { this.validate(); }
+        },
+
+        // OBSERVER
+        __hiddenChanged() {
+
+            // Super
+            Polymer.XPInputBehaviorImp.__hiddenChanged.apply(this, arguments);
+
+            // Setting
+            this.async(() => this.checked = this.hidden ? false : this.checked);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleSpace(event) {
+
+            // Focusing
+            if (event.keyCode === 32) { event.preventDefault(); }
+        }
+    };
+
+    Polymer.XPInputCheckedBehavior = [
+        Polymer.XPInputBehavior,
+        Polymer.XPInputCheckedBehaviorImp
+    ];
+</script>
+</head><body></body></html>

@@ -1,0 +1,659 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPInputBehaviorImp = {
+
+        // CLASSES
+        classes: ['input'],
+
+        /*********************************************************************/
+
+        /**
+         * Fired when the input's bindable value is being validated, useful to add custom validation.
+         *
+         * @event xp-input-validate
+         * @param {string} id
+         * @param {string} name
+         * @param {*} value
+         * @bubbles
+         */
+
+        /**
+         * Fired when the input's validity changes.
+         *
+         * @event xp-input-validity
+         * @param {string} id
+         * @param {string} name
+         * @param {boolean} isValid
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Must be redefined to reflect the native input's `value` onto the element.
+         *
+         * @method _commitFrom
+         * @abstract
+         * @private
+         */
+        _commitFrom() {},
+
+        /**
+         * Must be redefined to reflect the element's `tabIndex` to the native input.
+         *
+         * @method _commitIndex
+         * @param {number} index
+         * @abstract
+         * @private
+         */
+        _commitIndex() {},
+
+        /**
+         * Must be redefined to reflect the element's `value` onto the native input.
+         *
+         * @method _commitTo
+         * @abstract
+         * @private
+         */
+        _commitTo() {},
+
+        /**
+         * Must be redefined to inject the native input.
+         *
+         * @method _inject
+         * @abstract
+         * @private
+         */
+        _inject() {},
+
+        /**
+         * Must be redefined to sanitize the native input's `value`.
+         *
+         * @method _sanitize
+         * @param {boolean} [native]
+         * @abstract
+         * @private
+         */
+        _sanitize() {},
+
+        /**
+         * Must be redefined to update the native input's attributes.
+         *
+         * @method _update
+         * @abstract
+         * @private
+         */
+        _update() {},
+
+        /**
+         * Must be redefined to validate the native input's `value`.
+         *
+         * @method _validate
+         * @param {string} [invalidMessage]
+         * @abstract
+         * @private
+         */
+        _validate() {},
+
+        /*********************************************************************/
+
+        /**
+         * Blurs the input.
+         *
+         * @method focus
+         */
+        blur() {
+
+            // Blurring
+            if (this.input && this.input.blur) { this.input.blur(); }
+        },
+
+        /**
+         * Finds the input's label.
+         *
+         * @method findLabel
+         * @returns {Element}
+         */
+        findLabel() {
+
+            // Let
+            let root  = this.id && Polymer.dom(this.domHost ? this.domHost.root : document),
+                found = this.id && root.querySelector(`[for="${this.id}"]`);
+
+            // Finding
+            return found || XP.findParentElement(this, 'label') || null;
+        },
+
+        /**
+         * Focuses the input.
+         *
+         * @method focus
+         */
+        focus() {
+
+            // Focusing
+            if (this.input && this.input.focus) { this.input.focus(); }
+        },
+
+        /**
+         * Overrides the validation message.
+         *
+         * @method override
+         * @param {string} invalidMessage
+         */
+        override(invalidMessage) {
+
+            // Asserting
+            XP.assertArgument(XP.isVoid(invalidMessage) || XP.isString(invalidMessage), 1, 'string');
+
+            // Validating
+            this._validate(invalidMessage);
+        },
+
+        /**
+         * Resets the input.
+         *
+         * @method reset
+         * @param {boolean} [focus = false]
+         */
+        reset(focus) {
+
+            // Resetting
+            this.bindValue = this.memento.bindValue;
+
+            // Ensuring
+            this.ensure('invalid', false);
+            this.ensure('invalidMessage', null);
+
+            // Focusing
+            if (focus) { this.focus(); }
+        },
+
+        /**
+         * Sanitizes the input's value.
+         *
+         * @method sanitize
+         * @param {boolean} [native = false]
+         * @returns {number | string}
+         */
+        sanitize(native) {
+
+            // Sanitizing
+            if (this.input) { this._sanitize(native); }
+
+            return this.value;
+        },
+
+        /**
+         * Updates the native input.
+         *
+         * @method update
+         * @private
+         */
+        update() {
+
+            // Updating
+            if (this.input) { this._update(); }
+
+            // Sanitizing
+            if (this.input) { this.sanitize(); }
+
+            // Validating
+            if (this.input && (this.value || !this.required || XP.isBoolean(this.checked))) { this.validate(); }
+        },
+
+        /**
+         * Validates the input's `value`.
+         *
+         * @method validate
+         */
+        validate() {
+
+            // Validating
+            this._validate();
+
+            // Firing
+            this.fire('xp-input-validate', {id: this.id, name: this.name, value: this.bindValue});
+        },
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'click': '__handleClick'
+        },
+
+        // OBSERVERS
+        observers: [
+            'update(disabled, form, input, name, required, type)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the input will focus on attach.
+             *
+             * @attribute auto-focus
+             * @type boolean
+             * @default false
+             */
+            autoFocus: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The input's bindable value, according to its `type`.
+             *
+             * @attribute bind-value
+             * @type *
+             * @notifies
+             */
+            bindValue: {
+                notify: true,
+                observer: '__bindValueChanged'
+            },
+
+            /**
+             * If set to true, the input is disabled.
+             *
+             * @attribute disabled
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            disabled: {
+                notify: true,
+                observer: '__disabledChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * A custom error message used instead of `invalidMessage`.
+             *
+             * @attribute error
+             * @type string
+             */
+            error: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * If set to true, the input is focused.
+             *
+             * @attribute focused
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            focused: {
+                notify: true,
+                observer: '__focusedChanged',
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The input's form.
+             *
+             * @attribute form
+             * @type Element
+             * @readonly
+             */
+            form: {
+                observer: '__formChanged',
+                readOnly: true,
+                value: null
+            },
+
+            /**
+             * If set to true, the input is hidden.
+             *
+             * @attribute hidden
+             * @type boolean
+             * @default false
+             */
+            hidden: {
+                observer: '__hiddenChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The input's memento.
+             *
+             * @attribute memento
+             * @type Object
+             * @readonly
+             */
+            memento: {
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            },
+
+            /**
+             * If set to true, the input is inline.
+             *
+             * @attribute inline
+             * @type boolean
+             * @default false
+             */
+            inline: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The native input.
+             *
+             * @attribute input
+             * @type Element | Object
+             * @readonly
+             */
+            input: {
+                observer: '__inputChanged',
+                readOnly: true
+            },
+
+            /**
+             * If set to true, the input's value is not valid.
+             *
+             * @attribute invalid
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            invalid: {
+                notify: true,
+                observer: '__invalidChanged',
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The native input's error message.
+             *
+             * @attribute invalid-message
+             * @type string
+             * @notifies
+             * @readonly
+             */
+            invalidMessage: {
+                notify: true,
+                readOnly: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * The input's label.
+             *
+             * @attribute label
+             * @type string
+             */
+            label: {
+                reflectToAttribute: true,
+                type: String,
+                value: null
+            },
+
+            /**
+             * If set to true, the input's bindable value is different from the input's memento.
+             *
+             * @attribute modified
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            modified: {
+                computed: '_computeModified(bindValue, memento.bindValue)',
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The input's name.
+             *
+             * @attribute name
+             * @type string
+             * @default ""
+             */
+            name: {
+                reflectToAttribute: true,
+                type: String,
+                value: ''
+            },
+
+            /**
+             * If set to true, the input is required.
+             *
+             * @attribute required
+             * @type boolean
+             * @default false
+             */
+            required: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The input's type.
+             *
+             * @attribute type
+             * @type string
+             * @default "text"
+             */
+            type: {
+                reflectToAttribute: true,
+                type: String,
+                value: 'text'
+            }
+        },
+
+        /*********************************************************************/
+
+        // COMPUTER
+        _computeModified(post, pre) {
+            return post !== pre;
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __disabledChanged() {
+
+            // Setting
+            if (this.isAttached) { XP.setAttribute(this.findLabel(), 'disabled', this.disabled); }
+        },
+
+        // OBSERVER
+        __focusedChanged() {
+
+            // Setting
+            if (this.isAttached) { XP.setAttribute(this.findLabel(), 'focused', this.focused); }
+        },
+
+        // OBSERVER
+        __formChanged(post, pre) {
+
+            // Listening
+            if (pre) { this.unlisten(pre, 'reset', '__handleReset'); }
+            if (post) { this.listen(post, 'reset', '__handleReset'); }
+        },
+
+        // OBSERVER
+        __hiddenChanged() {
+
+            // Setting
+            if (this.isAttached) { XP.setAttribute(this.findLabel(), 'hidden', this.hidden); }
+        },
+
+        // OBSERVER
+        __inputChanged() {
+
+            // Setting
+            if (this.input) { this.input.adapter = this; } else { return; }
+
+            // Listening
+            if (XP.isElement(this.input)) {
+                this.listen(this.input, 'blur', '__handleBlur');
+                this.listen(this.input, 'change', '__handleChange');
+                this.listen(this.input, 'focus', '__handleFocus');
+            }
+
+            // Mutating
+            Polymer.XPInputBehaviorImp.mutated.apply(this);
+        },
+
+        // OBSERVER
+        __invalidChanged() {
+
+            // Firing
+            this.fire('xp-input-validity', {id: this.id, name: this.name, isValid: this.invalid});
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached() {
+
+            // Let
+            let label = this.findLabel();
+
+            // Ensuring
+            this.ensure('form', XP.findParentElement(this, 'form') || null);
+            this.ensure('invalid', false);
+
+            // Overriding
+            XP.setAttribute(label, 'disabled', this.disabled);
+            XP.setAttribute(label, 'focused', this.focused);
+            XP.setAttribute(label, 'hidden', this.hidden);
+
+            // Listening
+            if (this.scrollIntoViewIfNeeded) { this.listen(window, 'resize', '__handleResize'); }
+        },
+
+        // LISTENER
+        detached() {
+
+            // Ensuring
+            this.ensure('form', null);
+
+            // Unlistening
+            if (this.scrollIntoViewIfNeeded) { this.unlisten(window, 'resize', '__handleResize'); }
+        },
+
+        // LISTENER
+        mutated() {
+
+            // Checking
+            if (this._commitIndex === Polymer.XPInputBehavior._commitIndex) { return; }
+
+            // Disconnecting
+            if (this.indexObserver) { this.indexObserver.disconnect(); }
+
+            // Committing
+            this.async(() => this._commitIndex(Math.max(this.tabIndex, 0)));
+
+            // Removing
+            this.removeAttribute(this.input ? 'tabindex' : '');
+
+            // Observing
+            this.indexObserver = XP.onMutation(this, Polymer.XPInputBehaviorImp.mutated.bind(this), {attributes: true, attributeFilter: ['tabindex']});
+        },
+
+        // LISTENER
+        ready() {
+
+            // Memoizing
+            this.async(() => this.memoize());
+
+            // Injecting
+            this.async(() => this._inject());
+
+            // Committing
+            this.async(() => this._commitTo());
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleBlur(event) {
+
+            // Ensuring
+            this.ensure('focused', false);
+
+            // Refiring
+            if (XP.isEvent(event)) { this.refire(event); }
+        },
+
+        // HANDLER
+        __handleChange() {
+
+            // Committing
+            this._commitFrom();
+        },
+
+        // HANDLER
+        __handleClick() {
+
+            // Focusing
+            if (!this.disabled) { this.focus(); }
+        },
+
+        // HANDLER
+        __handleFocus(event) {
+
+            // Ensuring
+            this.ensure('focused', !this.disabled);
+
+            // Refiring
+            if (XP.isEvent(event)) { this.refire(event); }
+        },
+
+        // HANDLER
+        __handleReset() {
+
+            // Resetting
+            this.async(() => this.reset());
+        },
+
+        // HANDLER
+        __handleResize() {
+
+            // Checking
+            if (!this.focused || !this.scrollIntoViewIfNeeded) { return; }
+
+            // Scrolling
+            this.debounce('scrolling', () => requestAnimationFrame(() => this.scrollIntoViewIfNeeded()));
+        }
+    };
+
+    Polymer.XPInputBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPInputBehaviorImp
+    ];
+</script>
+</head><body></body></html>

@@ -1,0 +1,66 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+</head><body><dom-module id="xp-input-styles">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                cursor: default;
+                display: block;
+                position: relative;
+                text-align: left;
+                -moz-user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-user-select: none;
+                user-select: none;
+                vertical-align: top;
+            }
+
+            :host([disabled]) {
+                pointer-events: none !important;
+            }
+
+            :host([hidden]) {
+                display: none !important;
+            }
+
+            :host([inline]) {
+                display: inline-block;
+                width: 182px;
+            }
+
+            /* SLOTTED */
+
+            :host .holder ::slotted(input),
+            :host .holder ::slotted(textarea) {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                color: inherit;
+                font-family: inherit;
+                font-size: inherit;
+                font-weight: inherit;
+                height: 100%;
+                letter-spacing: inherit;
+                line-height: inherit;
+                margin: 0;
+                outline: 0;
+                padding: 0;
+                resize: none;
+                text-overflow: ellipsis;
+                text-rendering: optimizeLegibility;
+                white-space: nowrap;
+                width: 100%;
+            }
+
+            :host .holder ::slotted(textarea) {
+                white-space: pre-line;
+                word-wrap: break-word;
+            }
+        </style>
+
+    </template>
+
+</dom-module>
+</body></html>

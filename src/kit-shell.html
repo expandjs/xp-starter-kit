@@ -1,4 +1,4 @@
-<link rel="import" href="../bower_components/mat-elements/mat-divider.html">
+<html><head><link rel="import" href="../bower_components/mat-elements/mat-divider.html">
 <link rel="import" href="../bower_components/mat-elements/mat-drawer-panel.html">
 <link rel="import" href="../bower_components/mat-elements/mat-drawer.html">
 <link rel="import" href="../bower_components/mat-elements/mat-header-panel.html">
@@ -12,15 +12,17 @@
 <link rel="import" href="../bower_components/app-behaviors/app-shell-behavior.html">
 <link rel="import" href="../bower_components/app-behaviors/app-view.html">
 <link rel="import" href="kit-behaviors/kit-base-behavior.html">
+<link rel="import" href="kit-dialogs/kit-dialog-settings.html">
 <link rel="import" href="kit-elements/kit-navigation.html">
 <link rel="import" href="kit-icons.html">
+<link rel="import" href="kit-menus/kit-menu-more.html">
 <link rel="import" href="kit-meta.html">
 <link rel="import" href="kit-store.html">
 <link rel="import" href="kit-styles/kit-base-styles.html">
 
-<dom-module id="kit-shell">
+</head><body><dom-module id="kit-shell">
 
-    <template strip-whitespace>
+    <template strip-whitespace="">
 
         <style include="mat-shell-styles kit-base-styles">
 
@@ -43,25 +45,25 @@
 
         </style>
 
-        <!-- STORE -->
+        
         <kit-store></kit-store>
 
-        <!-- DRAWER PANEL -->
+        
         <mat-drawer-panel narrow="{{narrow}}">
 
-            <!-- HEADER PANEL -->
+            
             <mat-header-panel mode="fixed">
 
-                <!-- HEADER -->
+                
                 <mat-header slot="header" background="indigo">
 
-                    <!-- NAV -->
+                    
                     <mat-icon-button class="nav" action="toggle" icon="kit:nav" hidden="{{!narrow}}" target="[[panel]]"></mat-icon-button>
 
-                    <!-- LABEL -->
+                    
                     <span class="label">[[localize(app.route.name)]]</span>
 
-                    <!-- BUTTONS -->
+                    
                     <mat-icon-button class="expandjs" icon-src="/src/kit-images/expandjs.svg" href="https://expandjs.com" target="_blank"></mat-icon-button>
                     <mat-icon-button class="github" icon="kit:github" href="https://github.com/expandjs" target="_blank"></mat-icon-button>
                     <mat-icon-button class="settings" icon="kit:settings" action="inject" target="kit-dialog-settings"></mat-icon-button>
@@ -69,24 +71,24 @@
 
                 </mat-header>
 
-                <!-- VIEW -->
+                
                 <app-view content="[[content]]"></app-view>
 
             </mat-header-panel>
 
-            <!-- DRAWER -->
+            
             <mat-drawer slot="drawer">
 
-                <!-- HEADER PANEL -->
+                
                 <mat-header-panel mode="waterfall">
 
-                    <!-- HEADER -->
+                    
                     <mat-header slot="header" brightness="transparent">
                         <span class="label">[[localize('starterKit')]]</span>
-                        <mat-divider baseline></mat-divider>
+                        <mat-divider baseline=""></mat-divider>
                     </mat-header>
 
-                    <!-- NAVIGATION -->
+                    
                     <kit-navigation></kit-navigation>
 
                 </mat-header-panel>
@@ -188,18 +190,9 @@
 
                 // Ensuring
                 this.ensure('theme', post);
-            },
-
-            /*********************************************************************/
-
-            // LISTENER
-            ready() {
-
-                // Importing
-                this.importHref(this.resolveUrl(`kit-dialogs/kit-dialog-settings.html`));
-                this.importHref(this.resolveUrl(`kit-menus/kit-menu-more.html`));
             }
         });
     </script>
 
 </dom-module>
+</body></html>

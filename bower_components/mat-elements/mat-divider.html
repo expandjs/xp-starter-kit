@@ -1,0 +1,118 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="mat-ink-behavior.html">
+<link rel="import" href="mat-ink-styles.html">
+
+</head><body><dom-module id="mat-divider">
+
+    <template strip-whitespace="">
+
+        <style include="mat-ink-styles">
+            :host {
+                display: block;
+                overflow: hidden;
+                padding: 7px 0 8px 0;
+            }
+
+            :host([baseline]) {
+                bottom: 0;
+                left: 0;
+                padding: 0;
+                position: absolute;
+                right: 0;
+            }
+
+            :host([cap]) {
+                left: 0;
+                padding: 0;
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            :host .line {
+                border-top: 1px solid currentColor;
+            }
+        </style>
+
+        <div class="line"></div>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'mat-divider',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.MATInkBehavior
+            ],
+
+            // CLASSES
+            classes: ['divider'],
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * If set to true, the divider is aligned baseline.
+                 *
+                 * @attribute baseline
+                 * @type boolean
+                 * @default false
+                 */
+                baseline: {
+                    observer: '_baselineChanged',
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * If set to true, the divider is aligned cap.
+                 *
+                 * @attribute cap
+                 * @type boolean
+                 * @default false
+                 */
+                cap: {
+                    observer: '_capChanged',
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * The divider's opacity.
+                 *
+                 * @attribute opacity
+                 * @type string
+                 * @default "divider"
+                 */
+                opacity: {
+                    reflectToAttribute: true,
+                    type: String,
+                    value: 'divider'
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _baselineChanged(post) {
+                this.cap = this.cap && !post;
+            },
+
+            // OBSERVER
+            _capChanged(post) {
+                this.baseline = this.baseline && !post;
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

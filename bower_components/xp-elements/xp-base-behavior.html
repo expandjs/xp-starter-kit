@@ -1,0 +1,493 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+
+<script>
+    Polymer.XPBaseBehavior = {
+
+        /**
+         * Adds `value` at the end of an array, if it doesn't already exist, and returns the provided `value`.
+         *
+         * @method append
+         * @param {string} path
+         * @param {*} value
+         * @param {Element} [target]
+         * @returns {*}
+         */
+        append(path, value, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+            XP.assertOption(XP.isArray((target || this).get(path)), path, 'Array');
+
+            // Let
+            let element = target || this,
+                array   = XP.get(element, path);
+
+            // Appending
+            if (array.indexOf(value) < 0) { element.push(path, value); }
+
+            return value;
+        },
+
+        /**
+         * Set `value` at the specified `path`, creating it if not exists.
+         *
+         * @method ensure
+         * @param {string} path
+         * @param {*} value
+         * @param {Element} [target]
+         */
+        ensure(path, value, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+
+            // Let
+            let element = target || this,
+                current = XP.get(element, path),
+                setter  = `_set${XP.capitalize(path)}`;
+
+            // Preventing
+            if (value === current || (value !== value && current !== current)) { return; }
+
+            // Setting
+            if (!element[setter]) { XP.set(element, path, value); } else { return element[setter](value); }
+
+            // Notifying
+            if (element.notifyPath) { element.notifyPath(path, value); }
+        },
+
+        /**
+         * Fires a custom event.
+         *
+         * @method fire
+         * @param {string} type
+         * @param {Object} [detail]
+         * @param {Object} [options]
+         *   @param {boolean} [options.bubbles = true]
+         *   @param {boolean} [options.cancelable = false]
+         *   @param {Node} [options.node]
+         * @returns {Event}
+         */
+        fire(type, detail, options) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(type, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(detail) || XP.isObject(detail), 2, 'Object');
+            XP.assertArgument(XP.isVoid(options) || XP.isObject(options), 3, 'Object');
+
+            // Preventing
+            if (Polymer.Base && Polymer.Base.fire) { return Polymer.Base.fire.apply(this, arguments); }
+
+            // Preparing
+            detail  = detail  || {};
+            options = options || {};
+
+            // Defaults
+            options.node       = options.node || this;
+            options.bubbles    = XP.isDefined(options.bubbles) ? !!options.bubbles : true;
+            options.cancelable = XP.isDefined(options.cancelable) ? !!options.cancelable : false;
+
+            // Let
+            let event = Object.assign(new Event(type, options), {detail: detail});
+
+            // Dispatching
+            options.node.dispatchEvent(event);
+
+            // Returning
+            return event;
+        },
+
+        /**
+         * Gets the element that has fired the `event`.
+         *
+         * @method firer
+         * @param {Event} event
+         * @returns {Element}
+         */
+        firer(event) {
+
+            // Asserting
+            XP.assertArgument(XP.isEvent(event), 1, 'Event');
+
+            // Finding
+            return Polymer.dom(event).rootTarget;
+        },
+
+        /**
+         * Gets the index at which the first occurrence of `value` is found in `array`.
+         *
+         * @method indexOf
+         * @param {string} path
+         * @param {*} value
+         * @param {Element} [target]
+         * @returns {*}
+         */
+        indexOf(path, value, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+            XP.assertOption(XP.isArray((target || this).get(path)), path, 'Array');
+
+            // Let
+            let element = target || this,
+                array   = XP.get(element, path);
+
+            // Finding
+            return array.indexOf(value);
+        },
+
+        /**
+         * Programmatically binds properties of different elements.
+         *
+         * @method linkProperties
+         * @param {string} to
+         * @param {string} from
+         * @param {Element} [target]
+         * @param {boolean} [notifyOnly = false]
+         */
+        linkProperties(to, from, target, notifyOnly) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(to, true), 1, 'string');
+            XP.assertArgument(XP.isString(from, true), 2, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+
+            // Let
+            let linker     = this,
+                element    = target || this,
+                handleTo   = handler.bind(this),
+                handleFrom = handler.bind(element);
+
+            // Handler
+            function handler(event) {
+
+                // Let
+                let other    = linker === this ? element : linker,
+                    property = linker === this ? from : to,
+                    path     = event.detail.path || '',
+                    value    = event.detail.value;
+
+                // Checking
+                if (linker.firer(event) !== this) { return; }
+
+                // Notifying
+                if (path) { return other.notifyPath(path.replace(property === from ? to : from, property), value); }
+
+                // Ensuring
+                if (!notifyOnly) { linker.ensure(property, value, other); }
+            }
+
+            // Checking
+            if (this._boundProperties.find(binding => binding.to === to && binding.from === from && binding.target === element)) { return; }
+
+            // Pushing
+            this._boundProperties.push({to: to, from: from, target: element, handleTo: handleTo, handleFrom: handleFrom});
+
+            // Listening
+            this.addEventListener(`${XP.kebabCase(to)}-changed`, handleTo);
+            element.addEventListener(`${XP.kebabCase(from)}-changed`, handleFrom);
+        },
+
+        /**
+         * Notifies everyone in array.
+         *
+         * @method notifyAll
+         * @param {Array} elements
+         * @param {string} path
+         * @param {*} value
+         */
+        notifyAll(elements, path, value) {
+
+            // Asserting
+            XP.assertArgument(XP.isArray(elements), 1, 'Array');
+            XP.assertArgument(XP.isString(path, true), 2, 'string');
+
+            // Notifying
+            elements.forEach(element => element.notifyPath(path, value));
+        },
+
+        /**
+         * Substitutes all items of `array` with ones from `values`, and returns the modified `array`.
+         * The substitution happens only if necessary.
+         *
+         * @method overwrite
+         * @param {string} path
+         * @param {Array} values
+         * @param {Element} [target]
+         * @returns {Array}
+         */
+        overwrite(path, values, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+            XP.assertArgument(XP.isArray(values), 2, 'Array');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+
+            // Let
+            let element = target || this,
+                array   = XP.get(element, path);
+
+            // Ensuring
+            if (XP.isVoid(array)) { this.ensure(path, array = [], element); }
+
+            // Checking
+            if (array.length === values.length && !array.reduce((differs, val, i) => differs || val !== values[i], false)) { return array; }
+
+            // Splicing
+            element.splice.apply(element, [path, 0, array.length].concat(values));
+
+            return array;
+        },
+
+        /**
+         * Useful to prevent unwanted events.
+         *
+         * @method preventDefault
+         * @param {Event} event
+         */
+        preventDefault(event) {
+
+            // Asserting
+            XP.assertArgument(XP.isEvent(event), 1, 'Event');
+
+            // Preventing
+            event.preventDefault();
+        },
+
+        /**
+         * Useful to prevent unwanted selection on `click` events.
+         *
+         * @method preventSelection
+         * @param {Event} event
+         */
+        preventSelection(event) {
+
+            // Asserting
+            XP.assertArgument(XP.isEvent(event, 'click'), 1, 'Event');
+
+            // Preventing
+            Object.assign(event, {selectionPrevented: true});
+        },
+
+        /**
+         * Removes all instances of `value` from `array`.
+         *
+         * @method pull
+         * @param {string} path
+         * @param {*} value
+         * @param {Element} [target]
+         * @returns {Array}
+         */
+        pull(path, value, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+            XP.assertOption(XP.isArray((target || this).get(path)), path, 'Array');
+
+            // Let
+            let element = target || this,
+                array   = XP.get(element, path);
+
+            // Splicing
+            for (let i = array.length - 1; i >= 0; i -= 1) { if (array[i] === value) { element.splice(path, i, 1); } }
+
+            return array;
+        },
+
+        /**
+         * Refires a custom event.
+         *
+         * @method refire
+         * @param {Event} event
+         * @param {string} [type]
+         * @param {Object} [detail]
+         * @returns {Event}
+         */
+        refire(event, type, detail) {
+
+            // Preparing
+            if (XP.isObject(type)) { detail = type; type = undefined; }
+
+            // Asserting
+            XP.assertArgument(XP.isEvent(event), 1, 'Event');
+            XP.assertArgument(XP.isVoid(type) || XP.isString(type, true), 2, 'string');
+            XP.assertArgument(XP.isVoid(detail) || XP.isObject(detail), 3, 'Object');
+
+            // Stopping
+            event.stopPropagation();
+
+            // Let
+            let fired = this.fire(type || event.type, Object.assign({}, event.detail, detail), {cancelable: event.cancelable});
+
+            // Preventing
+            if (fired.defaultPrevented) { event.preventDefault(); }
+
+            return fired;
+        },
+
+        /**
+         * Programmatically unbinds properties of different elements.
+         *
+         * @method unlinkProperties
+         * @param {string} to
+         * @param {string} from
+         * @param {Element} [target]
+         */
+        unlinkProperties(to, from, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(to, true), 1, 'string');
+            XP.assertArgument(XP.isString(from, true), 2, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
+
+            // Let
+            let element = target || this,
+                index   = this._boundProperties.findIndex(binding => binding.to === to && binding.from === from && binding.target === element),
+                link    = this._boundProperties[index];
+
+            // Splicing
+            if (link) { this._boundProperties.splice(index, 1); } else { return; }
+
+            // Unlistening
+            this.removeEventListener(`${XP.kebabCase(to)}-changed`, link.handleTo);
+            element.removeEventListener(`${XP.kebabCase(from)}-changed`, link.handleFrom);
+        },
+
+        /**
+         * Unset the specified `path`, if it exists.
+         *
+         * @method unset
+         * @param {string} path
+         * @param {Element} [target]
+         */
+        unset(path, target) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 2, 'Element');
+
+            // Let
+            let element = target || this,
+                setter  = `_set${XP.capitalize(path)}`;
+
+            // Setting
+            if (!element[setter]) { /*XP.unset(element, path);*/ } else { return element[setter](undefined); }
+
+            // Notifying
+            if (element.notifyPath) { element.notifyPath(path, undefined); }
+        },
+
+        /**
+         * Invokes `func` after `wait` milliseconds.
+         * A third parameter can be passed to use ticks instead of milliseconds.
+         *
+         * @method wait
+         * @param {Function} func
+         * @param {number} [wait = 0]
+         * @param {boolean} [ticks = false]
+         */
+        wait(func, wait, ticks) {
+
+            // Asserting
+            XP.assertArgument(XP.isFunction(func), 1, 'Function');
+            XP.assertArgument(XP.isVoid(wait) || XP.isIndex(wait), 2, 'number');
+
+            // Async
+            XP.delay(func.bind(this), wait, ticks);
+        },
+
+        /**
+         * Invokes `func` for each behavior and then for the element itself.
+         *
+         * @method walk
+         * @param {Function} func
+         */
+        walk(func) {
+
+            // Asserting
+            XP.assertArgument(XP.isFunction(func), 1, 'Function');
+
+            // Invoking
+            this.behaviors.forEach(func = func.bind(this));
+
+            // Calling
+            func(this);
+        },
+
+        /*********************************************************************/
+
+        /**
+         * Returns the provided `value`. Useful to setup a direct computation.
+         *
+         * @method _computeFrom
+         * @param {*} value
+         * @return {*} value
+         * @private
+         */
+        _computeFrom(value) {
+            return value;
+        },
+
+        /**
+         * Returns `true` if the provided `value` is empty.
+         *
+         * @method _isEmpty
+         * @param {*} value
+         * @returns {boolean}
+         * @private
+         */
+        _isEmpty(value) {
+            return XP.isEmpty(value);
+        },
+
+        /**
+         * Returns `true` if the provided values are equal.
+         *
+         * @method _isEqual
+         * @param {*} value1
+         * @param {*} value2
+         * @returns {boolean}
+         * @private
+         */
+        _isEqual(value1, value2) {
+            return XP.isEqual(value1, value2);
+        },
+
+        /**
+         * Returns `true` if the provided `value` is truthy.
+         *
+         * @method _isTruthy
+         * @param {*} value
+         * @return {boolean}
+         * @private
+         */
+        _isTruthy(value) {
+            return !!value;
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        created() {
+
+            // Setting
+            this._boundProperties = [];
+        },
+
+        // LISTENER
+        ready() {
+
+            // Walking
+            this.walk(behavior => {
+                Array.from(behavior.classes || []).forEach(value => this.classList.add(value));
+                Object.keys(behavior.properties || {}).forEach(key => behavior.properties[key].selector && !this[key] && this.ensure(key, Polymer.dom(this.root).querySelector(behavior.properties[key].selector) || null));
+            });
+        }
+    };
+</script>
+</head><body></body></html>

@@ -1,0 +1,54 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-selector-behavior.html">
+
+<script>
+    Polymer.XPSelectorMultiBehaviorImp = {
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, multi selection is allowed.
+             *
+             * @attribute multi
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            multi: {
+                observer: '__multiChanged',
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __multiChanged() {
+
+            // Multi
+            if (this.multi) {
+                this.ensure('selectedData', XP.isVoid(this.selectedData) ? [] : [this.selectedData]);
+                this.ensure('selectedItem', XP.isVoid(this.selectedItem) ? [] : [this.selectedItem]);
+                this.ensure('selectedIndex', XP.isVoid(this.selectedIndex) ? [] : [this.selectedIndex]);
+            }
+
+            // Single
+            if (!this.multi) {
+                this.ensure('selectedData', XP.isArray(this.selectedData) ? null : this.selectedData);
+                this.ensure('selectedItem', XP.isArray(this.selectedItem) ? null : this.selectedItem);
+                this.ensure('selectedIndex', XP.isArray(this.selectedIndex) ? null : this.selectedIndex);
+            }
+        }
+    };
+
+    Polymer.XPSelectorMultiBehavior = [
+        Polymer.XPSelectorBehavior,
+        Polymer.XPSelectorMultiBehaviorImp
+    ];
+</script>
+</head><body></body></html>

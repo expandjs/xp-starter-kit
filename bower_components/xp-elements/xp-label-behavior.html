@@ -1,0 +1,126 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPLabelBehaviorImp = {
+
+        // CLASSES
+        classes: ['label'],
+
+        /*********************************************************************/
+
+        /**
+         * Finds the labeled input.
+         *
+         * @method findInput
+         * @returns {Element}
+         */
+        findInput() {
+
+            // Let
+            let root      = this.domHost && Polymer.dom(this.domHost.root),
+                input     = this.for && (root ? root.querySelector(`#${this.for}`) : document.getElementById(this.for)),
+                selectors = this.for ? [] : this.selectors,
+                wrapped   = !input && Polymer.dom(this);
+
+            // Finding
+            return input || selectors.reduce((input, selector) => input || wrapped.querySelector(selector), null);
+        },
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'click': '__handleFocus'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the element is disabled.
+             *
+             * @attribute disabled
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            disabled: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the element is focused.
+             *
+             * @attribute focused
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            focused: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The labeled input's id.
+             *
+             * @attribute for
+             * @type string
+             * @default ""
+             */
+            for: {
+                reflectToAttribute: true,
+                type: String,
+                value: ''
+            },
+
+            /**
+             * If set to true, the element is hidden.
+             *
+             * @attribute hidden
+             * @type boolean
+             * @default false
+             */
+            hidden: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /**
+         * The list of possible inputs.
+         *
+         * @property selectors
+         * @type Array
+         * @default ["textarea", "select", "input"]
+         * @readonly
+         */
+        selectors: ['textarea', 'select', 'input'],
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleFocus(event) {
+
+            // Let
+            let input = !event.button && this.findInput();
+
+            // Focusing
+            if (input) { input.focus(); input.click(); }
+        }
+    };
+
+    Polymer.XPLabelBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPLabelBehaviorImp
+    ];
+</script>
+</head><body></body></html>

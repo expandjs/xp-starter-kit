@@ -1,12 +1,12 @@
-<link rel="import" href="../../bower_components/mat-elements/mat-item.html">
+<html><head><link rel="import" href="../../bower_components/mat-elements/mat-item.html">
 <link rel="import" href="../../bower_components/mat-elements/mat-list.html">
 <link rel="import" href="../../bower_components/app-behaviors/app-receiver-behavior.html">
 <link rel="import" href="../kit-behaviors/kit-base-behavior.html">
 <link rel="import" href="../kit-styles/kit-base-styles.html">
 
-<dom-module id="kit-navigation">
+</head><body><dom-module id="kit-navigation">
 
-    <template strip-whitespace>
+    <template strip-whitespace="">
 
         <style include="kit-base-styles">
 
@@ -20,7 +20,7 @@
 
         </style>
 
-        <!-- LIST -->
+        
         <mat-list index-attribute="href" selected-index="[[app.route.pathname]]">
             <template is="dom-repeat" items="[[app.meta.routes]]">
                 <mat-item href="[[item.path]]" label="[[localize(item.name)]]"></mat-item>
@@ -29,23 +29,7 @@
 
     </template>
 
-    <script>
-        Polymer({
-
-            // ELEMENT
-            is: 'kit-navigation',
-
-            // BEHAVIORS
-            behaviors: [
-                Polymer.APPReceiverBehavior,
-                Polymer.KITBaseBehavior
-            ],
-
-            // CLASSES
-            classes: [
-                'navigation'
-            ]
-        });
-    </script>
+    <script>Polymer({is:"kit-navigation",behaviors:[Polymer.APPReceiverBehavior,Polymer.KITBaseBehavior],classes:["navigation"]});</script>
 
 </dom-module>
+</body></html>

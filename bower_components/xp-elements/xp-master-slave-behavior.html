@@ -1,0 +1,142 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPMasterSlaveBehaviorImp = {
+
+        /**
+         * Fired on attach if the master map is not empty.
+         *
+         * @event xp-slave
+         * @param {Object} master
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'xp-slave': '__handleSlave'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * A map used to bind masters to their respective css selector.
+             *
+             * @attribute master
+             * @type Object
+             * @readonly
+             */
+            master: {
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            },
+
+            /**
+             * A map used to bind slaves arrays to their respective css selector.
+             *
+             * @attribute slave
+             * @type Object
+             * @readonly
+             */
+            slave: {
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            },
+
+            /**
+             * A map used to bind slaves arrays to their respective css selector.
+             *
+             * @attribute slaves
+             * @type Object
+             * @readonly
+             */
+            slaves: {
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached() {
+
+            // Checking
+            if (!XP.isObject(this.master, true)) { return; }
+
+            // Firing
+            this.async(() => this.fire('xp-slave', {firer: this, master: XP.clone(this.master)}));
+        },
+
+        // LISTENER
+        detached() {
+
+            // Iterating
+            this.async(() => Object.keys(this.master).forEach(property => {
+
+                // Let
+                let master = this[property];
+
+                // Decoupling slaves
+                if (master) { Object.keys(master.slaves).forEach(property => master.pull(property, this)); }
+
+                // Decoupling slave
+                if (master) { Object.keys(master.slave).forEach(property => master[property] === this && master.ensure(property, null)); }
+
+                // Decoupling master
+                this.ensure(property, null);
+            }));
+        },
+
+        // LISTENER
+        ready() {
+
+            // Walking
+            this.walk(behavior => {
+                Object.keys(behavior.properties || {}).forEach(key => {
+                    if (behavior.properties[key].master) { this.master[key] = behavior.properties[key].master; }
+                    if (behavior.properties[key].slave)  { this.slave[key]  = behavior.properties[key].slave; }
+                    if (behavior.properties[key].slaves) { this.slaves[key] = behavior.properties[key].slaves; }
+                });
+            });
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleSlave(event) {
+
+            // Let
+            let firer  = this.firer(event),
+                master = event.detail.master;
+
+            // Checking
+            if (firer === this || !Object.keys(master).some(property => XP.matches(this, master[property]))) { return; }
+
+            // Coupling master
+            Object.keys(master).forEach(property => XP.matches(this, master[property]) && !this.ensure(property, this, firer) && delete master[property]);
+
+            // Coupling slaves
+            Object.keys(this.slaves).forEach(property => XP.matches(firer, this.slaves[property]) && this.append(property, firer));
+
+            // Coupling slave
+            Object.keys(this.slave).forEach(property => XP.matches(firer, this.slave[property]) && this.ensure(property, firer));
+
+            // Stopping
+            if (!XP.isObject(master, true)) { event.stopPropagation(); }
+        }
+    };
+
+    Polymer.XPMasterSlaveBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPMasterSlaveBehaviorImp
+    ];
+</script>
+</head><body></body></html>

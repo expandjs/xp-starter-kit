@@ -1,0 +1,34 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+</head><body><dom-module id="xp-icon-styles">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: inline-block;
+                height: 24px;
+                position: static;
+                width: 24px;
+            }
+
+            :host([empty]) {
+                display: none !important;
+            }
+
+            /* SLOTTED */
+
+            :host ::slotted(:not(template)) {
+                border-radius: inherit;
+                box-sizing: border-box;
+                display: block;
+                fill: currentcolor;
+                height: 100%;
+                width: 100%;
+            }
+        </style>
+
+    </template>
+
+</dom-module>
+</body></html>

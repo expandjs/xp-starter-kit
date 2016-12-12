@@ -1,0 +1,70 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPWrapperBehaviorImp = {
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * A map used to bind attributes arrays to their respective owner.
+             *
+             * @attribute wrapped
+             * @type Object
+             * @readonly
+             */
+            wrapped: {
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __wrappedChanged(post) {
+
+            // Let
+            let property   = post && Object.keys(this.__data__).find(key => this.__data__[key] === post && key.indexOf('.') < 0),
+                attributes = property && this.wrapped[property];
+
+            // Checking
+            if (!attributes) { return; }
+
+            // Iterating
+            attributes.forEach(attribute => {
+
+                // Let
+                let to   = XP.isUseful(this[attribute]) ? post : this,
+                    from = XP.isUseful(this[attribute]) ? this : post;
+
+                // Ensuring
+                this.ensure(attribute, from[attribute], to);
+
+                // Linking
+                this.linkProperties(attribute, attribute, post);
+            });
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        ready() {
+
+            // Let
+            let root = Polymer.dom(this.root);
+
+            // Wrapping
+            this.async(() => Object.keys(this.wrapped).forEach(key => this[key] || this.ensure(key, root.querySelector(`.${XP.kebabCase(key)}`))));
+        }
+    };
+
+    Polymer.XPWrapperBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPWrapperBehaviorImp
+    ];
+</script>
+</head><body></body></html>

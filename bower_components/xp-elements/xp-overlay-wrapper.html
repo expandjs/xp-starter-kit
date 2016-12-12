@@ -1,0 +1,178 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-targeter-behavior.html">
+<link rel="import" href="xp-wrapper-behavior.html">
+
+<script>
+    Polymer.XPOverlayWrapperImp = {
+
+        // CLASSES
+        classes: ['overlay'],
+
+        /*********************************************************************/
+
+        /**
+         * Fired on hide.
+         *
+         * @event xp-hide
+         * @bubbles
+         */
+
+        /**
+         * Fired on show.
+         *
+         * @event xp-show
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Aligns the overlay.
+         *
+         * @method align
+         */
+        align() {
+            return XP.apply(this.overlay, 'align', arguments);
+        },
+
+        /**
+         * Hides the overlay.
+         *
+         * @method hide
+         */
+        hide() {
+            return XP.apply(this.overlay, 'hide', arguments);
+        },
+
+        /**
+         * Shows the overlay.
+         *
+         * @method show
+         */
+        show() {
+            return XP.apply(this.overlay, 'show', arguments);
+        },
+
+        /**
+         * Toggles the overlay.
+         *
+         * @method toggle
+         */
+        toggle() {
+            return XP.apply(this.overlay, 'toggle', arguments);
+        },
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__overlayChanged(overlay)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The overlay's callback.
+             *
+             * @attribute callback
+             * @type Function
+             * @notifies
+             */
+            callback: {
+                notify: true,
+                type: Function,
+                value: null
+            },
+
+            /**
+             * The overlay's context.
+             *
+             * @attribute data
+             * @type *
+             * @notifies
+             */
+            context: {
+                notify: true,
+                value: null
+            },
+
+            /**
+             * The overlay's data.
+             *
+             * @attribute data
+             * @type *
+             * @notifies
+             */
+            data: {
+                notify: true,
+                value: null
+            },
+
+            /**
+             * The overlay element.
+             *
+             * @attribute overlay
+             * @type Element
+             * @notifies
+             * @readonly
+             */
+            overlay: {
+                notify: true,
+                observer: '__wrappedChanged',
+                readOnly: true
+            },
+
+            /**
+             * If set to true, the overlay is showed.
+             *
+             * @attribute showed
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            showed: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __overlayChanged(post) {
+
+            // Listening
+            if (post) { this.listen(post, 'xp-hide', '__handleRefire'); }
+            if (post) { this.listen(post, 'xp-show', '__handleRefire'); }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        ready() {
+
+            // Mapping
+            this.wrapped.overlay = ['callback', 'context', 'data', 'showed', 'target'];
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleRefire(event) {
+
+            // Refiring
+            if (this.overlay === this.firer(event)) { this.refire(event); }
+        }
+    };
+
+    Polymer.XPOverlayWrapper = [
+        Polymer.XPTargeterBehavior,
+        Polymer.XPWrapperBehavior,
+        Polymer.XPOverlayWrapperImp
+    ];
+</script>
+</head><body></body></html>

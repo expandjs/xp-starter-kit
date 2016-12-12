@@ -1,0 +1,91 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-meta-behavior.html">
+
+</head><body><dom-module id="app-i18n">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+        <slot></slot>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'app-i18n',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPMetaBehavior
+            ],
+
+            /*********************************************************************/
+
+            /**
+             * Fired when the i18n has been parsed.
+             *
+             * @event app-i18n
+             * @param {string} namespace
+             * @param {string} locale
+             * @param {Object} data
+             * @bubbles
+             */
+
+            /*********************************************************************/
+
+            // OBSERVERS
+            observers: [
+                '_dataChanged(data)'
+            ],
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The i18n's locale.
+                 *
+                 * @attribute locale
+                 * @type string
+                 */
+                locale: {
+                    type: String
+                },
+
+                /**
+                 * The i18n's namespace.
+                 *
+                 * @attribute namespace
+                 * @type string
+                 */
+                namespace: {
+                    type: String
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _dataChanged() {
+
+                // Checking
+                if (!this.data || !this.locale || !this.namespace) { return; }
+
+                // Setting
+                XP.set(window, `app.${this.namespace}.i18n.${this.locale}`, XP.freezeDeep(this.data));
+
+                // Firing
+                this.fire(`app-i18n`, {data: this.data, locale: this.locale, namespace: this.namespace}, {node: window});
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

@@ -1,0 +1,88 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-anchor-behavior.html">
+<link rel="import" href="../xp-elements/xp-anchor-styles.html">
+<link rel="import" href="../xp-elements/xp-tab-behavior.html">
+<link rel="import" href="../xp-elements/xp-tab-styles.html">
+<link rel="import" href="mat-icon.html">
+<link rel="import" href="mat-icon-button.html">
+<link rel="import" href="mat-icons.html">
+<link rel="import" href="mat-ink.html">
+<link rel="import" href="mat-pressed-behavior.html">
+<link rel="import" href="mat-pressed-styles.html">
+<link rel="import" href="mat-typography.html">
+
+</head><body><dom-module id="mat-tab">
+
+    <template strip-whitespace="">
+
+        <style include="mat-pressed-styles xp-anchor-styles xp-tab-styles">
+            :host {
+                @apply --mat-font-button;
+                height: 48px;
+                line-height: 50px;
+                max-width: 264px;
+                min-width: 160px;
+                opacity: 0.6;
+            }
+
+            :host([active]) {
+                opacity: 1;
+            }
+
+            :host .anchor {
+                text-decoration: none !important;
+            }
+
+            :host .main {
+                padding: 0 24px;
+            }
+
+            :host .icon {
+                margin: 12px 0;
+            }
+
+            :host([label]:not([label=""])) .icon {
+                float: left;
+                margin: 12px 12px 12px -12px;
+            }
+
+            :host([label=""]) .label,
+            :host(:not([label])) .label {
+                display: none !important;
+            }
+
+            :host .icon:not([empty]) ~ .label {
+                text-align: left;
+            }
+
+            /* TABLET */
+
+            @media (max-width: 960px) {
+
+                :host {
+                    min-width: 72px;
+                }
+
+                :host .main {
+                    padding: 0 12px;
+                }
+            }
+        </style>
+
+        <a class="anchor" tabindex="-1" on-click="__handleAnchor">
+            <div class="main">
+                <mat-icon class="icon" name="[[icon]]" src="[[iconSrc]]"></mat-icon>
+                <div class="label">[[label]]</div>
+            </div>
+        </a>
+
+        
+        
+
+    </template>
+
+    <script>Polymer({is:"mat-tab",behaviors:[Polymer.MATPressedBehavior,Polymer.XPAnchorBehavior,Polymer.XPTabBehavior],properties:{icon:{reflectToAttribute:!0,type:String},iconSrc:{reflectToAttribute:!0,type:String}}});</script>
+
+</dom-module>
+</body></html>

@@ -1,0 +1,154 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-master-slave-behavior.html">
+
+</head><body><dom-module id="xp-media-query">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: none !important;
+            }
+        </style>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            // ELEMENT
+            is: 'xp-media-query',
+
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPMasterSlaveBehavior
+            ],
+
+            // CLASSES
+            classes: ['media-query'],
+
+            /*********************************************************************/
+
+            /**
+             * Fired when the query's match state changes.
+             *
+             * @event xp-media-change
+             * @param {boolean} matched
+             * @bubbles
+             */
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The master group.
+                 *
+                 * @attribute group
+                 * @type Element
+                 * @readonly
+                 */
+                group: {
+                    master: '.media-queries',
+                    readOnly: true,
+                    value: null
+                },
+
+                /**
+                 * If set to true, the current media query is matched.
+                 *
+                 * @attribute matched
+                 * @type boolean
+                 * @default false
+                 * @notifies
+                 * @readonly
+                 */
+                matched: {
+                    notify: true,
+                    readOnly: true,
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * The media query's matcher.
+                 *
+                 * @attribute matcher
+                 * @type Object
+                 * @readonly
+                 */
+                matcher: {
+                    readOnly: true
+                },
+
+                /**
+                 * The media query's name.
+                 *
+                 * @attribute name
+                 * @type string
+                 * @default ""
+                 */
+                name: {
+                    reflectToAttribute: true,
+                    type: String,
+                    value: ''
+                },
+
+                /**
+                 * The CSS media query to evaluate.
+                 *
+                 * @attribute query
+                 * @type string
+                 */
+                query: {
+                    observer: '_queryChanged',
+                    type: String
+                }
+            },
+
+            /*********************************************************************/
+
+            // OBSERVER
+            _queryChanged(post) {
+
+                // Unlistening
+                if (this.matcher) { this.matcher.removeListener(this._handleQuery); }
+
+                // Ensuring
+                this.ensure('matcher', window.matchMedia(post));
+
+                // Listening
+                if (this.matcher) { this.matcher.addListener(this._handleQuery); }
+
+                // Handling
+                this._handleQuery(this.matcher);
+            },
+
+            /*********************************************************************/
+
+            // LISTENER
+            created() {
+
+                // Binding
+                this._handleQuery = this._handleQuery.bind(this);
+            },
+
+            /*********************************************************************/
+
+            // HANDLER
+            _handleQuery(event) {
+
+                // Ensuring
+                this.ensure('matched', event.matches);
+
+                // Firing
+                this.wait(this.fire.bind(this, 'xp-media-change', {matched: this.matched}));
+            }
+        });
+    </script>
+
+</dom-module>
+</body></html>

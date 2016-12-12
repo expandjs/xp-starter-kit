@@ -1,0 +1,131 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPFocusedBehaviorImp = {
+
+        // LISTENERS
+        listeners: {
+            blur: '__handleBlur',
+            focus: '__handleFocus'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the element is disabled.
+             *
+             * @attribute disabled
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            disabled: {
+                notify: true,
+                observer: '__disabledChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the element is focused.
+             *
+             * @attribute focused
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            focused: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the element is hidden.
+             *
+             * @attribute hidden
+             * @type boolean
+             * @default false
+             */
+            hidden: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /**
+         * The last value of tabIndex.
+         *
+         * @property tabIndexLast
+         * @type number
+         * @default 0
+         * @readonly
+         */
+        tabIndexLast: 0,
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __disabledChanged() {
+
+            // Focusing
+            this.ensure('focused', this.focused && !this.disabled);
+
+            // Setting
+            this.tabIndexLast = this.disabled ? this.tabIndex : this.tabIndexLast;
+            this.tabIndex     = this.disabled ? -1 : this.tabIndexLast;
+
+            // Styling
+            this.style.pointerEvents = this.disabled ? 'none' : '';
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        mutated() {
+
+            // Setting
+            this.tabIndex = this.disabled ? -1 : this.tabIndex || 0;
+
+            // Observing
+            XP.onMutation(this, Polymer.XPFocusedBehaviorImp.mutated.bind(this), {attributes: true, attributeFilter: ['tabindex']});
+        },
+
+        // LISTENER
+        ready() {
+
+            // Mutating
+            Polymer.XPFocusedBehaviorImp.mutated.apply(this);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleBlur() {
+
+            // Ensuring
+            this.ensure('focused', false);
+        },
+
+        // HANDLER
+        __handleFocus() {
+
+            // Ensuring
+            this.ensure('focused', !this.disabled);
+        }
+    };
+
+    Polymer.XPFocusedBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPFocusedBehaviorImp
+    ];
+</script>
+</head><body></body></html>

@@ -1,0 +1,45 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-overlay-wrapper.html">
+
+<script>
+    Polymer.XPMenuWrapperImp = {
+
+        // CLASSES
+        classes: ['menu'],
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The found items.
+             *
+             * @attribute items
+             * @type Array
+             * @notifies
+             * @readonly
+             */
+            items: {
+                notify: true,
+                readOnly: true
+            }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        ready() {
+
+            // Mapping
+            this.wrapped.overlay.push('items');
+        }
+    };
+
+    Polymer.XPMenuWrapper = [
+        Polymer.XPOverlayWrapper,
+        Polymer.XPMenuWrapperImp
+    ];
+</script>
+</head><body></body></html>

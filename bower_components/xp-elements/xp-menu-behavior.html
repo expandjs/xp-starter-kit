@@ -1,0 +1,153 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-finder-behavior.html">
+<link rel="import" href="xp-master-slave-behavior.html">
+<link rel="import" href="xp-overlay-behavior.html">
+
+<script>
+    Polymer.XPMenuBehaviorImp = {
+
+        // CLASSES
+        classes: ['menu'],
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'xp-activate': '__handleOption'
+        },
+
+        // OBSERVERS
+        observers: [
+            '__foundChanged(found)',
+            '__submenusChanged(submenus.splices)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, clicking outside will close the overlay.
+             *
+             * @attribute auto-hide
+             * @type boolean
+             * @default true
+             */
+            autoHide: {
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * If set to true, the menu is a cascade one.
+             *
+             * @attribute cascade
+             * @type boolean
+             * @default false
+             */
+            cascade: {
+                observer: '__cascadeChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the items will be deep searched.
+             *
+             * @attribute find-deep
+             * @type boolean
+             * @default true
+             * @readonly
+             */
+            findDeep: {
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The selector used to recognize items.
+             *
+             * @attribute item-selector
+             * @type string
+             * @default ".option"
+             */
+            itemSelector: {
+                type: String,
+                value: '.option'
+            },
+
+            /**
+             * The slave submenus.
+             *
+             * @attribute submenus
+             * @type Array
+             * @readonly
+             */
+            submenus: {
+                readOnly: true,
+                slaves: '.submenu',
+                value() { return []; }
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __cascadeChanged() {
+
+            // Setting
+            if (this.cascade && (this.position === 'over' || !this.position)) { this.position = 'baseline'; }
+        },
+
+        // OBSERVER
+        __foundChanged() {
+
+            // Hiding
+            if (!this.found) { this.hide(); }
+        },
+
+        // OBSERVER
+        __showedChanged() {
+
+            // Super
+            Polymer.XPOverlayBehaviorImp.__showedChanged.apply(this, arguments);
+
+            // Checking
+            if (this.showed) { return this.async(() => this.found || this.hide()); }
+
+            // Hiding
+            Array.from(this.submenus || []).forEach(submenu => submenu.hide());
+        },
+
+        // OBSERVER
+        __submenusChanged() {
+
+            // Setting
+            if (this.submenus.length) { this.cascade = true; }
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleOption(event) {
+
+            // Let
+            let firer = this.firer(event);
+
+            // Checking
+            if (firer.toggleable || !firer.classList.contains('option')) { return; }
+
+            // Frame 1
+            requestAnimationFrame(() => event.defaultPrevented || this.hide());
+        }
+    };
+
+    Polymer.XPMenuBehavior = [
+        Polymer.XPFinderBehavior,
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.XPOverlayBehavior,
+        Polymer.XPMenuBehaviorImp
+    ];
+</script>
+</head><body></body></html>

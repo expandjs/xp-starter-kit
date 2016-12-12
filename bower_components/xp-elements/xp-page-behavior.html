@@ -1,0 +1,229 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-master-slave-behavior.html">
+
+<script>
+    Polymer.XPPageBehaviorImp = {
+
+        // CLASSES
+        classes: ['page'],
+
+        /*********************************************************************/
+
+        /**
+         * Fired when the something has been injected.
+         *
+         * @event xp-inject
+         * @param {Element} injected
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'xp-slave': '__handleSlave'
+        },
+
+        // OBSERVERS
+        observers: [
+            '__activeChanged(active, injected)',
+            '__contentChanged(active, content, lazy)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the page is active.
+             *
+             * @attribute active
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            active: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the page can be closed.
+             *
+             * @attribute closable
+             * @type boolean
+             * @default false
+             */
+            closable: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The `tagName` of the element to inject into the page.
+             *
+             * @attribute content
+             * @type string
+             */
+            content: {
+                reflectToAttribute: true,
+                type: String
+            },
+
+            /**
+             * The page's data.
+             *
+             * @attribute data
+             * @type *
+             * @notifies
+             */
+            data: {
+                notify: true,
+                observer: '__dataChanged',
+                value: null
+            },
+
+            /**
+             * If set to true, there's nothing injected.
+             *
+             * @attribute empty
+             * @type boolean
+             * @notifies
+             * @readonly
+             */
+            empty: {
+                computed: '_computeEmpty(injected)',
+                notify: true,
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The injected element.
+             *
+             * @attribute injected
+             * @type Element
+             * @notifies
+             * @readonly
+             */
+            injected: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * If set to true, the content will be injected on active.
+             *
+             * @attribute lazy
+             * @type boolean
+             * @default false
+             */
+            lazy: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the page is scrollable.
+             *
+             * @attribute scrollable
+             * @type boolean
+             * @default false
+             */
+            scrollable: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The master selector.
+             *
+             * @attribute selector
+             * @type Element
+             * @readonly
+             */
+            selector: {
+                master: '.pages',
+                readOnly: true,
+                value: null
+            }
+        },
+
+        /*********************************************************************/
+
+        // COMPUTER
+        _computeEmpty(injected) {
+            return !injected;
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __activeChanged() {
+
+            // Setting
+            if (this.injected) { XP.setAttribute(this.injected, 'active', this.active); }
+        },
+
+        // OBSERVER
+        __contentChanged() {
+
+            // Let
+            let wrapped   = Polymer.dom(this),
+                removable = this.injected && (!this.content || this.content.toUpperCase() !== this.injected.tagName || (this.lazy && !this.active)),
+                injected  = this.content && (removable || !this.injected) && (this.active || !this.lazy) && document.createElement(this.content);
+
+            // Removing
+            if (removable) { wrapped.removeChild(this.injected); }
+
+            // Unlinking
+            if (removable) { this.unlinkProperties('data', 'data', this.injected); }
+
+            // Linking
+            if (injected) { this.linkProperties('data', 'data', injected, true); }
+
+            // Ensuring
+            if (injected && XP.isDefined(this.data)) { this.ensure('data', this.data, injected); }
+
+            // Appending
+            if (injected) { wrapped.appendChild(injected); }
+
+            // Ensuring
+            if (injected || removable) { this.ensure('injected', injected || null); }
+
+            // Firing
+            if (injected) { this.fire('xp-inject', {injected: injected}); }
+        },
+
+        // OBSERVER
+        __dataChanged() {
+
+            // Setting
+            if (this.injected) { this.injected.data = this.data; }
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleSlave(event) {
+
+            // Let
+            let firer    = this.firer(event),
+                selector = event.detail.selector;
+
+            // Stopping
+            if (firer !== this && selector === '.pages' && firer.classList.contains('page')) { event.stopPropagation(); }
+        }
+    };
+
+    Polymer.XPPageBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.XPPageBehaviorImp
+    ];
+</script>
+</head><body></body></html>

@@ -1,0 +1,44 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="mat-ink-behavior.html">
+<link rel="import" href="mat-pressed-behavior.html">
+
+<script>
+    Polymer.MATPressedInkBehaviorImp = {
+
+        // OBSERVERS
+        observers: [
+            '__colorChanged(active, activeColor)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The ink's active color.
+             *
+             * @attribute active-color
+             * @type string
+             */
+            activeColor: {
+                type: String
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __colorChanged() {
+
+            // Ensuring
+            this.ensure('currentColor', (this.active && this.activeColor) || this.color || null);
+        }
+    };
+
+    Polymer.MATPressedInkBehavior = [
+        Polymer.MATInkBehavior,
+        Polymer.MATPressedBehavior,
+        Polymer.MATPressedInkBehaviorImp
+    ];
+</script>
+</head><body></body></html>

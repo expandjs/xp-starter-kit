@@ -1,0 +1,247 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-focused-behavior.html">
+<link rel="import" href="xp-targeter-behavior.html">
+
+<script>
+    Polymer.XPPressedBehaviorImp = {
+
+        /**
+         * Fired when the active state changes.
+         *
+         * @event xp-active
+         * @param {boolean} isActive
+         * @bubbles
+         */
+
+        /**
+         * Fired when the element is clicked.
+         *
+         * @event xp-activate
+         * @param {Element} target
+         * @param {boolean} isActive
+         * @param {*} data
+         * @bubbles
+         * @cancelable
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Makes the element pressed.
+         *
+         * @method press
+         */
+        press() {
+
+            // Let
+            let params = this.params,
+                target = this.findTarget() || this.target || this.domHost,
+                event  = this.fire('xp-activate', {target: target, isActive: this.active, data: this.data}, {cancelable: true});
+
+            // Checking
+            if (event.defaultPrevented) { return; }
+
+            // Setting
+            if (this.toggleable)  { this.active   = !this.active; }
+            if (this.autoDisable) { this.disabled = true; }
+
+            // Switching
+            switch (this.action) {
+
+            // CALLBACK
+            case 'callback':
+                if (target && target.callback) { target.callback(null, this.data); }
+                break;
+
+            // INJECT
+            case 'inject':
+                if (this.target) { this.inject(this.target, this.domHost, this.data, this.domHost && this.domHost[this.callback]); }
+                break;
+
+            // TOGGLE
+            case 'toggle':
+                if (XP.isFunction(target && target.toggle)) { this.ensure('target', this, target); }
+
+            // DEFAULT
+            default:
+                if (XP.isString(params, true)) { params = params.split(',').map(param => XP.parsePrimitive(param.trim())); }
+                if (XP.isFunction(target && target[this.action])) { XP.apply(target, this.action, params || (target === this.domHost ? [event] : [])); }
+                break;
+            }
+        },
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'click': '__handleClick',
+            'down': '__handleTouch',
+            'up': '__handleTouch'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The method called on activate.
+             *
+             * @attribute action
+             * @type string
+             */
+            action: {
+                reflectToAttribute: true,
+                type: String
+            },
+
+            /**
+             * If set to true, the element is active.
+             *
+             * @attribute active
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            active: {
+                notify: true,
+                observer: '__activeChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, pressing the element will disable it.
+             *
+             * @attribute auto-disable
+             * @type boolean
+             * @default false
+             */
+            autoDisable: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The name of the callback passed to the injected target.
+             *
+             * @attribute callback
+             * @type string
+             */
+            callback: {
+                type: String
+            },
+
+            /**
+             * The element's data.
+             *
+             * @attribute data
+             * @type *
+             * @notifies
+             */
+            data: {
+                notify: true,
+                value: null
+            },
+
+            /**
+             * If set to true, the element can't be pressed by tap.
+             *
+             * @attribute no-tap
+             * @type boolean
+             * @default false
+             */
+            noTap: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The arguments passed to the method called on activate.
+             *
+             * @attribute params
+             * @type Array | string
+             */
+            params: {
+                type: String
+            },
+
+            /**
+             * If set to true, the element is pressed.
+             *
+             * @attribute pressed
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            pressed: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, pressing the element will toggle its active state.
+             *
+             * @attribute toggleable
+             * @type boolean
+             * @default false
+             */
+            toggleable: {
+                observer: '__toggleableChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __activeChanged() {
+
+            // Firing
+            this.fire('xp-active', {isActive: this.active});
+        },
+
+        // OBSERVER
+        __toggleableChanged() {
+
+            // Setting
+            if (!this.toggleable) { this.active = false; }
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleClick(event) {
+
+            // Preventing
+            if (!event.button) { event.pressed = event.pressed || this; }
+
+            // Pressing
+            if (event.pressed === this) { this.press(); }
+        },
+
+        // HANDLER
+        __handleTouch(event) {
+
+            // Preventing
+            event.pressed = event.pressed || this;
+
+            // Ensuring
+            if (event.pressed === this) { this.ensure('pressed', event.type === 'down'); }
+        }
+    };
+
+    Polymer.XPPressedBehavior = [
+        Polymer.XPFocusedBehavior,
+        Polymer.XPTargeterBehavior,
+        Polymer.XPPressedBehaviorImp
+    ];
+</script>
+</head><body></body></html>

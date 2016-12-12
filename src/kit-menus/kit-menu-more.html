@@ -1,16 +1,16 @@
-<link rel="import" href="../../bower_components/mat-elements/mat-menu.html">
+<html><head><link rel="import" href="../../bower_components/mat-elements/mat-menu.html">
 <link rel="import" href="../../bower_components/mat-elements/mat-option.html">
 <link rel="import" href="../kit-behaviors/kit-menu-behavior.html">
 <link rel="import" href="../kit-styles/kit-base-styles.html">
 
-<dom-module id="kit-menu-more">
+</head><body><dom-module id="kit-menu-more">
 
-    <template strip-whitespace>
+    <template strip-whitespace="">
 
-        <!-- MENU -->
+        
         <mat-menu>
 
-            <!-- OPTIONS -->
+            
             <mat-option icon="kit:settings" label="[[localize('settings')]]" action="inject" target="kit-dialog-settings"></mat-option>
             <mat-option icon="kit:github" label="Github" href="https://github.com/expandjs" target="_blank"></mat-option>
             <mat-option icon-src="/src/kit-images/expandjs.svg" label="expand.js" href="https://expandjs.com" target="_blank"></mat-option>
@@ -19,17 +19,7 @@
 
     </template>
 
-    <script>
-        Polymer({
-
-            // ELEMENT
-            is: 'kit-menu-more',
-
-            // BEHAVIORS
-            behaviors: [
-                Polymer.KITMenuBehavior
-            ]
-        });
-    </script>
+    <script>Polymer({is:"kit-menu-more",behaviors:[Polymer.KITMenuBehavior]});</script>
 
 </dom-module>
+</body></html>

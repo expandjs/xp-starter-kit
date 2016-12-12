@@ -1,0 +1,55 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-base-behavior.html">
+
+<script>
+    Polymer.APPLocaleBehaviorImp = {
+
+        /**
+         * Set the application's locale.
+         *
+         * @method setLocale
+         * @param {string} locale
+         */
+        setLocale(locale) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(locale, true), 1, 'string');
+
+            // Ensuring
+            this.ensure('app.locale', locale);
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * Returns a localized string.
+             *
+             * @method localize
+             * @param {Array | Object | string} string
+             * @param {Object} [replacements]
+             * @returns {Array | Object | string}
+             */
+            localize: {
+                computed: '_computeLocalize(app.i18n, app.locale, app.i18n.*)',
+                type: Function
+            }
+        },
+
+        /*********************************************************************/
+
+        // COMPUTER
+        _computeLocalize(i18n, locale) {
+            return XP.localize.bind(XP, i18n && i18n[locale]);
+        }
+    };
+
+    Polymer.APPLocaleBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.APPLocaleBehaviorImp
+    ];
+</script>
+</head><body></body></html>

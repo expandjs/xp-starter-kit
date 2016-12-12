@@ -1,0 +1,51 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPTargeterBehaviorImp = {
+
+        /**
+         * Finds the targeted element.
+         *
+         * @method findTarget
+         * @returns {Element}
+         */
+        findTarget() {
+
+            // Let
+            let root = this.domHost && Polymer.dom(this.domHost.root);
+
+            // Finding
+            if (XP.isElement(this.target)) { return this.target; }
+            if (XP.isString(this.target, true) && root) { return root.querySelector('#' + this.target) || null; }
+            if (XP.isString(this.target, true)) { return document.getElementById(this.target) || null; }
+
+            return null;
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The element's target.
+             *
+             * @attribute target
+             * @type Element | string
+             * @notifies
+             */
+            target: {
+                notify: true,
+                value: null
+            }
+        }
+    };
+
+    Polymer.XPTargeterBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPTargeterBehaviorImp
+    ];
+</script>
+</head><body></body></html>

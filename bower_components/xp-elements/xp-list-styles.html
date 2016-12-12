@@ -1,0 +1,35 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+
+</head><body><dom-module id="xp-list-styles">
+
+    <template strip-whitespace="">
+
+        <style>
+            :host {
+                display: block;
+                position: static;
+            }
+
+            /* SLOTTED */
+
+            :host ::slotted(.item) {
+                cursor: pointer;
+                display: block;
+                outline: 0;
+                text-align: left;
+                text-decoration: none;
+                -moz-user-select: none;
+                -webkit-tap-highlight-color: transparent;
+                -webkit-user-select: none;
+                user-select: none;
+            }
+
+            :host ::slotted(.item[href]:hover) {
+                text-decoration: underline;
+            }
+        </style>
+
+    </template>
+
+</dom-module>
+</body></html>

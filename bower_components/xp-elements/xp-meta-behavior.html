@@ -1,0 +1,59 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-base-behavior.html">
+
+<script>
+    Polymer.XPMetaBehaviorImp = {
+
+        // CLASSES
+        classes: ['meta'],
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The meta's data.
+             *
+             * @attribute data
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            data: {
+                notify: true,
+                readOnly: true,
+                type: Object
+            }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        mutated() {
+
+            // Finding
+            let elements = XP.findElements(Polymer.dom(this), 'property[path]:not([path=""])');
+
+            // Parsing
+            let result = elements.reduce((result, property) => XP.set(result, `data.${property.getAttribute('path')}`, XP.parsePrimitive(property.getAttribute('value'))), {});
+
+            // Ensuring
+            this.ensure('data', result.data || {});
+        },
+
+        // LISTENER
+        ready() {
+
+            // Observing
+            Polymer.dom(this).observeNodes(this.mutated.bind(this));
+        }
+    };
+
+    Polymer.XPMetaBehavior = [
+        Polymer.XPBaseBehavior,
+        Polymer.XPMetaBehaviorImp
+    ];
+</script>
+</head><body></body></html>

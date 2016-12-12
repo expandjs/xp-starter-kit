@@ -1,0 +1,254 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
+<link rel="import" href="app-locale-behavior.html">
+
+<script>
+    Polymer.APPStoreBehaviorImp = {
+
+        // CLASSES
+        classes: ['store'],
+
+        /*********************************************************************/
+
+        /**
+         * Should be redefined to setup the application's state.
+         *
+         * @method initialize
+         * @abstract
+         */
+        initialize() {},
+
+        /*********************************************************************/
+
+        /**
+         * Set the application's `memento`.
+         *
+         * @method memoize
+         */
+        memoize() {
+
+            // Ensuring
+            this.ensure('memento', XP.cloneDeep(this.app));
+        },
+
+        /**
+         * Resets the application's `state`.
+         *
+         * @method reset
+         */
+        reset() {
+
+            // Ensuring
+            this.ensure('app', XP.cloneDeep(this.memento));
+        },
+
+        /*********************************************************************/
+
+        // LISTENERS
+        listeners: {
+            'app-authorize': '__handleAuthorize',
+            'app-route': '__handleRoute',
+            'app-unauthorize': '__handleUnauthorize'
+        },
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The application's auth.
+             *
+             * @attribute auth
+             * @type Object
+             * @readonly
+             */
+            auth: {
+                readOnly: true,
+                type: Object
+            },
+
+            /**
+             * The application's state.
+             *
+             * @attribute app
+             * @type Object
+             * @default {}
+             * @notifies
+             * @readonly
+             */
+            app: {
+                notify: true,
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            },
+
+            /**
+             * The application's commands.
+             *
+             * @attribute commands
+             * @type Array
+             * @readonly
+             */
+            commands: {
+                readOnly: true,
+                slaves: '.command',
+                value() { return []; }
+            },
+
+            /**
+             * The application's state's memento.
+             *
+             * @attribute memento
+             * @type Object
+             * @readonly
+             */
+            memento: {
+                readOnly: true,
+                type: Object
+            },
+
+            /**
+             * If set to true, the client is offline.
+             *
+             * @attribute offline
+             * @type boolean
+             * @notifies
+             * @readonly
+             */
+            offline: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: !navigator.onLine
+            },
+
+            /**
+             * The application's router.
+             *
+             * @attribute router
+             * @type Element
+             * @readonly
+             */
+            router: {
+                slave: '.router',
+                readOnly: true
+            },
+
+            /**
+             * The application's shell.
+             *
+             * @attribute shell
+             * @type Element
+             * @readonly
+             */
+            shell: {
+                master: '.shell',
+                observer: '__shellChanged',
+                readOnly: true
+            },
+
+            /**
+             * The application's sources.
+             *
+             * @attribute sources
+             * @type Object
+             * @readonly
+             */
+            sources: {
+                readOnly: true,
+                type: Object
+            }
+        },
+
+        /**
+         * The application's namespace.
+         *
+         * @property namespace
+         * @type string
+         * @readonly
+         */
+        get namespace() { return this.shell && this.shell.namespace; },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __shellChanged(post) {
+
+            // Waiting (ShadyDOM)
+            this.async(() => {
+
+                // Let
+                let base = {i18n: {}, locale: XP.toLocale(navigator.language), meta: {}},
+                    app  = XP.merge(base, XP.get(window, `app.${this.namespace}`), this.app);
+
+                // Ensuring
+                this.ensure('app', app);
+
+                // Initializing
+                if (post) { this.initialize(); }
+
+                // Memoizing
+                if (post) { this.memoize(); }
+
+                // Exposing
+                XP.set(window, `app.${this.namespace}`, app);
+            });
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        ready() {
+
+            // Let
+            let auth    = {},
+                sources = {};
+
+            // Listening
+            window.addEventListener('offline', () => this.ensure('offline', true));
+            window.addEventListener('online', () => this.ensure('offline', false));
+
+            // Mapping
+            XP.getElements(Polymer.dom(this.root), '.auth[name]:not([name=""])').forEach(element => auth[element.name] = element);
+            XP.getElements(Polymer.dom(this.root), '.source[name]:not([name=""])').forEach(element => sources[element.name] = element);
+
+            // Binding
+            Object.keys(sources).forEach(key => this.ensure('auth', auth[key] || null, sources[key]));
+
+            // Ensuring
+            this.ensure('auth', auth);
+            this.ensure('sources', sources);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleAuthorize(event) {
+
+            // Ensuring
+            this.ensure(`app.auth.${event.detail.authenticator}`, event.detail.accessToken);
+        },
+
+        // HANDLER
+        __handleRoute(event) {
+
+            // Ensuring
+            this.async(() => event.defaultPrevented || this.ensure('app.route', event.detail.route));
+        },
+
+        // HANDLER
+        __handleUnauthorize(event) {
+
+            // Ensuring
+            this.ensure(`app.auth.${event.detail.authenticator}`, null);
+        }
+    };
+
+    Polymer.APPStoreBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.APPLocaleBehavior,
+        Polymer.APPStoreBehaviorImp
+    ];
+</script>
+</head><body></body></html>

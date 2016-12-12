@@ -1,0 +1,127 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-master-slave-behavior.html">
+<link rel="import" href="xp-selector-behavior.html">
+
+<script>
+    Polymer.XPPagesBehaviorImp = {
+
+        // CLASSES
+        classes: ['pages'],
+
+        /*********************************************************************/
+
+        /**
+         * Fired when a page is closing.
+         *
+         * @event xp-page-close
+         * @param {number | string} index
+         * @param {boolean} isActive
+         * @bubbles
+         * @cancelable
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Closes a page.
+         *
+         * @method close
+         * @param {*} identity
+         * @returns {Element}
+         */
+        close(identity) {
+
+            // Let
+            let item  = this.findItem(identity),
+                index = this.findIndex(item, true);
+
+            // Checking
+            if (!item || !item.closable) { return null; }
+
+            // Firing
+            if (item.fire('xp-page-close', {index: index, isActive: !!item.active}, {cancelable: true}).defaultPrevented) { return null; }
+
+            // Removing
+            return Polymer.dom(Polymer.dom(item).parentNode).removeChild(item);
+        },
+
+        /**
+         * Opens a page.
+         *
+         * @method open
+         * @param {Object} [properties]
+         * @param {boolean} [autoSelect = false]
+         * @returns {Element}
+         */
+        open(properties, autoSelect) {
+
+            // Let
+            let item = this.itemTag && document.createElement(this.itemTag),
+                page = item && Object.assign(item, properties, {closable: true});
+
+            // Frame 1
+            requestAnimationFrame(() => {
+
+                // Pushing
+                if (page) { this.push('items', Polymer.dom(this).appendChild(page)); } else { return null; }
+
+                // Selecting
+                if (autoSelect) { requestAnimationFrame(() => this.select(page, true)); }
+            });
+
+            return page;
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The selector used to recognize items.
+             *
+             * @attribute item-selector
+             * @type string
+             * @default ".page"
+             */
+            itemSelector: {
+                type: String,
+                value: '.page'
+            },
+
+            /**
+             * The tag used to append new items.
+             *
+             * @attribute item-tag
+             * @type string
+             * @readonly
+             */
+            itemTag: {
+                readOnly: true,
+                type: String
+            },
+
+            /**
+             * The found items.
+             *
+             * @attribute items
+             * @type Array
+             * @notifies
+             * @readonly
+             */
+            items: {
+                readOnly: true,
+                slaves: '.page',
+                value() { return []; }
+            }
+        }
+    };
+
+    Polymer.XPPagesBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.XPSelectorBehavior,
+        Polymer.XPPagesBehaviorImp
+    ];
+</script>
+</head><body></body></html>

@@ -1,0 +1,145 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
+<link rel="import" href="app-locale-behavior.html">
+
+<script>
+    Polymer.APPReceiverBehaviorImp = {
+
+        /**
+         * Should be redefined to setup the receiver.
+         *
+         * @method initialize
+         * @abstract
+         */
+        initialize() {},
+
+        /*********************************************************************/
+
+        /**
+         * Invokes an application's command.
+         *
+         * @method invoke
+         * @param {string} command
+         * @param {Object} [options]
+         * @param {Function} [callback]
+         */
+        invoke(command, options, callback) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(command, true), 1, 'string');
+
+            // Invoking
+            return XP.apply(this.shell, 'forward', arguments);
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The application's state.
+             *
+             * @attribute app
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            app: {
+                notify: true,
+                readOnly: true,
+                type: Object
+            },
+
+            /**
+             * If set to true, the client is offline.
+             *
+             * @attribute offline
+             * @type boolean
+             * @notifies
+             * @readonly
+             */
+            offline: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: !navigator.onLine
+            },
+
+            /**
+             * The application's shell.
+             *
+             * @attribute shell
+             * @type Element
+             * @readonly
+             */
+            shell: {
+                master: '.shell',
+                observer: '__shellChanged',
+                readOnly: true
+            },
+
+            /**
+             * The application's store.
+             *
+             * @attribute store
+             * @type Element
+             * @readonly
+             */
+            store: {
+                observer: '__storeChanged',
+                readOnly: true
+            }
+        },
+
+        /**
+         * The application's namespace.
+         *
+         * @property namespace
+         * @type string
+         * @readonly
+         */
+        get namespace() { return this.shell && this.shell.namespace; },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __shellChanged(post) {
+
+            // Ensuring
+            this.async(() => this.ensure('store', post && post.store));
+        },
+
+        // OBSERVER
+        __storeChanged(post, pre) {
+
+            // Linking
+            if (pre) { this.unlinkProperties('app', 'app', pre); }
+            if (post) { this.linkProperties('app', 'app', post); }
+
+            // Ensuring
+            this.ensure('app', post && post.app);
+
+            // Initializing
+            if (post) { this.initialize(); }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        ready() {
+
+            // Listening
+            window.addEventListener('offline', () => this.ensure('offline', true));
+            window.addEventListener('online', () => this.ensure('offline', false));
+        }
+    };
+
+    Polymer.APPReceiverBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.APPLocaleBehavior,
+        Polymer.APPReceiverBehaviorImp
+    ];
+</script>
+</head><body></body></html>

@@ -1,0 +1,141 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
+<link rel="import" href="app-locale-behavior.html">
+
+<script>
+    Polymer.APPShellBehaviorImp = {
+
+        // CLASSES
+        classes: ['shell'],
+
+        /*********************************************************************/
+
+        /**
+         * Forwards a command invocation to the application's store.
+         *
+         * @method forward
+         * @param {string} command
+         * @param {Object} [options]
+         * @param {Function} [callback]
+         */
+        forward(command, options, callback) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(command, true), 1, 'string');
+            XP.assertArgument(!command.startsWith('_'), 1, 'public');
+
+            // Warning
+            if (!XP.isFunction(this.store[command])) { console.warn(`[${this.store.tagName.toLowerCase()}]:${command} is not defined.`); }
+
+            // Executing
+            return XP.call(this.store, command, options, callback);
+        },
+
+        /*********************************************************************/
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The application's state.
+             *
+             * @attribute app
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            app: {
+                notify: true,
+                readOnly: true,
+                type: Object
+            },
+
+            /**
+             * The application's namespace.
+             *
+             * @attribute namespace
+             * @type string
+             * @readonly
+             */
+            namespace: {
+                readOnly: true,
+                type: String,
+                value() { return XP.lowerCase(this.tagName.slice(0, this.tagName.indexOf('-'))); }
+            },
+
+            /**
+             * The application's store.
+             *
+             * @attribute store
+             * @type Element
+             * @readonly
+             */
+            store: {
+                observer: '__storeChanged',
+                slave: '.store',
+                readOnly: true
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __storeChanged(post, pre) {
+
+            // Linking
+            if (pre) { this.unlinkProperties('app', 'app', pre); }
+            if (post) { this.linkProperties('app', 'app', post); }
+
+            // Ensuring
+            this.ensure('app', post && post.app);
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached() {
+
+            // Listening
+            this.listen(window, 'app-i18n', '__handleI18n');
+            this.listen(window, 'app-meta', '__handleMeta');
+        },
+
+        // OBSERVER
+        detached() {
+
+            // Unlistening
+            this.unlisten(window, 'app-i18n', '__handleI18n');
+            this.unlisten(window, 'app-meta', '__handleMeta');
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleI18n(event) {
+
+            // Checking
+            if (event.detail.namespace !== this.namespace) { return; }
+
+            // Notifying
+            this.notifyPath(`app.i18n.${event.detail.locale}`, event.detail.data);
+        },
+
+        // HANDLER
+        __handleMeta(event) {
+
+            // Checking
+            if (event.detail.namespace !== this.namespace) { return; }
+
+            // Notifying
+            this.notifyPath(`app.meta.${event.detail.name}`, event.detail.data);
+        }
+    };
+
+    Polymer.APPShellBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.APPLocaleBehavior,
+        Polymer.APPShellBehaviorImp
+    ];
+</script>
+</head><body></body></html>

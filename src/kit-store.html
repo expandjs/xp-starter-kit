@@ -1,11 +1,11 @@
-<link rel="import" href="../bower_components/app-behaviors/app-route.html">
+<html><head><link rel="import" href="../bower_components/app-behaviors/app-route.html">
 <link rel="import" href="../bower_components/app-behaviors/app-router.html">
 <link rel="import" href="../bower_components/app-behaviors/app-store-behavior.html">
 <link rel="import" href="kit-behaviors/kit-base-behavior.html">
 
-<dom-module id="kit-store">
+</head><body><dom-module id="kit-store">
 
-    <template strip-whitespace>
+    <template strip-whitespace="">
 
         <style>
             :host {
@@ -13,7 +13,7 @@
             }
         </style>
 
-        <!-- ROUTER -->
+        
         <app-router>
             <template is="dom-repeat" items="[[app.meta.routes]]">
                 <app-route path="[[item.path]]" data-name$="[[item.name]]" data-view$="[[item.view]]"></app-route>
@@ -69,3 +69,4 @@
     </script>
 
 </dom-module>
+</body></html>

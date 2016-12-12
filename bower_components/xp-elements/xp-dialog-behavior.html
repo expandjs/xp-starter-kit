@@ -1,0 +1,132 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-overlay-behavior.html">
+
+<script>
+    Polymer.XPDialogBehaviorImp = {
+
+        // CLASSES
+        classes: ['dialog'],
+
+        /*********************************************************************/
+
+        /**
+         * Aligns the dialog.
+         *
+         * @method align
+         */
+        align() {
+
+            // Aligning
+            requestAnimationFrame(() => this.showed && XP.alignElement(this));
+        },
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__sizeChanged(fullScreen, height, width)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the dialog is full screen.
+             *
+             * @attribute full-screen
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            fullScreen: {
+                notify: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The dialog's height. If `0` the dialog will resize itself based on it's content.
+             *
+             * @attribute height
+             * @type number
+             * @default 0
+             */
+            height: {
+                reflectToAttribute: true,
+                type: Number,
+                value: 0
+            },
+
+            /**
+             * If set to true, the dialog's backdrop is hidden.
+             *
+             * @attribute no-backdrop
+             * @type boolean
+             * @default false
+             */
+            noBackdrop: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The dialog's width. If `0` the dialog will resize itself based on it's content.
+             *
+             * @attribute width
+             * @type number
+             * @default 0
+             */
+            width: {
+                reflectToAttribute: true,
+                type: Number,
+                value: 0
+            }
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __sizeChanged() {
+
+            // Let
+            let margin = XP.getMargin(this);
+
+            // Stylizing
+            this.style.height    = this.height && !this.fullScreen ? `calc(100% - ${margin.top + margin.bottom}px` : ``;
+            this.style.margin    = this.fullScreen ? `0` : ``;
+            this.style.maxHeight = this.height && !this.fullScreen ? `${this.height}px` : ``;
+            this.style.maxWidth  = this.width && !this.fullScreen ? `${this.width}px` : ``;
+            this.style.width     = this.width && !this.fullScreen ? `calc(100% - ${margin.left + margin.right}px)` : ``;
+
+            // Aligning
+            this.align();
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached() {
+
+            // Resizing
+            Polymer.RenderStatus.afterNextRender(this, this.__sizeChanged);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleBackdrop(event) {
+
+            // Hiding
+            if (this.autoHide && !event.button) { this.hide(); }
+        }
+    };
+
+    Polymer.XPDialogBehavior = [
+        Polymer.XPOverlayBehavior,
+        Polymer.XPDialogBehaviorImp
+    ];
+</script>
+</head><body></body></html>

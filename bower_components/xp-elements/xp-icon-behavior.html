@@ -1,0 +1,189 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-iconset-finder.html">
+
+<script>
+    Polymer.XPIconBehaviorImp = {
+
+        // CLASSES
+        classes: ['icon'],
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__iconChanged(iconName, iconSet)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the element is hidden.
+             *
+             * @attribute empty
+             * @type boolean
+             * @default true
+             * @notifies
+             * @readonly
+             */
+            empty: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The rendered icon's element.
+             *
+             * @attribute icon-element
+             * @type Element
+             * @readonly
+             */
+            iconElement: {
+                notify: true,
+                readOnly: true
+            },
+
+            /**
+             * The rendered icon's name.
+             *
+             * @attribute icon-name
+             * @type string
+             * @readonly
+             */
+            iconName: {
+                readOnly: true,
+                type: String
+            },
+
+            /**
+             * The rendered icon's set.
+             *
+             * @attribute icon-set
+             * @type Element
+             * @readonly
+             */
+            iconSet: {
+                readOnly: true
+            },
+
+            /**
+             * The icon's name.
+             *
+             * @attribute name
+             * @type string
+             */
+            name: {
+                observer: '__nameChanged',
+                reflectToAttribute: true,
+                type: String
+            },
+
+            /**
+             * If set to true, the icon is rendered as `div` background instead of `svg`.
+             *
+             * @attribute raster
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            raster: {
+                computed: '_computeRaster(src)',
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The icon's src.
+             *
+             * @attribute src
+             * @type string
+             */
+            src: {
+                observer: '__iconChanged',
+                reflectToAttribute: true,
+                type: String
+            }
+        },
+
+        /*********************************************************************/
+
+        // COMPUTER
+        _computeRaster(src) {
+            return !!src;
+        },
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __iconChanged() {
+
+            // Let
+            let iconChild = this.src || !this.iconName || !this.iconSet ? null : this.iconSet.findIcon(this.iconName),
+                iconNew   = this.src ? document.createElement('div') : iconChild && document.createElementNS('http://www.w3.org/2000/svg', 'svg'),
+                iconTag   = this.src ? 'div' : iconChild && 'svg',
+                iconOld   = Polymer.dom(this).children[0];
+
+            // Appending
+            if (iconChild) { iconNew.appendChild(iconChild); }
+
+            // Ensuring
+            this.ensure('empty', !iconNew);
+            this.ensure('iconElement', iconNew);
+
+            // CASE: svg
+            if (iconTag === 'svg') {
+
+                // Setting
+                iconNew.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+                iconNew.setAttribute('height', '24');
+                iconNew.setAttribute('width', '24');
+                iconNew.setAttribute('viewBox', '0 0 24 24');
+            }
+
+            // CASE: raster
+            else if (iconTag) {
+
+                // Styling
+                iconNew.style.background = `url(${this.src}) 100% no-repeat`;
+                iconNew.style.backgroundSize = `100% 100%`;
+            }
+
+            // Replacing
+            if (iconOld) { Polymer.dom(this).removeChild(iconOld); }
+            if (iconNew) { Polymer.dom(this).appendChild(iconNew); }
+
+            // Scoping
+            if (iconTag === 'div' && this.domHost) { this.domHost.scopeSubtree(this); }
+        },
+
+        // OBSERVER
+        __nameChanged() {
+
+            // Let
+            let parts    = XP.split(this.name, ':'),
+                iconName = parts[1],
+                iconSet  = parts[0] && this.findIconset(parts[0]);
+
+            // Ensuring
+            this.ensure('iconName', iconName || undefined);
+            this.ensure('iconSet', iconSet || undefined);
+
+            // Listening
+            this[iconSet ? 'unlisten' : 'listen'](window, 'xp-iconset', '__nameChanged');
+        }
+    };
+
+    Polymer.XPIconBehavior = [
+        Polymer.XPIconsetFinder,
+        Polymer.XPIconBehaviorImp
+    ];
+</script>
+</head><body></body></html>

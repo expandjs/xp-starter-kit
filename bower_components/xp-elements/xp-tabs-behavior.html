@@ -1,0 +1,287 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-master-slave-behavior.html">
+<link rel="import" href="xp-selector-behavior.html">
+
+<script>
+    Polymer.XPTabsBehaviorImp = {
+
+        // CLASSES
+        classes: ['tabs'],
+
+        /*********************************************************************/
+
+        /**
+         * Slides to the left.
+         *
+         * @method slideLeft
+         * @returns {Element}
+         */
+        slideLeft() {
+
+            // Sliding
+            return this.slideTo(this.items.reverse().find(this._bleedsLeft.bind(this)));
+        },
+
+        /**
+         * Slides to the right.
+         *
+         * @method slideRight
+         * @returns {Element}
+         */
+        slideRight() {
+
+            // Sliding
+            return this.slideTo(this.items.find(this._bleedsRight.bind(this)));
+        },
+
+        /**
+         * Slides to a tab.
+         *
+         * @method slideTo
+         * @param {*} identity
+         * @returns {Element}
+         */
+        slideTo(identity) {
+
+            // Let
+            let item = this.findItem(identity);
+
+            // Scrolling
+            if (item) { this.slider.scrollLeft = item.offsetLeft - (this.slider.clientWidth / 2) + (item.clientWidth / 2); }
+
+            // Handling
+            if (item) { this.__handleMutation(); }
+
+            return item;
+        },
+
+        /*********************************************************************/
+
+        /**
+         * Returns true if the tab is bleeding out of the slider's left side.
+         *
+         * @method _bleedsLeft
+         * @param {Element} item
+         * @returns {boolean}
+         * @private
+         */
+        _bleedsLeft(item) {
+            return item.offsetLeft < this.slider.scrollLeft;
+        },
+
+        /**
+         * Returns true if the tab is bleeding out of the slider's right side.
+         *
+         * @method _bleedsRight
+         * @param {Element} item
+         * @returns {boolean}
+         * @private
+         */
+        _bleedsRight(item) {
+            return item.offsetLeft + item.clientWidth > this.slider.scrollLeft + this.slider.clientWidth;
+        },
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            '__handleMutation(scrolled, slider)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * The selector used to recognize items.
+             *
+             * @attribute item-selector
+             * @type string
+             * @default ".tab"
+             */
+            itemSelector: {
+                type: String,
+                value: '.tab'
+            },
+
+            /**
+             * The tag used to append new items.
+             *
+             * @attribute item-tag
+             * @type string
+             * @readonly
+             */
+            itemTag: {
+                readOnly: true,
+                type: String
+            },
+
+            /**
+             * The found items.
+             *
+             * @attribute items
+             * @type Array
+             * @notifies
+             * @readonly
+             */
+            items: {
+                readOnly: true,
+                slaves: '.tab',
+                value() { return []; }
+            },
+
+            /**
+             * If set to true, the tabs can be slided on the left.
+             *
+             * @attribute more-left
+             * @type boolean
+             * @default false
+             * @readonly
+             */
+            moreLeft: {
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the tabs can be slided on the right.
+             *
+             * @attribute more-right
+             * @type boolean
+             * @default false
+             * @readonly
+             */
+            moreRight: {
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, the tabs container is scrollable.
+             *
+             * @attribute scrollable
+             * @type boolean
+             * @default false
+             */
+            scrollable: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The tabs scroll amount.
+             *
+             * @attribute scrolled
+             * @type number
+             * @default 0
+             * @readonly
+             */
+            scrolled: {
+                readOnly: true,
+                type: Number,
+                value: 0
+            },
+
+            /**
+             * If set to true, the items will be selected on tap.
+             *
+             * @attribute selectable
+             * @type boolean
+             * @default true
+             */
+            selectable: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The tabs slider.
+             *
+             * @attribute slider
+             * @type Element
+             * @readonly
+             */
+            slider: {
+                readOnly: true,
+                selector: '.slider'
+            },
+
+            /**
+             * If set to true, the track event is running.
+             *
+             * @attribute tracking
+             * @type boolean
+             * @readonly
+             */
+            tracking: {
+                readOnly: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        attached() {
+
+            // Mutating
+            Polymer.RenderStatus.afterNextRender(this, Polymer.XPTabsBehaviorImp.mutated);
+        },
+
+        // LISTENER
+        mutated() {
+
+            // Handling
+            this.__handleMutation();
+
+            // Observing
+            XP.onMutation(this, Polymer.XPTabsBehaviorImp.mutated.bind(this), {attributes: true, childList: true, subtree: true});
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleMutation() {
+
+            // Checking
+            if (!this.slider) { return; }
+
+            requestAnimationFrame(() => {
+                // Ensuring
+                this.ensure('scrolled', this.slider.scrollLeft);
+                this.ensure('moreLeft', this.scrolled > 0);
+                this.ensure('moreRight', this.scrolled + this.slider.clientWidth < this.slider.scrollWidth);
+            });
+        },
+
+        // HANDLER
+        __handleTrack(event) {
+
+            // Scrolling
+            this.slider.scrollLeft -= event.detail.ddx || 0;
+
+            // Handling
+            this.__handleMutation();
+
+            // Checking
+            if (event.detail.state === 'track') { return; }
+
+            // Frame 1
+            requestAnimationFrame(() => this.ensure('tracking', event.detail.state === 'start'));
+        }
+    };
+
+    Polymer.XPTabsBehavior = [
+        Polymer.XPMasterSlaveBehavior,
+        Polymer.XPSelectorBehavior,
+        Polymer.XPTabsBehaviorImp
+    ];
+</script>
+</head><body></body></html>

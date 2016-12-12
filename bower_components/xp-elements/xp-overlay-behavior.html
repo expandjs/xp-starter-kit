@@ -1,0 +1,267 @@
+<html><head><link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../expandjs/expandjs.html">
+<link rel="import" href="xp-targeter-behavior.html">
+
+<script>
+    Polymer.XPOverlayBehaviorImp = {
+
+        // CLASSES
+        classes: ['overlay'],
+
+        /*********************************************************************/
+
+        /**
+         * Fired on hide.
+         *
+         * @event xp-hide
+         * @bubbles
+         */
+
+        /**
+         * Fired on show.
+         *
+         * @event xp-show
+         * @bubbles
+         */
+
+        /*********************************************************************/
+
+        /**
+         * Aligns the overlay.
+         *
+         * @method align
+         */
+        align() {
+
+            // Aligning
+            requestAnimationFrame(() => this.showed && XP.alignElement(this, this.findTarget(), this.position, this.autoCenter));
+        },
+
+        /**
+         * Hides the overlay.
+         *
+         * @method hide
+         */
+        hide() {
+            this.showed = false;
+        },
+
+        /**
+         * Shows the overlay.
+         *
+         * @method show
+         */
+        show() {
+            this.showed = true;
+        },
+
+        /**
+         * Toggles the overlay.
+         *
+         * @method toggle
+         */
+        toggle() {
+            this[this.showed ? 'hide' : 'show']();
+        },
+
+        /*********************************************************************/
+
+        // OBSERVERS
+        observers: [
+            'align(autoCenter, position, showed, target)'
+        ],
+
+        // PROPERTIES
+        properties: {
+
+            /**
+             * If set to true, the overlay is center aligned.
+             *
+             * @attribute auto-center
+             * @type boolean
+             * @default false
+             */
+            autoCenter: {
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * If set to true, clicking outside will close the overlay.
+             *
+             * @attribute auto-hide
+             * @type boolean
+             * @default false
+             */
+            autoHide: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The overlay's callback.
+             *
+             * @attribute callback
+             * @type Function
+             * @notifies
+             */
+            callback: {
+                notify: true,
+                type: Function,
+                value: null
+            },
+
+            /**
+             * The overlay's context.
+             *
+             * @attribute context
+             * @type Element
+             */
+            context: {
+                value: null
+            },
+
+            /**
+             * The overlay's data.
+             *
+             * @attribute data
+             * @type *
+             * @notifies
+             */
+            data: {
+                notify: true,
+                value: null
+            },
+
+            /**
+             * The overlay position relative to the target.
+             *
+             * 'over' is over the target.
+             *
+             * 'aside' is to the side of the target.
+             *
+             * 'baseline' is underneath the target.
+             *
+             * @attribute position
+             * @type "aside" | "baseline" | "over"
+             * @default "over"
+             */
+            position: {
+                type: String,
+                value: "over"
+            },
+
+            /**
+             * If set to true, the overlay is showed.
+             *
+             * @attribute showed
+             * @type boolean
+             * @default false
+             * @notifies
+             */
+            showed: {
+                notify: true,
+                observer: '__showedChanged',
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
+            }
+        },
+
+        /**
+         * The list of possible positions.
+         *
+         * @property positions
+         * @type Array
+         * @default ["aside", "baseline", "over"]
+         * @readonly
+         */
+        positions: ['aside', 'baseline', 'over'],
+
+        /*********************************************************************/
+
+        // OBSERVER
+        __showedChanged() {
+
+            // Let
+            let method = this.showed ? 'listen' : 'unlisten';
+
+            // Firing
+            if (this.isAttached) { this.fire(this.showed ? 'xp-show' : 'xp-hide'); }
+
+            // Frame 1
+            requestAnimationFrame(() => {
+
+                // Listening
+                this[method](this, 'click', '__handlePush');
+                this[method](window, 'click', '__handleHide');
+                this[method](window, 'keyup', '__handleHide');
+                this[method](window, 'resize', '__handleResize');
+            });
+        },
+
+        /*********************************************************************/
+
+        // LISTENER
+        created() {
+
+            // Binding
+            this.__handleHide   = this.__handleHide.bind(this);
+            this.__handlePush   = this.__handlePush.bind(this);
+            this.__handleResize = this.__handleResize.bind(this);
+        },
+
+        /*********************************************************************/
+
+        // HANDLER
+        __handleHide(event) {
+
+            // Frame 2
+            requestAnimationFrame(() => {
+
+                // Checking
+                if (event.overlays && event.overlays.indexOf(this) >= 0) { return; }
+
+                // Setting
+                if ((!event.keyCode && !event.button && this.autoHide) || (event.keyCode === 27 && !event.defaultPrevented)) { event.hiding = this; }
+
+                // Frame 3
+                requestAnimationFrame(() => {
+
+                    // Checking
+                    if (event.hiding !== this) { return; }
+
+                    // Unlistening
+                    this.unlisten(this, 'click', '__handlePush');
+                    this.unlisten(window, 'click', '__handleHide');
+                    this.unlisten(window, 'keyup', '__handleHide');
+                    this.unlisten(window, 'resize', '__handleResize');
+
+                    // Hiding
+                    this.hide();
+                });
+            });
+        },
+
+        // HANDLER
+        __handlePush(event) {
+
+            // Pushing
+            (event.overlays = event.overlays || []).push(this);
+        },
+
+        // HANDLER
+        __handleResize() {
+
+            // Aligning
+            this.align();
+        }
+    };
+
+    Polymer.XPOverlayBehavior = [
+        Polymer.XPTargeterBehavior,
+        Polymer.XPOverlayBehaviorImp
+    ];
+</script>
+</head><body></body></html>
