@@ -18,8 +18,8 @@ const ejs      = require('ejs'),
     XP         = require('expandjs'),
     config     = require('./config'),
     tls        = require('./tls'),
-    production = fs.find('./production.on.html'),
-    views      = fs.export('./views', 'html', ejs.compile);
+    production = fs.find(`${__dirname}/production.on.html`),
+    views      = fs.export(`${__dirname}/views`, 'html', ejs.compile);
 
 /***********************************************************************/
 /* ROUTER */
@@ -33,13 +33,13 @@ router.get('/cookies', (req, res) => new Responder({data: views.cookies(), mode:
 config.routes.forEach(route => router.get(route, (req, res) => new Responder({data: views.index(), mode: 'html', response: res}).send()));
 
 // Production
-if (production) { router.use('/', Static('./build/unbundled')); }
+if (production) { router.use('/', Static(`${__dirname}/build/unbundled`)); }
 
 // Development
-router.use('/bower_components', Static('../bower_components'));
-router.use('/bower_components', Static('../node_modules'));
-router.use('/bower_components', Static('./bower_components'));
-router.use('/src', Static('./src'));
+router.use('/bower_components', Static(`${__dirname}./bower_components`));
+router.use('/bower_components', Static(`${__dirname}./node_modules`));
+router.use('/bower_components', Static(`${__dirname}/bower_components`));
+router.use('/src', Static(`${__dirname}/src`));
 
 // Fallback
 router.get('/service-worker.js', (req, res) => new Responder({data: '', mode: 'js', response: res}).send());

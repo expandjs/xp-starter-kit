@@ -18,7 +18,7 @@
   ],
 
   "dependencies": {
-    "app-elements": "ExpandJS/app-elements",
+    "app-behaviors": "ExpandJS/app-behaviors",
     "mat-elements": "ExpandJS/mat-elements",
     "xp-elements": "ExpandJS/xp-elements"
   }
