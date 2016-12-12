@@ -24,6 +24,10 @@
     "xp-responder": "^1.0.0"
   },
 
+  "devDependencies": {
+    "polymer-cli": "^0.17.0"
+  },
+
   "scripts": {
     "build": "npm run build:polymer",
     "build:polymer": "polymer build"
