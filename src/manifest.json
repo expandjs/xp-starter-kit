@@ -3,7 +3,7 @@
   "display": "standalone",
   "name": "XP Starter Kit",
   "short_name": "XP Starter Kit",
-  "start_url": "/xp-starter-kit/?utm_source=homescreen",
+  "start_url": "/?utm_source=homescreen",
   "theme_color": "#3F51B5",
 
   "icons": [
