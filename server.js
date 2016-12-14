@@ -28,10 +28,6 @@ const ejs      = require('ejs'),
 // Let
 let router = Router({caseSensitive: true, strict: true});
 
-// Routing
-router.get('/cookies', (req, res) => new Responder({data: views.cookies(), mode: 'html', response: res}).send());
-config.routes.forEach(route => router.get(route, (req, res) => new Responder({data: views.index(), mode: 'html', response: res}).send()));
-
 // Static (production)
 if (production) { router.use('/', Static(`${__dirname}/build/unbundled`)); }
 
@@ -41,6 +37,10 @@ router.use('/bower_components', Static(`${__dirname}./node_modules`));
 router.use('/bower_components', Static(`${__dirname}/bower_components`));
 router.get('/service-worker.js', (req, res) => new Responder({data: '', mode: 'js', response: res}).send());
 router.use('/src', Static(`${__dirname}/src`));
+
+// Routing
+router.get('/cookies', (req, res) => new Responder({data: views.cookies(), mode: 'html', response: res}).send());
+config.routes.forEach(route => router.get(route, (req, res) => new Responder({data: views.index(), mode: 'html', response: res}).send()));
 
 // Fallback
 router.use((req, res) => new Responder({error: XP.error(404), mode: 'html', response: res}).send());
