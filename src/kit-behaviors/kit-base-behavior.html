@@ -3,15 +3,19 @@
 <script>
     Polymer.KITBaseBehaviorImp = {
 
-        /**
-         * @attribute view
-         * @type string
-         * @readonly
-         */
-        view: {
-            computed: '_computeFrom(app.view)',
-            reflectToAttribute: true,
-            type: String
+        // PROPERTIES
+        properties: {
+
+            /**
+             * @attribute view
+             * @type string
+             * @readonly
+             */
+            view: {
+                computed: '_computeFrom(app.view)',
+                reflectToAttribute: true,
+                type: String
+            }
         }
     };
 
