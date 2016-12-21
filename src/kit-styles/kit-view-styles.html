@@ -8,13 +8,13 @@
         <style include="kit-base-styles">
 
             :host {
-                box-sizing: border-box;
+                @apply --mat-padding;
+                display: block;
                 height: 100%;
-                padding: var(--mat-padding);
             }
 
             :host .wrapper {
-                padding: var(--mat-padding);
+                @apply --mat-padding;
             }
 
             /* TABLET */
@@ -22,11 +22,11 @@
             @media (max-width: 960px) {
 
                 :host {
-                    padding: var(--mat-padding-mobile);
+                    @apply --mat-padding-mobile;
                 }
 
                 :host .wrapper {
-                    padding: var(--mat-padding-mobile);
+                    @apply --mat-padding-mobile;
                 }
             }
 
