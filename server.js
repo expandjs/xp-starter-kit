@@ -31,8 +31,8 @@ let router = Router({caseSensitive: true, strict: true});
 if (production) { router.use('/', Static(`${__dirname}/build/unbundled`)); }
 
 // Static (development)
-router.use('/bower_components', Static(`${__dirname}./bower_components`));
-router.use('/bower_components', Static(`${__dirname}./node_modules`));
+router.use('/bower_components', Static(`${__dirname}/../bower_components`));
+router.use('/bower_components', Static(`${__dirname}/../node_modules`));
 router.use('/bower_components', Static(`${__dirname}/bower_components`));
 router.get('/service-worker.js', (req, res) => new Responder({data: '', mode: 'js', response: res}).send());
 router.use('/src', Static(`${__dirname}/src`));
