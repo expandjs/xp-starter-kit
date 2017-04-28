@@ -48,6 +48,7 @@
              *
              * @event app-route
              * @param {string} namespace
+             * @param {Object} query
              * @param {Object} route
              * @bubbles
              * @cancelable
@@ -67,7 +68,8 @@
                 XP.assertArgument(XP.isString(href, true), 1, 'string');
 
                 // Let
-                let url = document.baseURI ? new URL(href, document.baseURI) : new URL(href);
+                let ts  = this.redirectTs,
+                    url = new URL(href, document.baseURI);
 
                 // Redirecting
                 if (url.origin !== location.origin) { location.href = url.href; return; }
@@ -75,11 +77,14 @@
                 // Checking
                 if (url.href === location.href) { return; }
 
-                // Pushing state
-                history.pushState({}, '', url.href);
+                // Setting
+                this.redirectTs = Date.now();
 
-                // Handling
-                this._handleRoute();
+                // Changing state
+                history[this.redirectTs - ts <= 250 ? 'replaceState' : 'pushState']({}, '', url.href);
+
+                // Firing
+                this.fire('app-redirect', {href: url.href});
             },
 
             /*********************************************************************/
@@ -93,6 +98,20 @@
             properties: {
 
                 /**
+                 * The application's active query.
+                 *
+                 * @attribute query
+                 * @type Object
+                 * @notifies
+                 * @readonly
+                 */
+                query: {
+                    notify: true,
+                    readOnly: true,
+                    type: Object
+                },
+
+                /**
                  * If set to true, the route change has been prevented.
                  *
                  * @attribute rollback
@@ -101,8 +120,7 @@
                  */
                 rollback: {
                     readOnly: true,
-                    type: Boolean,
-                    value: false
+                    type: Boolean
                 },
 
                 /**
@@ -160,6 +178,16 @@
             },
 
             /**
+             * The last redirect timestamp.
+             *
+             * @property redirectTs
+             * @type number
+             * @default 0
+             * @readonly
+             */
+            redirectTs: 0,
+
+            /**
              * The application's namespace.
              *
              * @property namespace
@@ -183,8 +211,10 @@
                 // Listening
                 if (pre) { this.unlisten(pre, 'click', '_handleClick'); }
                 if (pre) { this.unlisten(window, 'popstate', '_handleRoute'); }
+                if (pre) { this.unlisten(window, 'app-redirect', '_handleRoute'); }
                 if (post) { this.listen(post, 'click', '_handleClick'); }
                 if (post) { this.listen(window, 'popstate', '_handleRoute'); }
+                if (post) { this.listen(window, 'app-redirect', '_handleRoute'); }
             },
 
             /*********************************************************************/
@@ -216,29 +246,35 @@
             _handleRoute() {
 
                 // Preventing
-                if (this.rollback || !this.routes) { return this.ensure('rollback', false); }
+                if (this.rollback || !this.routes || !this.shell) { return this.ensure('rollback', false); }
 
                 // Matching
                 this.routes.find(element => {
 
                     // Let
-                    let params = XP.parsePath(location.pathname, element.path),
+                    let params = XP.parsePath(location.pathname, `${this.shell.baseRoute || ''}${element.path}`),
                         query  = XP.parseQueryString(location.search.slice(1)),
-                        opts   = params && {params: XP.freezeDeep(params), pathname: location.pathname, query: query},
-                        route  = params && Object.assign({}, XP.mapValues(element.dataset, val => XP.parsePrimitive(val)), opts),
-                        event  = params && this.fire('app-route', {namespace: this.namespace, route: route}, {cancelable: true});
+                        data   = params && {basename: this.shell.baseRoute || '', params: XP.freezeDeep(params), pathname: location.pathname.replace(this.shell.baseRoute || '', '')},
+                        route  = params && this.get('route.pathname') !== data.pathname && Object.assign({}, XP.mapValues(element.dataset, val => XP.parsePrimitive(val)), data),
+                        event  = params && this.fire('app-route', {namespace: this.namespace, query: query, route: route || this.route}, {cancelable: true});
 
                     // Checking
-                    if (event) { this.ensure('rollback', event.defaultPrevented); } else { return; }
+                    if (!params) { return; }
+
+                    // Preparing
+                    if (event) { this.ensure('rollback', event.defaultPrevented); }
 
                     // Rollback
                     if (this.rollback) { history.forward(); this.wait(() => !this.rollback || history.back(), 3, true); return true; }
 
                     // Redirecting
-                    if (element.redirect) { this.redirect(element.redirect); return true; }
+                    if (element.redirect) { this.redirect(`${this.shell.baseRoute || ''}${element.redirect}`); return true; }
 
                     // Ensuring
-                    return !this.ensure('route', route);
+                    if (route) { this.ensure('route', route); }
+                    if (query) { this.ensure('query', query); }
+
+                    return true;
                 });
             }
         });

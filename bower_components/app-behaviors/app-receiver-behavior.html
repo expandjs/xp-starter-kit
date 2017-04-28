@@ -53,6 +53,20 @@
             },
 
             /**
+             * The application's auth.
+             *
+             * @attribute auth
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            auth: {
+                notify: true,
+                readOnly: true,
+                type: Object
+            },
+
+            /**
              * If set to true, the client is offline.
              *
              * @attribute offline
@@ -116,10 +130,13 @@
 
             // Linking
             if (pre) { this.unlinkProperties('app', 'app', pre); }
+            if (pre) { this.unlinkProperties('auth', 'auth', pre); }
             if (post) { this.linkProperties('app', 'app', post); }
+            if (post) { this.linkProperties('auth', 'auth', post); }
 
             // Ensuring
             this.ensure('app', post && post.app);
+            this.ensure('auth', post && post.auth);
 
             // Initializing
             if (post) { this.initialize(); }

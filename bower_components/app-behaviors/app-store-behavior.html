@@ -47,36 +47,36 @@
 
         // LISTENERS
         listeners: {
-            'app-authorize': '__handleAuthorize',
-            'app-route': '__handleRoute',
-            'app-unauthorize': '__handleUnauthorize'
+            'app-route': '__handleRoute'
         },
 
         // PROPERTIES
         properties: {
 
             /**
-             * The application's auth.
-             *
-             * @attribute auth
-             * @type Object
-             * @readonly
-             */
-            auth: {
-                readOnly: true,
-                type: Object
-            },
-
-            /**
              * The application's state.
              *
              * @attribute app
              * @type Object
-             * @default {}
              * @notifies
              * @readonly
              */
             app: {
+                notify: true,
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
+            },
+
+            /**
+             * The application's auth.
+             *
+             * @attribute auth
+             * @type Object
+             * @notifies
+             * @readonly
+             */
+            auth: {
                 notify: true,
                 readOnly: true,
                 type: Object,
@@ -94,6 +94,23 @@
                 readOnly: true,
                 slaves: '.command',
                 value() { return []; }
+            },
+
+            /**
+             * If set to true, the store is initialized.
+             *
+             * @attribute initialized
+             * @type boolean
+             * @default false
+             * @notifies
+             * @readonly
+             */
+            initialized: {
+                notify: true,
+                readOnly: true,
+                reflectToAttribute: true,
+                type: Boolean,
+                value: false
             },
 
             /**
@@ -178,21 +195,37 @@
             // Waiting (ShadyDOM)
             this.async(() => {
 
+                // Starting
+                this.ensure('initialized', false);
+
+                // Listening
+                this[post ? 'listen' : 'unlisten'](window, 'offline', '__handleOffline');
+                this[post ? 'listen' : 'unlisten'](window, 'online', '__handleOnline');
+
+                // Checking
+                if (!post) { return; }
+
                 // Let
-                let base = {i18n: {}, locale: XP.toLocale(navigator.language), meta: {}},
-                    app  = XP.merge(base, XP.get(window, `app.${this.namespace}`), this.app);
+                let locale = XP.toLocale(navigator.language),
+                    app    = XP.merge({i18n: {}, locale: locale, meta: {}}, XP.get(window, `app.${this.namespace}`), this.app),
+                    auth   = XP.merge(window.auth || {}, this.auth);
 
                 // Ensuring
                 this.ensure('app', app);
+                this.ensure('auth', auth);
 
                 // Initializing
-                if (post) { this.initialize(); }
+                this.initialize();
 
                 // Memoizing
-                if (post) { this.memoize(); }
+                this.memoize();
 
                 // Exposing
                 XP.set(window, `app.${this.namespace}`, app);
+                XP.set(window, `auth`, auth);
+
+                // Ending
+                this.ensure('initialized', true);
             });
         },
 
@@ -202,46 +235,41 @@
         ready() {
 
             // Let
-            let auth    = {},
-                sources = {};
-
-            // Listening
-            window.addEventListener('offline', () => this.ensure('offline', true));
-            window.addEventListener('online', () => this.ensure('offline', false));
-
-            // Mapping
-            XP.getElements(Polymer.dom(this.root), '.auth[name]:not([name=""])').forEach(element => auth[element.name] = element);
-            XP.getElements(Polymer.dom(this.root), '.source[name]:not([name=""])').forEach(element => sources[element.name] = element);
-
-            // Binding
-            Object.keys(sources).forEach(key => this.ensure('auth', auth[key] || null, sources[key]));
+            let sources = XP.getElements(Polymer.dom(this.root), '.source[name]:not([name=""])');
 
             // Ensuring
-            this.ensure('auth', auth);
-            this.ensure('sources', sources);
+            this.ensure('sources', sources.reduce((result, source) => { result[source.name] = source; return result; }, {}));
         },
 
         /*********************************************************************/
 
         // HANDLER
-        __handleAuthorize(event) {
+        __handleOffline() {
 
             // Ensuring
-            this.ensure(`app.auth.${event.detail.authenticator}`, event.detail.accessToken);
+            this.ensure('offline', true);
+        },
+
+        // HANDLER
+        __handleOnline() {
+
+            // Ensuring
+            this.ensure('online', false);
         },
 
         // HANDLER
         __handleRoute(event) {
 
             // Ensuring
-            this.async(() => event.defaultPrevented || this.ensure('app.route', event.detail.route));
-        },
+            this.async(() => {
 
-        // HANDLER
-        __handleUnauthorize(event) {
+                // Preventing
+                if (event.defaultPrevented) { return; }
 
-            // Ensuring
-            this.ensure(`app.auth.${event.detail.authenticator}`, null);
+                // Ensuring
+                this.ensure('app.route', event.detail.route);
+                this.ensure('app.query', event.detail.query);
+            });
         }
     };
 

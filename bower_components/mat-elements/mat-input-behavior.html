@@ -4,24 +4,6 @@
 <script>
     Polymer.MATInputBehavior = {
 
-        // PROPERTIES
-        properties: {
-
-            /**
-             * The input's holder.
-             *
-             * @attribute holder
-             * @type Element
-             * @readonly
-             */
-            holder: {
-                readOnly: true,
-                selector: '.holder'
-            }
-        },
-
-        /*********************************************************************/
-
         // COMPUTER
         _computeDescription(description, invalidMessage) {
             return invalidMessage || description || '';

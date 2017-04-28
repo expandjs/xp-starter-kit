@@ -82,6 +82,23 @@
         },
 
         /**
+         * Refreshes the selection.
+         *
+         * @method refreshSelection
+         */
+        refreshSelection() {
+
+            // Ensuring
+            if (!this.multi) { this.ensure('selectedData', this.get('selectedItem.data') || null); }
+
+            // Overwriting
+            if (this.multi) { this.overwrite('selectedData', this.selectedItem ? this.selectedItem.map(item => item.data || null) : []); }
+
+            // Mutating
+            if (this.items) { this.items.forEach(item => XP.setAttribute(item, this.selectedAttribute, this.isSelected(item, true))); }
+        },
+
+        /**
          * Resets the selection.
          *
          * @method resetSelection
@@ -255,13 +272,11 @@
 
         // LISTENERS
         listeners: {
-            'click': '__handleSelection',
-            'data-changed': '__handleData'
+            'click': '__handleSelection'
         },
 
         // OBSERVERS
         observers: [
-            '__foundChanged(found)',
             '__selectedIndexChanged(selectedIndex.*)',
             '__selectedItemChanged(selectedItem.*)'
         ],
@@ -420,13 +435,6 @@
         /*********************************************************************/
 
         // OBSERVER
-        __foundChanged() {
-
-            // Selecting
-            if (this.found) { this.selectDefault(); }
-        },
-
-        // OBSERVER
         __itemsChanged() {
 
             // Debouncing
@@ -455,6 +463,11 @@
                     this.overwrite('selectedItem', this.items ? this.items.filter(item => this.isSelected(item, true)) : []);
                     this.overwrite('selectedIndex', this.selectedItem ? this.selectedItem.map(item => this.findIndex(item, true)) : []);
                     this.ensure('selecting', false);
+                }
+
+                // Selecting
+                if (this.autoSelect && this.found && !this.selectedItem) {
+                    this.selectDefault();
                 }
             });
         },
@@ -488,42 +501,11 @@
             // Propagating
             this.__itemsChanged.apply(this, arguments);
 
-            // Ensuring
-            if (!this.multi) { this.ensure('selectedData', this.get('selectedItem.data') || null); }
-
-            // Overwriting
-            if (this.multi) { this.overwrite('selectedData', this.selectedItem ? this.selectedItem.map(item => item.data || null) : []); }
-
-            // Mutating
-            if (this.items) { this.items.forEach(item => XP.setAttribute(item, this.selectedAttribute, this.isSelected(item, true))); }
+            // Refreshing
+            this.refreshSelection();
         },
 
         /*********************************************************************/
-
-        // LISTENER
-        created() {
-
-            // Binding
-            this.selectDefault = XP.once(this.selectDefault.bind(this));
-        },
-
-        /*********************************************************************/
-
-        // HANDLER
-        __handleData(event) {
-
-            // Let
-            let firer = this.firer(event);
-
-            // Checking
-            if (event.detail.path) { return; }
-
-            // Overwriting
-            if (this.multi && this.selectedItem.includes(firer)) { this.overwrite('selectedData', this.selectedItem.map(item => item.data || null)); }
-
-            // Ensuring
-            if (!this.multi && this.selectedItem === firer) { this.ensure('selectedData', this.get('selectedItem.data') || null); }
-        },
 
         // HANDLER
         __handleSelection(event) {

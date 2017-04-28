@@ -25,10 +25,6 @@
                 pointer-events: auto !important;
             }
 
-            :host(:not([narrow])) > .wrapper > .main {
-                z-index: 1;
-            }
-
             :host > .wrapper > .backdrop {
                 @apply --layout-fit;
                 background: hsla(0, 0%, 0%, 0.5);
@@ -136,7 +132,7 @@
         <div class="wrapper">
             <div class="main"><slot></slot></div>
             <div class="backdrop" on-click="_handleHide"></div>
-            <div class="drawer-wrapper" on-xp-select="_handleSelect"><slot name="drawer"></slot></div>
+            <div class="drawer-wrapper"><slot name="drawer"></slot></div>
         </div>
 
     </template>
@@ -227,22 +223,10 @@
                  * @attribute animating
                  * @type boolean
                  * @default false
+                 * @readonly
                  */
                 animating: {
                     readOnly: true,
-                    reflectToAttribute: true,
-                    type: Boolean,
-                    value: false
-                },
-
-                /**
-                 * If set to true, the drawer will automatically close by selecting something inside.
-                 *
-                 * @attribute auto-hide
-                 * @type boolean
-                 * @default false
-                 */
-                autoHide: {
                     reflectToAttribute: true,
                     type: Boolean,
                     value: false
@@ -293,6 +277,19 @@
                 drawerWrapper: {
                     readOnly: true,
                     selector: '.drawer-wrapper'
+                },
+
+                /**
+                 * If set to true, the drawer panel will not close on `esc`.
+                 *
+                 * @attribute esc-disabled
+                 * @type boolean
+                 * @default false
+                 */
+                escDisabled: {
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
                 },
 
                 /**
@@ -582,7 +579,7 @@
 
                 // Setting
                 if (!event.keyCode && !event.button) { event.hiding = this; }
-                if (!event.defaultPrevented && event.keyCode === 27 && this.showed && (this.narrow || this.right)) { event.hiding = this; }
+                if (!event.defaultPrevented && event.keyCode === 27 && !this.escDisabled && this.showed && (this.narrow || this.right)) { event.hiding = this; }
 
                 // Frame 1
                 requestAnimationFrame(() => event.hiding !== this || this.hide());
@@ -596,16 +593,6 @@
 
                 // Handling
                 this.debounce('shifting', () => this._handleShift(null, true));
-            },
-
-            // HANDLER
-            _handleSelect(event) {
-
-                // Checking
-                if (!this.autoHide || !this.narrow || this.right || event.detail.multi || !event.detail.isSelected) { return; }
-
-                // Hiding
-                if (!this.refire(event).defaultPrevented) { this.hide(); }
             },
 
             // HANDLER

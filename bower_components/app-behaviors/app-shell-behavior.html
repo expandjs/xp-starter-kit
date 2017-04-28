@@ -52,6 +52,18 @@
             },
 
             /**
+             * If set, every application's route will be relative to this.
+             *
+             * @attribute base-route
+             * @type string
+             * @notifies
+             */
+            baseRoute: {
+                notify: true,
+                type: String
+            },
+
+            /**
              * The application's namespace.
              *
              * @attribute namespace
@@ -75,6 +87,19 @@
                 observer: '__storeChanged',
                 slave: '.store',
                 readOnly: true
+            },
+
+            /**
+             * The application's wrapper.
+             *
+             * @attribute wrapper
+             * @type Element
+             * @readonly
+             */
+            wrapper: {
+                observer: '__wrapperChanged',
+                master: '.shell',
+                readOnly: true
             }
         },
 
@@ -85,10 +110,20 @@
 
             // Linking
             if (pre) { this.unlinkProperties('app', 'app', pre); }
+            if (pre) { this.unlinkProperties('auth', 'auth', pre); }
             if (post) { this.linkProperties('app', 'app', post); }
+            if (post) { this.linkProperties('auth', 'auth', post); }
 
             // Ensuring
             this.ensure('app', post && post.app);
+        },
+
+        // OBSERVER
+        __wrapperChanged(post, pre) {
+
+            // Linking
+            if (pre) { this.unlinkProperties('auth', 'auth', pre); }
+            if (post) { this.linkProperties('auth', 'auth', post); }
         },
 
         /*********************************************************************/

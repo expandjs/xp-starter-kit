@@ -19,6 +19,13 @@
          */
 
         /**
+         * Fired on attached.
+         *
+         * @event xp-overlay
+         * @bubbles
+         */
+
+        /**
          * Fired on show.
          *
          * @event xp-show
@@ -147,6 +154,7 @@
 
             // Listening
             if (post) { this.listen(post, 'xp-hide', '__handleRefire'); }
+            if (post) { this.listen(post, 'xp-overlay', '__handleRefire'); }
             if (post) { this.listen(post, 'xp-show', '__handleRefire'); }
         },
 

@@ -26,9 +26,23 @@
             XP.assertArgument(XP.isVoid(callback) || XP.isFunction(callback), 4, 'Function');
 
             // Let
-            let injected = XP.isString(element) ? document.createElement(element.toLowerCase()) : element,
-                listener = XP.debounce(() => !injected.showed && Polymer.dom(Polymer.dom(injected).parentNode).removeChild(XP.unlisten(injected, 'showed-changed', listener)), 500),
-                shell    = XP.matches(this, '.shell') ? this : XP.findParentElement(this, '.shell') || document.body;
+            let showed,
+                remover  = XP.once(remove),
+                injected = XP.isString(element) ? document.createElement(element.toLowerCase()) : element,
+                shell    = XP.matches(this, '.shell') ? this : XP.findParentElement(this, '.shell') || document.body,
+                handler1 = event => this.firer(event) === injected && requestAnimationFrame(() => injected.show()),
+                handler2 = event => this.firer(event) === injected && showed && !event.detail.value ? this.wait(remover, 500) : showed = event.detail.value;
+
+            // Function
+            function remove() {
+
+                // Unlistening
+                XP.unlisten(injected, 'xp-overlay', handler1);
+                XP.unlisten(injected, 'showed-changed', handler2);
+
+                // Removing
+                Polymer.dom(Polymer.dom(injected).parentNode).removeChild(injected);
+            }
 
             // Ensuring
             if (injected) { this.ensure('target', this, injected); }
@@ -36,15 +50,14 @@
             if (data)     { this.ensure('data', data, injected); }
             if (callback) { this.ensure('callback', callback, injected); }
 
+            // Listening
+            XP.listen(injected, 'xp-overlay', handler1);
+            XP.listen(injected, 'showed-changed', handler2);
+
             // Appending
             Polymer.dom(shell.root || shell).appendChild(injected);
 
-            // Listening
-            XP.listen(injected, 'showed-changed', listener);
-
-            // Showing
-            requestAnimationFrame(() => requestAnimationFrame(() => XP.call(injected, 'show')));
-
+            // Returning
             return injected;
         }
     };

@@ -18,6 +18,13 @@
          */
 
         /**
+         * Fired on attached.
+         *
+         * @event xp-overlay
+         * @bubbles
+         */
+
+        /**
          * Fired on show.
          *
          * @event xp-show
@@ -83,18 +90,6 @@
              */
             autoCenter: {
                 reflectToAttribute: true,
-                type: Boolean,
-                value: false
-            },
-
-            /**
-             * If set to true, clicking outside will close the overlay.
-             *
-             * @attribute auto-hide
-             * @type boolean
-             * @default false
-             */
-            autoHide: {
                 type: Boolean,
                 value: false
             },
@@ -204,6 +199,13 @@
         /*********************************************************************/
 
         // LISTENER
+        attached() {
+
+            // Firing
+            requestAnimationFrame(() => this.fire('xp-overlay'));
+        },
+
+        // LISTENER
         created() {
 
             // Binding
@@ -217,16 +219,16 @@
         // HANDLER
         __handleHide(event) {
 
-            // Frame 2
+            // Frame 1
             requestAnimationFrame(() => {
 
                 // Checking
-                if (event.overlays && event.overlays.indexOf(this) >= 0) { return; }
+                if (event.overlays && event.overlays.includes(this)) { return; }
 
                 // Setting
-                if ((!event.keyCode && !event.button && this.autoHide) || (event.keyCode === 27 && !event.defaultPrevented)) { event.hiding = this; }
+                if ((!event.keyCode && !event.button) || (event.keyCode === 27 && !event.defaultPrevented)) { event.hiding = this; }
 
-                // Frame 3
+                // Frame 2
                 requestAnimationFrame(() => {
 
                     // Checking

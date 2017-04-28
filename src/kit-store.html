@@ -13,7 +13,7 @@
             }
         </style>
 
-        
+
         <app-router>
             <template is="dom-repeat" items="[[app.meta.routes]]">
                 <app-route path="[[item.path]]" data-name$="[[item.name]]" data-view$="[[item.view]]"></app-route>
@@ -51,7 +51,7 @@
             initialize() {
 
                 // Registering
-                if (navigator.serviceWorker) { navigator.serviceWorker.register('/xp-starter-kit/service-worker.js'); }
+                if (navigator.serviceWorker) { navigator.serviceWorker.register('service-worker.js'); }
 
                 // Ensuring
                 this.ensure('app.theme', 'light');
