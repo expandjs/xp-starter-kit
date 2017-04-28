@@ -2,7 +2,6 @@
 /* PROCESS */
 /*********************************************************************/
 process.chdir(__dirname);
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 /*********************************************************************/
@@ -18,7 +17,7 @@ const ejs      = require('ejs'),
     XP         = require('expandjs'),
     config     = require('./config'),
     tls        = require('./tls'),
-    production = fs.find(`${__dirname}/production.on.html`),
+    production = process.argv.includes('--production') || process.argv.includes('-p'),
     views      = fs.export(`${__dirname}/views`, 'html', ejs.compile);
 
 /***********************************************************************/

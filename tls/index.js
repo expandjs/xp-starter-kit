@@ -1,2 +1,8 @@
+// Const
+const fs = require('fs');
+
 // Exporting
-module.exports = require('xp-fs').export(__dirname, 'pem');
+module.exports = {
+    cert: fs.readFileSync(`${__dirname}/cert.pem`),
+    key: fs.readFileSync(`${__dirname}/key.pem`)
+};
