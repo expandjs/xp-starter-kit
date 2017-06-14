@@ -1,6 +1,10 @@
 <link rel="import" href="../../bower_components/xp-elements/xp-base-behavior.html">
 
 <script>
+
+    /**
+     * @polymerBehavior Polymer.KITBaseBehaviorImp
+     */
     Polymer.KITBaseBehaviorImp = {
 
         // PROPERTIES
@@ -12,13 +16,16 @@
              * @readonly
              */
             view: {
-                computed: '_computeFrom(app.view)',
+                computed: 'computeFrom(app.view)',
                 reflectToAttribute: true,
                 type: String
             }
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.KITBaseBehavior
+     */
     Polymer.KITBaseBehavior = [
         Polymer.XPBaseBehavior,
         Polymer.KITBaseBehaviorImp

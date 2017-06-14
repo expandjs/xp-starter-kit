@@ -1,5 +1,6 @@
 {
-  "entrypoint": "index.html",
+  "entrypoint": "views/index.html",
+
   "shell": "src/kit-shell.html",
 
   "fragments": [
