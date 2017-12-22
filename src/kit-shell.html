@@ -108,9 +108,9 @@
                     </mat-header>
 
                     <!-- NAVIGATION -->
-                    <mat-list index-attribute="href" selected-index="[[app.topic.href]]">
+                    <mat-list index-attribute="href" selected-index="[[app.route.basename]][[app.topic.href]]">
                         <template is="dom-repeat" items="[[app.meta.topics]]" filter="_isNavigable">
-                            <mat-item href="[[item.href]]" label="[[localize(item.name)]]"></mat-item>
+                            <mat-item href="[[app.route.basename]][[item.href]]" label="[[localize(item.name)]]"></mat-item>
                         </template>
                     </mat-list>
 
