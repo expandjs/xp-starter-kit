@@ -1,47 +1,45 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../xp-elements/xp-page-behavior.html">
-<link rel="import" href="../xp-elements/xp-page-styles.html">
-<link rel="import" href="mat-paper-behavior.html">
-<link rel="import" href="mat-paper-styles.html">
-<link rel="import" href="mat-spacing.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../iron-flex-layout/iron-flex-layout.html"><link rel="import" href="../xp-elements/xp-page-behavior.html"><link rel="import" href="../xp-elements/xp-page-styles.html"><link rel="import" href="mat-paper-behavior.html"><link rel="import" href="mat-paper-styles.html"><link rel="import" href="mat-spacing.html"></head><body><dom-module id="mat-page"><template strip-whitespace=""><style include="mat-paper-styles xp-page-styles">:host{overflow:hidden;transform:none !important;}:host-context([sliding]) .wrapper{display:block;}:host([padding]) .wrapper{@apply --mat-padding;}@media (max-width: 960px){:host([padding]) .wrapper{@apply --mat-padding-mobile;}}</style><div class="wrapper"><slot></slot></div></template><script>
+        Polymer({
 
-</head><body><dom-module id="mat-page">
+            // ELEMENT
+            is: 'mat-page',
 
-    <template strip-whitespace="">
+            // BEHAVIORS
+            behaviors: [
+                Polymer.MATPaperBehavior,
+                Polymer.XPPageBehavior
+            ],
 
-        <style include="mat-paper-styles xp-page-styles">
-            :host {
-                overflow: hidden;
-                transform: none !important;
-            }
+            /*********************************************************************/
 
-            :host-context([sliding]) .wrapper {
-                display: block;
-            }
+            // PROPERTIES
+            properties: {
 
-            :host([padding]) .wrapper {
-                @apply --mat-padding;
-            }
+                /**
+                 * The page's brightness.
+                 *
+                 * @attribute brightness
+                 * @type string
+                 * @default "transparent"
+                 */
+                brightness: {
+                    reflectToAttribute: true,
+                    type: String,
+                    value: 'transparent'
+                },
 
-            /* TABLET */
-
-            @media (max-width: 960px) {
-
-                :host([padding]) .wrapper {
-                    @apply --mat-padding-mobile;
+                /**
+                 * If set to true, the material spacing rules are applied.
+                 *
+                 * @attribute padding
+                 * @type boolean
+                 * @default false
+                 */
+                padding: {
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
                 }
             }
-        </style>
-
-        <div class="wrapper">
-            <slot></slot>
-        </div>
-
-    </template>
-
-    <script>Polymer({is:"mat-page",behaviors:[Polymer.MATPaperBehavior,Polymer.XPPageBehavior],properties:{brightness:{reflectToAttribute:!0,type:String,value:"transparent"},padding:{reflectToAttribute:!0,type:Boolean,value:!1}}});</script>
-
-</dom-module>
-</body></html>
+        });
+    </script></dom-module></body></html>

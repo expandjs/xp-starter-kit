@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-pressed-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-pressed-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.MATPressedBehaviorImp
+     */
     Polymer.MATPressedBehaviorImp = {
 
         /**
@@ -123,6 +123,8 @@
             }
         },
 
+        /*********************************************************************/
+
         /**
          * The last ripple timestamp.
          *
@@ -165,9 +167,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.MATPressedBehavior
+     */
     Polymer.MATPressedBehavior = [
         Polymer.XPPressedBehavior,
         Polymer.MATPressedBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

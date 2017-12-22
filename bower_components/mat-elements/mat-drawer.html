@@ -1,64 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../xp-elements/xp-base-behavior.html">
-<link rel="import" href="../xp-elements/xp-media-query.html">
-<link rel="import" href="mat-paper.html">
-<link rel="import" href="mat-spacing.html">
-
-</head><body><dom-module id="mat-drawer">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                box-sizing: border-box;
-                display: block;
-                height: 100%;
-                max-width: 100%;
-                pointer-events: auto;
-            }
-
-            :host([empty]) {
-                opacity: 0 !important;
-                pointer-events: none !important;
-                visibility: hidden !important;
-            }
-
-            :host .wrapper {
-                box-sizing: border-box;
-                height: 100%;
-            }
-
-            :host(:not([transparent])) .wrapper[foreground="dark"] {
-                box-shadow: 1px 0 var(--mat-divider-color);
-            }
-
-            :host(:not([transparent])) .wrapper[foreground="light"] {
-                box-shadow: 1px 0 var(--mat-divider-color-light);
-            }
-
-            :host .scroller {
-                box-sizing: border-box;
-                height: 100%;
-                overflow-x: hidden;
-                overflow-y: auto;
-            }
-
-            :host([padding]) .scroller {
-                padding: 16px;
-            }
-        </style>
-
-        <mat-paper class="wrapper" background="[[background]]" brightness="[[_computeBrightness(narrow, transparent)]]" z="[[_computeZ(narrow)]]">
-            <div class="scroller">
-                <slot></slot>
-            </div>
-        </mat-paper>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../iron-flex-layout/iron-flex-layout.html"><link rel="import" href="../xp-elements/xp-base-behavior.html"><link rel="import" href="../xp-elements/xp-media-query.html"><link rel="import" href="mat-paper.html"><link rel="import" href="mat-spacing.html"></head><body><dom-module id="mat-drawer"><template strip-whitespace=""><style>:host{box-sizing:border-box;display:block;height:100%;max-width:100%;pointer-events:auto;}:host([empty]){opacity:0 !important;pointer-events:none !important;visibility:hidden !important;}:host .wrapper{box-sizing:border-box;height:100%;}:host(:not([transparent])) .wrapper[foreground="dark"]{box-shadow:1px 0 var(--mat-divider-color);}:host(:not([transparent])) .wrapper[foreground="light"]{box-shadow:1px 0 var(--mat-divider-color-light);}:host .scroller{height:100%;overflow-x:hidden;overflow-y:auto;}:host([padding]) .scroller{padding:16px;height:calc(100% - 32px);}</style><mat-paper class="wrapper" background="[[background]]" brightness="[[_computeBrightness(narrow, transparent)]]" z="[[_computeZ(narrow)]]"><div class="scroller"><slot></slot></div></mat-paper></template><script>
         Polymer({
 
             // ELEMENT
@@ -172,7 +112,4 @@
                 Polymer.dom(this).observeNodes(this.mutated.bind(this));
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

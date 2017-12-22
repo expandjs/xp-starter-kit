@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-base-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-base-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPLabelBehaviorImp
+     */
     Polymer.XPLabelBehaviorImp = {
 
         // CLASSES
@@ -95,6 +95,8 @@
             }
         },
 
+        /*********************************************************************/
+
         /**
          * The list of possible inputs.
          *
@@ -118,9 +120,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPLabelBehavior
+     */
     Polymer.XPLabelBehavior = [
         Polymer.XPBaseBehavior,
         Polymer.XPLabelBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

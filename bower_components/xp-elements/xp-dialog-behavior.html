@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-overlay-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-overlay-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPDialogBehaviorImp
+     */
     Polymer.XPDialogBehaviorImp = {
 
         // CLASSES
@@ -148,7 +148,7 @@
                     // Checking
                     if (event.hiding !== this) { return; }
 
-                    // Unlistening
+                    // Removing listeners
                     this.unlisten(this, 'click', '__handlePush');
                     this.unlisten(window, 'click', '__handleHide');
                     this.unlisten(window, 'keyup', '__handleHide');
@@ -161,9 +161,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPDialogBehavior
+     */
     Polymer.XPDialogBehavior = [
         Polymer.XPOverlayBehavior,
         Polymer.XPDialogBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

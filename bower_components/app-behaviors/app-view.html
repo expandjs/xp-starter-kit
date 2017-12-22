@@ -1,25 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="app-receiver-behavior.html">
-
-</head><body><dom-module id="app-view">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                box-sizing: border-box;
-                display: block;
-                height: 100%;
-                position: relative;
-            }
-        </style>
-
-        <slot></slot>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="app-receiver-behavior.html"></head><body><dom-module id="app-view"><template strip-whitespace=""><style>:host{box-sizing:border-box;display:block;height:100%;position:relative;}</style><slot></slot></template><script>
         Polymer({
 
             // ELEMENT
@@ -87,7 +66,4 @@
                 if (inject || remove) { this.ensure('injected', inject || null); }
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

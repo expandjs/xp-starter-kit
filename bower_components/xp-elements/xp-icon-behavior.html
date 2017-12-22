@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-iconset-finder.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-iconset-finder.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPIconBehaviorImp
+     */
     Polymer.XPIconBehaviorImp = {
 
         // CLASSES
@@ -92,7 +92,7 @@
              * @readonly
              */
             raster: {
-                computed: '_computeRaster(src)',
+                computed: 'isTruthy(src)',
                 notify: true,
                 readOnly: true,
                 reflectToAttribute: true,
@@ -111,13 +111,6 @@
                 reflectToAttribute: true,
                 type: String
             }
-        },
-
-        /*********************************************************************/
-
-        // COMPUTER
-        _computeRaster(src) {
-            return !!src;
         },
 
         /*********************************************************************/
@@ -181,9 +174,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPIconBehavior
+     */
     Polymer.XPIconBehavior = [
         Polymer.XPIconsetFinder,
         Polymer.XPIconBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

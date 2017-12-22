@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
-<link rel="import" href="app-locale-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-master-slave-behavior.html"><link rel="import" href="app-locale-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.APPStoreBehaviorImp
+     */
     Polymer.APPStoreBehaviorImp = {
 
         // CLASSES
@@ -12,14 +11,14 @@
         /*********************************************************************/
 
         /**
-         * Should be redefined to setup the application's state.
+         * Initializes the application's state.
          *
          * @method initialize
          * @abstract
          */
-        initialize() {},
+        initialize() {
 
-        /*********************************************************************/
+        },
 
         /**
          * Set the application's `memento`.
@@ -41,6 +40,24 @@
 
             // Ensuring
             this.ensure('app', XP.cloneDeep(this.memento));
+        },
+
+        /**
+         * Registers the application's service worker.
+         *
+         * @method serviceWorker
+         * @param {string} path
+         */
+        serviceWorker(path) {
+
+            // Asserting
+            XP.assertArgument(XP.isString(path, true), 1, 'string');
+
+            // Preventing
+            if (location.protocol !== 'https:' || !navigator.serviceWorker) { return; }
+
+            // Registering
+            navigator.serviceWorker.register(path);
         },
 
         /*********************************************************************/
@@ -69,7 +86,7 @@
             },
 
             /**
-             * The application's auth.
+             * The authentication's state.
              *
              * @attribute auth
              * @type Object
@@ -97,23 +114,6 @@
             },
 
             /**
-             * If set to true, the store is initialized.
-             *
-             * @attribute initialized
-             * @type boolean
-             * @default false
-             * @notifies
-             * @readonly
-             */
-            initialized: {
-                notify: true,
-                readOnly: true,
-                reflectToAttribute: true,
-                type: Boolean,
-                value: false
-            },
-
-            /**
              * The application's state's memento.
              *
              * @attribute memento
@@ -126,21 +126,6 @@
             },
 
             /**
-             * If set to true, the client is offline.
-             *
-             * @attribute offline
-             * @type boolean
-             * @notifies
-             * @readonly
-             */
-            offline: {
-                notify: true,
-                reflectToAttribute: true,
-                type: Boolean,
-                value: !navigator.onLine
-            },
-
-            /**
              * The application's router.
              *
              * @attribute router
@@ -148,8 +133,8 @@
              * @readonly
              */
             router: {
-                slave: '.router',
-                readOnly: true
+                readOnly: true,
+                slave: '.router'
             },
 
             /**
@@ -178,55 +163,37 @@
             }
         },
 
-        /**
-         * The application's namespace.
-         *
-         * @property namespace
-         * @type string
-         * @readonly
-         */
-        get namespace() { return this.shell && this.shell.namespace; },
-
         /*********************************************************************/
 
         // OBSERVER
         __shellChanged(post) {
 
-            // Waiting (ShadyDOM)
-            this.async(() => {
+            // Listening
+            this[post ? 'listen' : 'unlisten'](window, 'offline', '__handleOffline');
+            this[post ? 'listen' : 'unlisten'](window, 'online', '__handleOffline');
 
-                // Starting
-                this.ensure('initialized', false);
+            // Let
+            let locale = XP.toLocale(navigator.language),
+                app    = XP.get(window, `app.${post.namespace}`),
+                auth   = XP.get(window, `auth`);
 
-                // Listening
-                this[post ? 'listen' : 'unlisten'](window, 'offline', '__handleOffline');
-                this[post ? 'listen' : 'unlisten'](window, 'online', '__handleOnline');
+            // Overriding
+            app  = XP.merge({i18n: {}, locale: locale, meta: {}}, app, this.app, {offline: !navigator.onLine});
+            auth = XP.merge({}, auth, this.auth);
 
-                // Checking
-                if (!post) { return; }
+            // Exposing
+            XP.set(window, `app.${post.namespace}`, app);
+            XP.set(window, `auth`, auth);
 
-                // Let
-                let locale = XP.toLocale(navigator.language),
-                    app    = XP.merge({i18n: {}, locale: locale, meta: {}}, XP.get(window, `app.${this.namespace}`), this.app),
-                    auth   = XP.merge(window.auth || {}, this.auth);
+            // Ensuring
+            this.ensure('app', app);
+            this.ensure('auth', auth);
 
-                // Ensuring
-                this.ensure('app', app);
-                this.ensure('auth', auth);
+            // Initializing
+            this.initialize();
 
-                // Initializing
-                this.initialize();
-
-                // Memoizing
-                this.memoize();
-
-                // Exposing
-                XP.set(window, `app.${this.namespace}`, app);
-                XP.set(window, `auth`, auth);
-
-                // Ending
-                this.ensure('initialized', true);
-            });
+            // Memoize
+            this.memoize();
         },
 
         /*********************************************************************/
@@ -244,39 +211,30 @@
         /*********************************************************************/
 
         // HANDLER
-        __handleOffline() {
+        __handleOffline(event) {
 
             // Ensuring
-            this.ensure('offline', true);
-        },
-
-        // HANDLER
-        __handleOnline() {
-
-            // Ensuring
-            this.ensure('online', false);
+            this.ensure('app.offline', event.type === 'offline');
         },
 
         // HANDLER
         __handleRoute(event) {
 
+            // Preventing
+            if (event.defaultPrevented) { return; }
+
             // Ensuring
-            this.async(() => {
-
-                // Preventing
-                if (event.defaultPrevented) { return; }
-
-                // Ensuring
-                this.ensure('app.route', event.detail.route);
-                this.ensure('app.query', event.detail.query);
-            });
+            this.ensure('app.route', event.detail.route);
+            this.ensure('app.query', event.detail.query);
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.APPStoreBehavior
+     */
     Polymer.APPStoreBehavior = [
         Polymer.XPMasterSlaveBehavior,
         Polymer.APPLocaleBehavior,
         Polymer.APPStoreBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

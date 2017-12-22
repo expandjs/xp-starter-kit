@@ -1,124 +1,9 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../xp-elements/xp-anchor-behavior.html">
-<link rel="import" href="../xp-elements/xp-anchor-styles.html">
-<link rel="import" href="../xp-elements/xp-overlay-injector.html">
-<link rel="import" href="mat-icon.html">
-<link rel="import" href="mat-icons.html">
-<link rel="import" href="mat-ink.html">
-<link rel="import" href="mat-pressed-ink-behavior.html">
-<link rel="import" href="mat-pressed-ink-styles.html">
-<link rel="import" href="mat-typography.html">
-
-</head><body><dom-module id="mat-option">
-
-    <template strip-whitespace="">
-
-        <style include="xp-anchor-styles mat-pressed-ink-styles">
-            :host {
-                @apply --mat-font-subhead;
-                display: block;
-                height: 48px;
-                overflow: hidden;
-                text-align: left;
-            }
-
-            :host-context([cascade]) {
-                height: 32px;
-            }
-
-            :host .anchor[href]:hover {
-                text-decoration: none;
-            }
-
-            :host .anchor[href]:hover .label {
-                text-decoration: underline;
-            }
-
-            :host .main {
-                @apply --layout-horizontal;
-                @apply --layout-center;
-                box-sizing: border-box;
-                height: 100%;
-                overflow: hidden;
-                padding: 0 16px;
-                pointer-events: none !important;
-            }
-
-            :host-context([cascade]) .main {
-                padding: 0 24px;
-            }
-
-            :host .primary {
-                margin-right: 24px;
-            }
-
-            :host([toggleable]:not([active])) .primary {
-                visibility: hidden !important;
-            }
-
-            :host-context(.dropdown) .primary {
-                display: none !important;
-            }
-
-            :host-context([cascade]) .primary {
-                margin-right: 16px;
-            }
-
-            :host .label,
-            :host .keystroke {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            :host([bold]) .label {
-                font-weight: bold;
-            }
-
-            :host .spacer {
-                @apply --layout-flex;
-                min-width: 16px;
-            }
-
-            :host([keystroke=""]:not([arrow="down"]):not([arrow="right"])) .spacer,
-            :host(:not([keystroke]):not([arrow="down"]):not([arrow="right"])) .spacer {
-                display: none !important;
-            }
-
-            :host([arrow]) .keystroke,
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../iron-flex-layout/iron-flex-layout.html"><link rel="import" href="../xp-elements/xp-anchor-behavior.html"><link rel="import" href="../xp-elements/xp-anchor-styles.html"><link rel="import" href="../xp-elements/xp-overlay-injector.html"><link rel="import" href="mat-icon.html"><link rel="import" href="mat-icons.html"><link rel="import" href="mat-ink.html"><link rel="import" href="mat-pressed-ink-behavior.html"><link rel="import" href="mat-pressed-ink-styles.html"><link rel="import" href="mat-typography.html"></head><body><dom-module id="mat-option"><template strip-whitespace=""><style include="xp-anchor-styles mat-pressed-ink-styles">:host{@apply --mat-font-subhead;display:block;height:48px;overflow:hidden;text-align:left;}:host-context([cascade]){height:32px;}:host .anchor[href]:hover{text-decoration:none;}:host .main{@apply --layout-horizontal;@apply --layout-center;box-sizing:border-box;height:100%;overflow:hidden;padding:0 16px;pointer-events:none !important;}:host-context([cascade]) .main{padding:0 24px;}:host .primary{margin-right:24px;}:host([toggleable]:not([active])) .primary{visibility:hidden !important;}:host-context(.dropdown) .primary{display:none !important;}:host-context([cascade]) .primary{margin-right:16px;}:host .label,
+            :host .keystroke{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}:host([bold]) .label{font-weight:bold;}:host .spacer{@apply --layout-flex;min-width:16px;}:host([keystroke=""]:not([arrow="down"]):not([arrow="right"])) .spacer,
+            :host(:not([keystroke]):not([arrow="down"]):not([arrow="right"])) .spacer{display:none !important;}:host([arrow]) .keystroke,
             :host([keystroke=""]) .keystroke,
             :host(:not([keystroke])) .keystroke,
-            :host-context(.dropdown) .keystroke {
-                display: none !important;
-            }
-
-            :host([arrow="right"]) .arrow {
-                transform: rotate(-90deg);
-            }
-
-            :host(:not([arrow="down"]):not([arrow="right"])) .arrow {
-                display: none !important;
-            }
-        </style>
-
-        <a class="anchor" tabindex="-1" on-click="__handleAnchor">
-            <div class="main">
-                <mat-icon class="primary icon" color="[[color]]" disabled="[[disabled]]" name="[[icon]]" src="[[iconSrc]]"></mat-icon>
-                <mat-ink class="label" color="[[color]]" disabled="[[disabled]]" opacity="[[_computeOpacity(hint)]]"><span>[[_computeLabel(label, value)]]</span></mat-ink>
-                <div class="spacer"></div>
-                <mat-ink class="keystroke" disabled="[[disabled]]"><span>[[keystroke]]</span></mat-ink>
-                <mat-icon class="arrow icon" disabled="[[disabled]]" name="mat:arrow-drop-down" opacity="hint"></mat-icon>
-            </div>
-        </a>
-
-        <div class="ripple-ground" active$="[[_computeActive(toggleable, active)]]"></div>
-        <div class="ripple-waves"></div>
-
-    </template>
-
-    <script>
+            :host-context(.dropdown) .keystroke{display:none !important;}:host([arrow="right"]) .arrow{transform:rotate(-90deg);}:host(:not([arrow="down"]):not([arrow="right"])) .arrow{display:none !important;}</style><a class="anchor" tabindex="-1" on-click="__handleAnchor"><div class="main"><mat-icon class="primary icon" color="[[color]]" disabled="[[disabled]]" name="[[icon]]" src="[[iconSrc]]"></mat-icon><mat-ink class="label" color="[[color]]" disabled="[[disabled]]" opacity="[[_computeOpacity(hint)]]"><span>[[_computeLabel(label, value)]]</span></mat-ink><div class="spacer"></div><mat-ink class="keystroke" disabled="[[disabled]]"><span>[[keystroke]]</span></mat-ink><mat-icon class="arrow icon" disabled="[[disabled]]" name="mat:arrow-drop-down" opacity="hint"></mat-icon></div></a><div class="ripple-ground" active$="[[_computeActive(toggleable, active)]]"></div><div class="ripple-waves"></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -260,12 +145,12 @@
 
             // COMPUTER
             _computeActive(toggleable, active) {
-                return !toggleable && !!active;
+                return Boolean(!toggleable && active);
             },
 
             // COMPUTER
             _computeInset(toggleable, icon, iconSrc) {
-                return !!toggleable || !!icon || !!iconSrc;
+                return Boolean(toggleable || icon || iconSrc);
             },
 
             // COMPUTER
@@ -288,7 +173,4 @@
                 if (this.toggleable) { this.iconSrc = ''; }
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

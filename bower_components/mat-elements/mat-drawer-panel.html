@@ -1,143 +1,11 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-base-behavior.html">
-<link rel="import" href="mat-drawer.html">
-
-</head><body><dom-module id="mat-drawer-panel">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                @apply --layout-fit;
-                pointer-events: none !important;
-            }
-
-            :host > .wrapper {
-                box-sizing: border-box;
-                height: 100%;
-                position: relative;
-                overflow: hidden;
-            }
-
-            :host > .wrapper > .main {
-                @apply --layout-fit;
-                pointer-events: auto !important;
-            }
-
-            :host > .wrapper > .backdrop {
-                @apply --layout-fit;
-                background: hsla(0, 0%, 0%, 0.5);
-            }
-
-            :host([showed]) > .wrapper > .backdrop {
-                pointer-events: auto !important;
-            }
-
-            :host(:not([narrow])) > .wrapper > .backdrop {
-                display: none !important;
-                z-index: 0;
-            }
-
-            :host > .wrapper > .drawer-wrapper {
-                bottom: 0;
-                display: block;
-                position: absolute;
-                top: 0;
-                visibility: hidden;
-                z-index: 0;
-            }
-
-            :host([narrow]) > .wrapper > .backdrop,
-            :host([narrow]) > .wrapper > .drawer-wrapper {
-                z-index: 9999 !important;
-            }
-
-            :host([narrow]) > .wrapper > .drawer-wrapper,
-            :host([right]) > .wrapper > .drawer-wrapper {
-                right: 0;
-            }
-
-            :host([narrow]) > .wrapper > .drawer-wrapper,
-            :host(:not([right])) > .wrapper > .drawer-wrapper {
-                left: 0;
-            }
-
-            :host([narrow]:not([right])) > .wrapper > .drawer-wrapper {
-                position: fixed;
-                width: calc(100% - 56px);
-            }
-
-            :host(:not([right])) > .wrapper > .drawer-wrapper {
-                max-width: 320px;
-                min-width: 256px;
-            }
-
-            :host([showed]) > .wrapper > .drawer-wrapper,
-            :host([tracking]) > .wrapper > .drawer-wrapper {
-                visibility: visible !important;
-            }
-
-            :host([tracking]) > .wrapper > .drawer-wrapper {
-                pointer-events: none !important;
-                transition: none !important;
-            }
-
-            :host([mini]:not([narrow])) > .wrapper > .drawer-wrapper {
-                max-width: 72px;
-                min-width: 72px;
-                pointer-events: auto !important;
-                text-align: center;
-            }
-
-            :host([animating]) > .wrapper > .backdrop,
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-base-behavior.html"><link rel="import" href="mat-drawer.html"></head><body><dom-module id="mat-drawer-panel"><template strip-whitespace=""><style>:host{@apply --layout-fit;pointer-events:none !important;}:host > .wrapper{box-sizing:border-box;height:100%;position:relative;overflow:hidden;}:host > .wrapper > .main{@apply --layout-fit;pointer-events:auto !important;}:host > .wrapper > .backdrop{@apply --layout-fit;background:hsla(0, 0%, 0%, 0.5);}:host([showed]) > .wrapper > .backdrop{pointer-events:auto !important;}:host(:not([narrow])) > .wrapper > .backdrop{display:none !important;z-index:0;}:host > .wrapper > .drawer-wrapper{bottom:0;display:block;position:absolute;top:0;visibility:hidden;z-index:0;}:host([narrow]) > .wrapper > .backdrop,
+            :host([narrow]) > .wrapper > .drawer-wrapper{z-index:9999 !important;}:host([narrow]) > .wrapper > .drawer-wrapper,
+            :host([right]) > .wrapper > .drawer-wrapper{right:0;}:host([narrow]) > .wrapper > .drawer-wrapper,
+            :host(:not([right])) > .wrapper > .drawer-wrapper{left:0;}:host([narrow]:not([right])) > .wrapper > .drawer-wrapper{position:fixed;width:calc(100% - 56px);}:host(:not([right])) > .wrapper > .drawer-wrapper{max-width:320px;min-width:256px;}:host([mini]:not([narrow])) > .wrapper > .drawer-wrapper{max-width:72px;min-width:72px;text-align:center;}:host([showed]:not([empty])) > .wrapper > .drawer-wrapper{pointer-events:auto !important;visibility:visible !important;}:host([tracking]) > .wrapper > .drawer-wrapper{pointer-events:none !important;transition:none !important;visibility:visible !important;}:host([animating]) > .wrapper > .backdrop,
             :host([animating]) > .wrapper > .drawer-wrapper,
-            :host([animating]) > .wrapper > .main {
-                transition: left 0.33s cubic-bezier(0.55, 0, 0.01, 1), transform 0.33s cubic-bezier(0.55, 0, 0.01, 1) !important;
-            }
-
-            :host([animating][narrow][mini]) > .wrapper > .backdrop,
+            :host([animating]) > .wrapper > .main{transition:left 0.33s cubic-bezier(0.55, 0, 0.01, 1), transform 0.33s cubic-bezier(0.55, 0, 0.01, 1) !important;}:host([animating][narrow][mini]) > .wrapper > .backdrop,
             :host([animating][narrow][mini]) > .wrapper > .drawer-wrapper,
-            :host([animating][narrow][mini]) > .wrapper > .main {
-                transition: left 0.33s cubic-bezier(0.55, 0, 0.01, 1), transform 0s !important;
-            }
-
-            /* SLOTTED */
-
-            :host([narrow][right]) > .wrapper > .drawer-wrapper ::slotted(:not(template)) {
-                width: 100%;
-            }
-
-            :host([tracking]) > .wrapper > .drawer-wrapper ::slotted(:not(template)) {
-                overflow-y: hidden !important;
-            }
-
-            :host([mini]:not([narrow])) > .wrapper > .drawer-wrapper ::slotted(:not(template)) {
-                width: 100%;
-            }
-
-            /* SMARTPHONE */
-
-            @media (max-width: 480px) {
-
-                :host(:not([right])) > .wrapper > .drawer-wrapper {
-                    margin-right: 56px;
-                    max-width: 320px;
-                    min-width: 0;
-                }
-            }
-
-        </style>
-
-        <div class="wrapper">
-            <div class="main"><slot></slot></div>
-            <div class="backdrop" on-click="_handleHide"></div>
-            <div class="drawer-wrapper"><slot name="drawer"></slot></div>
-        </div>
-
-    </template>
-
-    <script>
+            :host([animating][narrow][mini]) > .wrapper > .main{transition:left 0.33s cubic-bezier(0.55, 0, 0.01, 1), transform 0s !important;}:host([narrow][right]) > .wrapper > .drawer-wrapper ::slotted(:not(template)){width:100%;}:host([tracking]) > .wrapper > .drawer-wrapper ::slotted(:not(template)){overflow-y:hidden !important;}:host([mini]:not([narrow])) > .wrapper > .drawer-wrapper ::slotted(:not(template)){width:100%;}@media (max-width: 480px){:host(:not([right])) > .wrapper > .drawer-wrapper{margin-right:56px;max-width:320px;min-width:0;}}</style><div class="wrapper"><div class="main"><slot></slot></div><div class="backdrop" on-click="_handleHide"></div><div class="drawer-wrapper"><slot name="drawer"></slot></div></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -200,6 +68,42 @@
 
                 // Toggling
                 this[this.showed ? 'hide' : 'show']();
+            },
+
+            /*********************************************************************/
+
+            /**
+             * Resizes the drawer.
+             *
+             * @method resize
+             * @param {number} [offset]
+             * @param {boolean} [instant = false]
+             */
+            resize(offset, instant) {
+
+                // Checking
+                if (!this.backdrop || !this.drawerWrapper) { return; }
+
+                // Let
+                let other  = this.right ? 'left' : 'right',
+                    side   = this.right ? 'right' : 'left';
+
+                // Ensuring
+                this.ensure('width', this.empty ? 0 : (this.tracking ? this.width : XP.getWidth(this.drawer)));
+                this.ensure('offset', this.tracking ? XP.clamp(offset, 0, this.width) : (!this.showed || this.empty ? 0 : (this.mini && !this.narrow ? 72 : this.width)));
+
+                // Transitions
+                this.backdrop.style.transition      = this.tracking || instant ? `` : `opacity 0.33s cubic-bezier(0.55, 0, 0.01, 1)`;
+                this.drawerWrapper.style.transition = this.tracking || instant ? `` : `transform 0.33s cubic-bezier(0.55, 0, 0.01, 1)`;
+                this.main.style.transition          = this.tracking || instant ? `` : `${side} 0.33s cubic-bezier(0.55, 0, 0.01, 1)`;
+
+                // Styling
+                this.backdrop.style.opacity         = this.tracking ? this.backdrop.style.opacity : Number(this.showed);
+                this.drawerWrapper.style.transform  = this.tracking ? this.drawerWrapper.style.transform : `translateX(${this.showed ? 0 : (this.right ? 100 : -100)}%)`;
+                this.main.style.bottom              = 0;
+                this.main.style.top                 = 0;
+                this.main.style[side]               = this.narrow ? 0 : `${this.offset}px`;
+                this.main.style[other]              = this.main.style[other] || 0;
             },
 
             /*********************************************************************/
@@ -277,6 +181,23 @@
                 drawerWrapper: {
                     readOnly: true,
                     selector: '.drawer-wrapper'
+                },
+
+                /**
+                 * If set to true, the drawer is hidden.
+                 *
+                 * @attribute empty
+                 * @type boolean
+                 * @default true
+                 * @notifies
+                 * @readonly
+                 */
+                empty: {
+                    notify: true,
+                    readOnly: true,
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: true
                 },
 
                 /**
@@ -423,7 +344,7 @@
                  * @readonly
                  */
                 tracking: {
-                    computed: '_computeTracking(tracked)',
+                    computed: 'isTruthy(tracked)',
                     reflectToAttribute: true,
                     type: Boolean,
                     value: false
@@ -449,11 +370,6 @@
                 return XP.isNumber(breakPoint) ? breakPoint : (right ? 640 : (mini ? 961 : 1280));
             },
 
-            // COMPUTER
-            _computeTracking(tracked) {
-                return !!tracked;
-            },
-
             /*********************************************************************/
 
             // OBSERVER
@@ -466,12 +382,22 @@
             // OBSERVER
             _drawerChanged(post, pre) {
 
+                // Ensuring
+                this.ensure('empty', this.drawer ? this.drawer.empty : true);
+
                 // Listening
                 if (pre) { this.unlisten(pre, 'empty-changed', '_handleEmpty'); }
                 if (post) { this.listen(post, 'empty-changed', '_handleEmpty'); }
 
                 // Handling
-                requestAnimationFrame(() => this._handleShift(null, true));
+                requestAnimationFrame(() => this.resize(null, true));
+            },
+
+            // OBSERVER
+            _emptyChanged() {
+
+                // Handling
+                this.resize(null, true);
             },
 
             // OBSERVER
@@ -512,7 +438,7 @@
             _panelChanged() {
 
                 // Handling
-                this._handleShift(null, this.instantHide && !this.showed);
+                this.resize(null, this.instantHide && !this.showed);
             },
 
             // OBSERVER
@@ -536,13 +462,13 @@
                 this.listen(window, 'resize', '_handleResize');
 
                 // Handling
-                Polymer.RenderStatus.afterNextRender(this, this._handleShift, [null, true]);
+                Polymer.RenderStatus.afterNextRender(this, this.resize, [null, true]);
             },
 
             // LISTENER
             detached() {
 
-                // Unlistening
+                // Removing listeners
                 this.unlisten(this, 'track', '_handleTrack');
                 this.unlisten(window, 'keyup', '_handleHide');
                 this.unlisten(window, 'resize', '_handleResize');
@@ -550,7 +476,6 @@
 
             // LISTENER
             mutated() {
-
                 // Ensuring
                 this.ensure('drawer', XP.findElement(Polymer.dom(this), '[slot="drawer"]') || null);
             },
@@ -568,18 +493,18 @@
             /*********************************************************************/
 
             // HANDLER
-            _handleEmpty(event) {
+            _handleEmpty() {
 
-                // Handling
-                if (Polymer.dom(event).rootTarget === this.drawer) { this._handleShift(null, true); }
+                // Ensuring
+                this.ensure('empty', this.drawer ? this.drawer.empty : true);
             },
 
             // HANDLER
             _handleHide(event) {
 
                 // Setting
-                if (!event.keyCode && !event.button) { event.hiding = this; }
-                if (!event.defaultPrevented && event.keyCode === 27 && !this.escDisabled && this.showed && (this.narrow || this.right)) { event.hiding = this; }
+                if (event.type === 'click' && !event.button) { event.hiding = this; }
+                if (event.keyCode === 27 && !event.defaultPrevented && !this.escDisabled && this.showed && (this.narrow || this.right)) { event.hiding = this; }
 
                 // Frame 1
                 requestAnimationFrame(() => event.hiding !== this || this.hide());
@@ -592,35 +517,7 @@
                 this.ensure('narrow', window.innerWidth < this.breakPoint);
 
                 // Handling
-                this.debounce('shifting', () => this._handleShift(null, true));
-            },
-
-            // HANDLER
-            _handleShift(offset, instant) {
-
-                // Checking
-                if (!this.backdrop || !this.drawerWrapper) { return; }
-
-                // Let
-                let other  = this.right ? 'left' : 'right',
-                    side   = this.right ? 'right' : 'left';
-
-                // Ensuring
-                this.ensure('width', !this.drawer || this.drawer.empty ? 0 : (this.tracking ? this.width : XP.getWidth(this.drawer)));
-                this.ensure('offset', !this.tracking ? (!this.showed ? 0 : (this.mini && !this.narrow ? 72 : this.width)) : XP.clamp(offset, 0, this.width));
-
-                // Transitions
-                this.backdrop.style.transition      = this.tracking || instant ? `` : `opacity 0.33s cubic-bezier(0.55, 0, 0.01, 1)`;
-                this.drawerWrapper.style.transition = this.tracking || instant ? `` : `transform 0.33s cubic-bezier(0.55, 0, 0.01, 1)`;
-                this.main.style.transition          = this.tracking || instant ? `` : `${side} 0.33s cubic-bezier(0.55, 0, 0.01, 1)`;
-
-                // Styling
-                this.backdrop.style.opacity         = this.tracking ? this.backdrop.style.opacity : Number(this.showed);
-                this.drawerWrapper.style.transform  = this.tracking ? this.drawerWrapper.style.transform : `translateX(${this.showed ? 0 : (this.right ? 100 : -100)}%)`;
-                this.main.style.bottom              = 0;
-                this.main.style.top                 = 0;
-                this.main.style[side]               = this.narrow ? 0 : `${this.offset}px`;
-                this.main.style[other]              = this.main.style[other] || 0;
+                this.debounce('shifting', () => this.resize(null, true));
             },
 
             // HANDLER
@@ -647,26 +544,23 @@
 
                     // TRACK
                     case 'track':
-                        this._handleShift(this.offset + event.detail.ddx * (this.right ? -1 : 1));
+                        this.resize(this.offset + event.detail.ddx * (this.right ? -1 : 1));
                         break;
 
                     // START
                     case 'start':
                         this.ensure('tracked', tracked);
                         this.ensure('width', XP.getWidth(this.drawerWrapper));
-                        this._handleShift(this.offset + event.detail.dx * (this.right ? -1 : 1));
+                        this.resize(this.offset + event.detail.dx * (this.right ? -1 : 1));
                         break;
 
                     // END
                     case 'end':
                         this.ensure('tracked', null);
                         this.showed = this.offset > this.width / 2;
-                        if (showed === this.showed) { this._handleShift(); }
+                        if (showed === this.showed) { this.resize(); }
                         break;
                 }
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

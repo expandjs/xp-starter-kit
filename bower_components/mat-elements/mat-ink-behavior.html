@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
-<link rel="import" href="mat-palette.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-master-slave-behavior.html"><link rel="import" href="mat-palette.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.MATInkBehaviorImp
+     */
     Polymer.MATInkBehaviorImp = {
 
         // CLASSES
@@ -131,10 +130,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.MATInkBehavior
+     */
     Polymer.MATInkBehavior = [
         Polymer.XPMasterSlaveBehavior,
         Polymer.MATPalette,
         Polymer.MATInkBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

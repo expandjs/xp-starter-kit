@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
-<link rel="import" href="app-locale-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-master-slave-behavior.html"><link rel="import" href="app-locale-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.APPShellBehaviorImp
+     */
     Polymer.APPShellBehaviorImp = {
 
         // CLASSES
@@ -12,24 +11,29 @@
         /*********************************************************************/
 
         /**
-         * Forwards a command invocation to the application's store.
+         * Invokes an application's command.
          *
-         * @method forward
+         * @method invoke
          * @param {string} command
          * @param {Object} [options]
          * @param {Function} [callback]
          */
-        forward(command, options, callback) {
+        invoke(command, options, callback) {
+
+            // Preparing
+            if (XP.isFunction(options)) { callback = options; options = {}; }
+            if (XP.isVoid(callback)) { callback = function () {}; }
 
             // Asserting
-            XP.assertArgument(XP.isString(command, true), 1, 'string');
-            XP.assertArgument(!command.startsWith('_'), 1, 'public');
+            XP.assertArgument(XP.isString(command, true) && !command.startsWith('_'), 1, 'string');
+            XP.assertArgument(XP.isVoid(options) || XP.isObject(options), 2, 'Object');
+            XP.assertArgument(XP.isFunction(callback), 3, 'Function');
 
-            // Warning
-            if (!XP.isFunction(this.store[command])) { console.warn(`[${this.store.tagName.toLowerCase()}]:${command} is not defined.`); }
+            // Preventing
+            if (!XP.isFunction(this.store[command])) { console.warn(`[${this.store.tagName.toLowerCase()}]:${command} is not defined.`); return; }
 
             // Executing
-            return XP.call(this.store, command, options, callback);
+            if (this.store) { return this.store[command](options, callback); }
         },
 
         /*********************************************************************/
@@ -52,15 +56,17 @@
             },
 
             /**
-             * If set, every application's route will be relative to this.
+             * The authentication's state.
              *
-             * @attribute base-route
-             * @type string
+             * @attribute auth
+             * @type Object
              * @notifies
+             * @readonly
              */
-            baseRoute: {
+            auth: {
                 notify: true,
-                type: String
+                readOnly: true,
+                type: Object
             },
 
             /**
@@ -77,6 +83,20 @@
             },
 
             /**
+             * If set, every application's route will be relative to this.
+             *
+             * @attribute pathname
+             * @type string
+             * @default ""
+             * @notifies
+             */
+            pathname: {
+                notify: true,
+                type: String,
+                value: ''
+            },
+
+            /**
              * The application's store.
              *
              * @attribute store
@@ -85,21 +105,8 @@
              */
             store: {
                 observer: '__storeChanged',
-                slave: '.store',
-                readOnly: true
-            },
-
-            /**
-             * The application's wrapper.
-             *
-             * @attribute wrapper
-             * @type Element
-             * @readonly
-             */
-            wrapper: {
-                observer: '__wrapperChanged',
-                master: '.shell',
-                readOnly: true
+                readOnly: true,
+                slave: '.store'
             }
         },
 
@@ -115,15 +122,8 @@
             if (post) { this.linkProperties('auth', 'auth', post); }
 
             // Ensuring
-            this.ensure('app', post && post.app);
-        },
-
-        // OBSERVER
-        __wrapperChanged(post, pre) {
-
-            // Linking
-            if (pre) { this.unlinkProperties('auth', 'auth', pre); }
-            if (post) { this.linkProperties('auth', 'auth', post); }
+            if (post) { this.ensure('app', post.app); }
+            if (post) { this.ensure('auth', post.auth); }
         },
 
         /*********************************************************************/
@@ -139,7 +139,7 @@
         // OBSERVER
         detached() {
 
-            // Unlistening
+            // Removing listeners
             this.unlisten(window, 'app-i18n', '__handleI18n');
             this.unlisten(window, 'app-meta', '__handleMeta');
         },
@@ -149,7 +149,7 @@
         // HANDLER
         __handleI18n(event) {
 
-            // Checking
+            // Preventing
             if (event.detail.namespace !== this.namespace) { return; }
 
             // Notifying
@@ -159,7 +159,7 @@
         // HANDLER
         __handleMeta(event) {
 
-            // Checking
+            // Preventing
             if (event.detail.namespace !== this.namespace) { return; }
 
             // Notifying
@@ -167,10 +167,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.APPShellBehavior
+     */
     Polymer.APPShellBehavior = [
         Polymer.XPMasterSlaveBehavior,
         Polymer.APPLocaleBehavior,
         Polymer.APPShellBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

@@ -1,20 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-master-slave-behavior.html">
-
-</head><body><dom-module id="xp-media-query">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                display: none !important;
-            }
-        </style>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-master-slave-behavior.html"></head><body><dom-module id="xp-media-query"><template strip-whitespace=""><style>:host{display:none !important;}</style></template><script>
         Polymer({
 
             // ELEMENT
@@ -114,7 +98,7 @@
             // OBSERVER
             _queryChanged(post) {
 
-                // Unlistening
+                // Removing listeners
                 if (this.matcher) { this.matcher.removeListener(this._handleQuery); }
 
                 // Ensuring
@@ -148,7 +132,4 @@
                 this.wait(this.fire.bind(this, 'xp-media-change', {matched: this.matched}));
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

@@ -1,107 +1,6 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="mat-icon-button.html">
-<link rel="import" href="mat-icons.html">
-<link rel="import" href="mat-ink.html">
-<link rel="import" href="mat-input-checked-behavior.html">
-<link rel="import" href="mat-input-styles.html">
-<link rel="import" href="mat-typography.html">
-
-</head><body><dom-module id="mat-radio">
-
-    <template strip-whitespace="">
-
-        <style include="mat-input-styles">
-            :host {
-                @apply --mat-font-subhead;
-                cursor: pointer;
-                display: block;
-                height: 48px;
-                line-height: 48px;
-            }
-
-            :host([label=""]),
-            :host(:not([label])) {
-                height: 40px;
-                margin: 4px;
-                width: 40px;
-            }
-
-            :host([flip]) {
-                text-align: right;
-            }
-
-            :host(:not([flip])) {
-                text-align: left;
-            }
-
-            :host .wrapper {
-                padding: 0 !important;
-            }
-
-            :host([label=""]) .button,
-            :host(:not([label])) .button {
-                margin: 0;
-            }
-
-            :host([label][flip]:not([label=""])) .button {
-                right: -12px;
-                position: absolute;
-            }
-
-            :host([label]:not([flip]):not([label=""])) .button {
-                left: -12px;
-                position: absolute;
-            }
-
-            :host .label {
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            :host([flip]) .label {
-                padding-right: 52px;
-            }
-
-            :host(:not([flip])) .label {
-                padding-left: 52px;
-            }
-
-            /* SLOTTED */
-
-            :host ::slotted(input) {
-                display: none !important;
-            }
-
-            /* ANIMATION */
-
-            :host {
-
-                --mat-icon-button-active-icon-one: {
-                    color: var(--mat-radio-color, #009688);
-                    opacity: 1 !important;
-                    transform: scale(1) !important;
-                    visibility: inherit !important;
-                };
-
-                --mat-icon-button-active-icon-two: {
-                    color: var(--mat-radio-color, #009688);
-                    transform: scale(0.5);
-                };
-            }
-        </style>
-
-        <slot></slot>
-
-        <div class="wrapper">
-            <mat-icon-button class="holder button" active="[[checked]]" active-icon="mat:brightness-1" disabled="[[disabled]]" focused="{{focused}}" icon="mat:radio-button-unchecked"></mat-icon-button>
-            <mat-ink class="label" disabled="[[disabled]]"><span>[[label]]</span></mat-ink>
-        </div>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="mat-icon-button.html"><link rel="import" href="mat-icons.html"><link rel="import" href="mat-ink.html"><link rel="import" href="mat-input-checked-behavior.html"><link rel="import" href="mat-input-styles.html"><link rel="import" href="mat-typography.html"></head><body><dom-module id="mat-radio"><template strip-whitespace=""><style include="mat-input-styles">:host{@apply --mat-font-subhead;cursor:pointer;height:48px;line-height:48px;min-width:0;}:host([label=""]),
+            :host(:not([label])){height:40px;margin:4px;width:40px;}:host([flip]){text-align:right;}:host(:not([flip])){text-align:left;}:host .wrapper{padding:0 !important;}:host([label=""]) .button,
+            :host(:not([label])) .button{display:block;margin:0;}:host([label][flip]:not([label=""])) .button{right:-12px;position:absolute;}:host([label]:not([flip]):not([label=""])) .button{left:-12px;position:absolute;}:host .label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}:host([flip]) .label{padding-right:52px;}:host(:not([flip])) .label{padding-left:52px;}:host ::slotted(input){display:none !important;}:host{--mat-icon-button-active-icon-one:{color:var(--mat-radio-color, #009688);opacity:1 !important;transform:scale(1) !important;visibility:inherit !important;};--mat-icon-button-active-icon-two:{color:var(--mat-radio-color, #009688);transform:scale(0.5);};}</style><slot></slot><div class="wrapper"><mat-icon-button class="holder button" active="[[checked]]" active-icon="mat:brightness-1" disabled="[[disabled]]" focused="{{focused}}" icon="mat:radio-button-unchecked"></mat-icon-button><mat-ink class="label" disabled="[[disabled]]"><span>[[label]]</span></mat-ink></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -138,7 +37,7 @@
             /*********************************************************************/
 
             /**
-             * Reflects the native input's `value` onto the element.
+             * Implements the `commitFrom` strategy.
              *
              * @method _commitFrom
              * @private
@@ -151,7 +50,7 @@
             },
 
             /**
-             * Reflects the element's `tabIndex` onto the native input.
+             * Implements the `commitIndex` strategy.
              *
              * @method _commitIndex
              * @param {number} value
@@ -164,7 +63,7 @@
             },
 
             /**
-             * Reflects the element's `value` onto the native input.
+             * Implements the `commitTo` strategy.
              *
              * @method _commitTo
              * @private
@@ -177,7 +76,7 @@
             },
 
             /**
-             * Injects the native input.
+             * Implements the `inject` strategy.
              *
              * @method _inject
              * @private
@@ -197,7 +96,7 @@
             },
 
             /**
-             * Updates the native input's attributes.
+             * Implements the `update` strategy.
              *
              * @method _update
              * @private
@@ -211,7 +110,7 @@
             },
 
             /**
-             * Validates the native input's `value`.
+             * Implements the `validate` strategy.
              *
              * @method _validate
              * @param {string} [invalidMessage]
@@ -303,6 +202,8 @@
                 }
             },
 
+            /*********************************************************************/
+
             /**
              * The list of instances.
              *
@@ -354,10 +255,7 @@
             _handleToggle(event) {
 
                 // Toggling
-                if (!event.button && (!event.keyCode || event.keyCode === 32)) { this.checked = true; }
+                if (event.type === 'click' && !event.button || event.keyCode === 32) { this.checked = true; }
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

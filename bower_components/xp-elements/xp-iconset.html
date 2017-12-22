@@ -1,22 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-iconset-finder.html">
-
-</head><body><dom-module id="xp-iconset">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                display: none !important;
-            }
-        </style>
-
-        <slot></slot>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-iconset-finder.html"></head><body><dom-module id="xp-iconset"><template strip-whitespace=""><style>:host{display:none !important;}</style><slot></slot></template><script>
         Polymer({
 
             // ELEMENT
@@ -92,7 +74,4 @@
                 this.fire('xp-iconset', {name: this.name}, {node: window});
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

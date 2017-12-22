@@ -1,119 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="mat-paper-behavior.html">
-<link rel="import" href="mat-paper-styles.html">
-<link rel="import" href="mat-typography.html">
-
-</head><body><dom-module id="mat-header">
-
-    <template strip-whitespace="">
-
-        <style include="mat-paper-styles">
-            :host {
-                @apply --mat-font-headline;
-                line-height: 32px;
-                min-height: 64px;
-            }
-
-            :host .wrapper {
-                @apply --layout-vertical;
-                position: relative;
-                transform translate3d(0, 0 ,0);
-            }
-
-            :host .main {
-                @apply --layout-horizontal;
-                @apply --layout-center;
-                height: 64px;
-                padding: 0 16px 0 24px;
-                z-index: 1;
-            }
-
-            :host .extended {
-                padding: 0 24px;
-            }
-
-            :host([inset]) .extended {
-                padding-left: 80px;
-            }
-
-            /* SLOTTED */
-
-            :host .main ::slotted(.nav) {
-                height: 24px;
-                margin: 4px 24px 4px -8px;
-                padding: 8px;
-                width: 24px;
-            }
-
-            :host .main ::slotted(.label) {
-                @apply --layout-flex;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-
-            :host .main ::slotted(.breadcrumb) {
-                @apply --layout-flex;
-            }
-
-            :host .main ::slotted(.more) {
-                height: 24px;
-                margin: 4px -6px 4px 4px;
-                padding: 8px;
-                width: 24px;
-            }
-
-            :host .extended ::slotted(.tabs) {
-                margin: 0 -24px;
-            }
-
-            :host([inset]) .extended ::slotted(.tabs) {
-                margin-left: -80px;
-            }
-
-            /* TABLET */
-
-            @media (max-width: 960px) {
-
-                :host {
-                    min-height: 56px;
-                }
-
-                :host .main {
-                    height: 56px;
-                    padding: 0 8px 0 16px;
-                }
-
-                :host .extended {
-                    padding: 0 16px;
-                }
-
-                :host([inset]) .extended {
-                    padding-left: 72px;
-                }
-
-                /* SLOTTED */
-
-                :host .extended ::slotted(.tabs) {
-                    margin: 0 -16px;
-                }
-
-                :host([inset]) .extended ::slotted(.tabs) {
-                    margin-left: -72px;
-                }
-            }
-        </style>
-
-        <div class="wrapper">
-            <div class="main"><slot></slot></div>
-            <div class="extended"><slot name="extended"></slot></div>
-        </div>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../iron-flex-layout/iron-flex-layout.html"><link rel="import" href="mat-paper-behavior.html"><link rel="import" href="mat-paper-styles.html"><link rel="import" href="mat-typography.html"></head><body><dom-module id="mat-header"><template strip-whitespace=""><style include="mat-paper-styles">:host{@apply --mat-font-headline;line-height:32px;min-height:64px;}:host .wrapper{@apply --layout-vertical;position:relative;transform translate3d(0, 0 ,0);}:host .main{@apply --layout-horizontal;@apply --layout-center;height:64px;padding:0 16px 0 24px;z-index:1;}:host .extended{padding:0 24px;}:host([inset]) .extended{padding-left:80px;}:host .main ::slotted(.nav){box-sizing:content-box;height:24px;margin:4px 24px 4px -8px;padding:8px;width:24px;}:host .main ::slotted(.label){@apply --layout-flex;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}:host .main ::slotted(.breadcrumb){@apply --layout-flex;}:host .main ::slotted(.more){height:24px;margin:4px -6px 4px 4px;padding:8px;width:24px;}:host .extended ::slotted(.tabs){margin:0 -24px;}:host([inset]) .extended ::slotted(.tabs){margin-left:-80px;}@media (max-width: 960px){:host{min-height:56px;}:host .main{height:56px;padding:0 8px 0 16px;}:host .extended{padding:0 16px;}:host([inset]) .extended{padding-left:72px;}:host .extended ::slotted(.tabs){margin:0 -16px;}:host([inset]) .extended ::slotted(.tabs){margin-left:-72px;}}</style><div class="wrapper"><div class="main"><slot></slot></div><div class="extended"><slot name="extended"></slot></div></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -160,15 +45,15 @@
                 /**
                  * A fixed height for the extended section of the header.
                  *
-                 * @attribute extendedBy
+                 * @attribute extended-by
                  * @type number
                  * @default 0
                  * @notifies
                  */
                 extendedBy: {
-                    reflectToAttribute: true,
-                    observer: '_extendedByChanged',
                     notify: true,
+                    observer: '_extendedByChanged',
+                    reflectToAttribute: true,
                     type: Number,
                     value: 0
                 },
@@ -230,16 +115,10 @@
             /*********************************************************************/
 
             // OBSERVER
-            _extendedByChanged(post, pre) {
-
-                // Extended
-                if (!this.extended) { return; }
+            _extendedByChanged(post) {
 
                 // Styling
-                this.extended.style.height = post || '';
+                if (this.extended) { this.extended.style.height = post || ''; }
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

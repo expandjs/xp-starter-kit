@@ -3,22 +3,22 @@
   "display": "standalone",
   "name": "XP Starter Kit",
   "short_name": "XP Starter Kit",
-  "start_url": "/xp-starter-kit/?utm_source=homescreen",
+  "start_url": "/?utm_source=homescreen",
   "theme_color": "#3F51B5",
 
   "icons": [
     {
-      "src": "kit-images/icon-128.png",
+      "src": "src/kit-images/icon-128.png",
       "sizes": "128x128",
       "type": "image/png"
     },
     {
-      "src": "kit-images/icon-192.png",
+      "src": "src/kit-images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "kit-images/icon-384.png",
+      "src": "src/kit-images/icon-384.png",
       "sizes": "384x384",
       "type": "image/png"
     }

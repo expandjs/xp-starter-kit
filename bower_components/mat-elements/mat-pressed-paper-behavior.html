@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="mat-paper-behavior.html">
-<link rel="import" href="mat-pressed-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="mat-paper-behavior.html"><link rel="import" href="mat-pressed-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.MATPressedPaperBehaviorImp
+     */
     Polymer.MATPressedPaperBehaviorImp = {
 
         /**
@@ -63,6 +62,8 @@
                 type: String
             }
         },
+
+        /*********************************************************************/
 
         /**
          * The elevation value of z.
@@ -129,10 +130,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.MATPressedPaperBehavior
+     */
     Polymer.MATPressedPaperBehavior = [
         Polymer.MATPaperBehavior,
         Polymer.MATPressedBehavior,
         Polymer.MATPressedPaperBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

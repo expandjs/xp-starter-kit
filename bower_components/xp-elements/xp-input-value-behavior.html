@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-input-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-input-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPInputValueBehaviorImp
+     */
     Polymer.XPInputValueBehaviorImp = {
 
         /**
@@ -60,12 +60,12 @@
             if (!XP.isDate(date)) { return ''; }
 
             // Let
-            let year    = String(date.getUTCFullYear()),
-                month   = String(date.getUTCMonth() + 1),
-                day     = String(date.getUTCDate()),
-                hours   = local ? String(date.getUTCHours()) : '',
-                minutes = local ? String(date.getUTCMinutes()) : '',
-                seconds = local ? String(date.getUTCSeconds()) : '';
+            let year    = String(date.getFullYear()),
+                month   = String(date.getMonth() + 1),
+                day     = String(date.getDate()),
+                hours   = local ? String(date.getHours()) : '',
+                minutes = local ? String(date.getMinutes()) : '',
+                seconds = local ? String(date.getSeconds()) : '';
 
             // Overriding
             month   = `${month[1] ? `` : `0`}${month}`;
@@ -101,7 +101,7 @@
             if (from === this.memento.value) { return this.memento.bindValue; }
             if (this.type === 'number' || this.type === 'range') { return XP.toDefined(XP.toFinite(from)); }
             if (this.type !== 'date' && this.type !== 'datetime-local') { return String(from) || null; }
-            if (from = XP.toDate(from)) { return XP.toISODate(from.getTime() + (from.getTimezoneOffset() * 60000)); }
+            if (from = XP.toDate(from)) { return XP.toISODate(from.getTime()); }
             return null;
         },
 
@@ -116,7 +116,7 @@
         _toValue(bindValue) {
             if (!XP.isPrimitive(bindValue)) { return ''; }
             if (this.type !== 'date' && this.type !== 'datetime-local') { return !XP.isVoid(bindValue) ? XP.toString(bindValue) : ''; }
-            if (bindValue = XP.toDate(bindValue)) { return XP.toISODate(bindValue.getTime() - (bindValue.getTimezoneOffset() * 60000)); }
+            if (bindValue = XP.toDate(bindValue)) { return XP.toISODate(bindValue.getTime()); }
             return '';
         },
 
@@ -180,8 +180,11 @@
             // Casting
             this.value = this._toValue(this.bindValue);
 
+            // Let
+            let memoized = XP.isDefined(this.get('memento.bindValue'));
+
             // Firing
-            this.fire('xp-input-change', {id: this.id, name: this.name, value: this.bindValue});
+            if (memoized) { this.async(() => this.fire('xp-input-change', {id: this.id, name: this.name, value: this.bindValue})); }
         },
 
         // OBSERVER
@@ -229,9 +232,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPInputValueBehavior
+     */
     Polymer.XPInputValueBehavior = [
         Polymer.XPInputBehavior,
         Polymer.XPInputValueBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

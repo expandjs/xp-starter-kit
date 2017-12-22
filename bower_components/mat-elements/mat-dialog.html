@@ -1,83 +1,6 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../xp-elements/xp-dialog-behavior.html">
-<link rel="import" href="../xp-elements/xp-dialog-styles.html">
-<link rel="import" href="mat-divider.html">
-<link rel="import" href="mat-paper-behavior.html">
-<link rel="import" href="mat-paper-styles.html">
-<link rel="import" href="mat-typography.html">
-
-</head><body><dom-module id="mat-dialog">
-
-    <template strip-whitespace="">
-
-        <style include="mat-paper-styles xp-dialog-styles">
-            :host {
-                margin: 24px 40px;
-            }
-
-            :host .body {
-                box-sizing: border-box;
-                padding: 24px;
-            }
-
-            :host(:not([empty-actions])) .body {
-                height: calc(100% - 48px);
-                padding-bottom: 16px;
-            }
-
-            :host .label {
-                @apply --mat-font-headline;
-                margin: -4px 0 12px 0;
-            }
-
-            :host([label=""]) .label,
-            :host(:not([label])) .label {
-                display: none !important;
-            }
-
-            :host .actions {
-                @apply --layout-horizontal;
-                @apply --layout-center;
-                @apply --layout-end-justified;
-                min-height: 48px;
-                padding: 2px 8px 2px 24px;
-                position: relative;
-            }
-
-            :host([empty-actions]) .actions,
-            :host(:not([scrollable])) .divider {
-                display: none !important;
-            }
-
-            /* SLOTTED */
-
-            :host .actions ::slotted(:not(template)) {
-                display: block;
-            }
-
-            :host .actions ::slotted(:not(template):not(:first-child)) {
-                margin-left: 8px;
-            }
-        </style>
-
-        <div class="backdrop" on-click="__handleBackdrop"></div>
-
-        <div class="wrapper">
-            <div class="body">
-                <div class="label">[[label]]</div>
-                <slot></slot>
-            </div>
-            <div class="actions">
-                <mat-divider class="divider" cap=""></mat-divider>
-                <slot name="actions"></slot>
-            </div>
-        </div>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../iron-flex-layout/iron-flex-layout.html"><link rel="import" href="../xp-elements/xp-dialog-behavior.html"><link rel="import" href="../xp-elements/xp-dialog-styles.html"><link rel="import" href="mat-divider.html"><link rel="import" href="mat-paper-behavior.html"><link rel="import" href="mat-paper-styles.html"><link rel="import" href="mat-typography.html"></head><body><dom-module id="mat-dialog"><template strip-whitespace=""><style include="mat-paper-styles xp-dialog-styles">:host{margin:24px 40px;}:host .wrapper{@apply --layout-vertical-reverse;}:host .body{box-sizing:border-box;padding:24px;}:host(:not([empty-actions])) .body{height:calc(100% - 48px);padding-bottom:16px;}:host(:not([scrollable])) .body{overflow:visible;}:host .label{@apply --mat-font-headline;margin:-4px 0 12px 0;}:host([label=""]) .label,
+            :host(:not([label])) .label{display:none !important;}:host .actions{@apply --layout-horizontal;@apply --layout-center;@apply --layout-end-justified;min-height:48px;padding:2px 8px 2px 24px;position:relative;}:host([empty-actions]) .actions,
+            :host(:not([scrollable])) .divider{display:none !important;}:host .actions ::slotted(:not(template)){display:block;}:host .actions ::slotted(:not(template):not(:first-child)){margin-left:8px;}</style><div class="backdrop" on-click="__handleBackdrop"></div><div class="wrapper"><div class="actions"><mat-divider class="divider" cap=""></mat-divider><slot name="actions"></slot></div><div class="body"><div class="label">[[label]]</div><slot></slot></div></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -162,7 +85,7 @@
                  * @readonly
                  */
                 emptyActions: {
-                    computed: '_computeEmptyActions(actions)',
+                    computed: 'isEmpty(actions)',
                     notify: true,
                     reflectToAttribute: true,
                     type: Boolean,
@@ -213,13 +136,6 @@
 
             /*********************************************************************/
 
-            // COMPUTER
-            _computeEmptyActions(actions) {
-                return !actions || !actions.length;
-            },
-
-            /*********************************************************************/
-
             // LISTENER
             attached() {
 
@@ -251,7 +167,4 @@
                 XP.onMutation(this, this.scrolling.bind(this), {attributes: true, characterData: true, childList: true, subtree: true});
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

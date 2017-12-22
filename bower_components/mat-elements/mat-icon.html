@@ -1,21 +1,32 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-icon-behavior.html">
-<link rel="import" href="../xp-elements/xp-icon-styles.html">
-<link rel="import" href="mat-ink-behavior.html">
-<link rel="import" href="mat-ink-styles.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-icon-behavior.html"><link rel="import" href="../xp-elements/xp-icon-styles.html"><link rel="import" href="mat-ink-behavior.html"><link rel="import" href="mat-ink-styles.html"></head><body><dom-module id="mat-icon"><template strip-whitespace=""><style include="mat-ink-styles xp-icon-styles"></style><slot></slot></template><script>
+        Polymer({
 
-</head><body><dom-module id="mat-icon">
+            // ELEMENT
+            is: 'mat-icon',
 
-    <template strip-whitespace="">
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPIconBehavior,
+                Polymer.MATInkBehavior
+            ],
 
-        <style include="mat-ink-styles xp-icon-styles"></style>
+            /*********************************************************************/
 
-        <slot></slot>
+            // PROPERTIES
+            properties: {
 
-    </template>
-
-    <script>Polymer({is:"mat-icon",behaviors:[Polymer.XPIconBehavior,Polymer.MATInkBehavior],properties:{opacity:{reflectToAttribute:!0,type:String,value:"icon"}}});</script>
-
-</dom-module>
-</body></html>
+                /**
+                 * The icon's opacity.
+                 *
+                 * @attribute opacity
+                 * @type string
+                 * @default "icon"
+                 */
+                opacity: {
+                    reflectToAttribute: true,
+                    type: String,
+                    value: 'icon'
+                }
+            }
+        });
+    </script></dom-module></body></html>

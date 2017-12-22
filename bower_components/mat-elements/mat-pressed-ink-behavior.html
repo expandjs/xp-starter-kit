@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="mat-ink-behavior.html">
-<link rel="import" href="mat-pressed-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="mat-ink-behavior.html"><link rel="import" href="mat-pressed-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.MATPressedInkBehaviorImp
+     */
     Polymer.MATPressedInkBehaviorImp = {
 
         // OBSERVERS
@@ -35,10 +34,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.MATPressedInkBehavior
+     */
     Polymer.MATPressedInkBehavior = [
         Polymer.MATInkBehavior,
         Polymer.MATPressedBehavior,
         Polymer.MATPressedInkBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

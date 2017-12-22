@@ -1,45 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="mat-ink-behavior.html">
-<link rel="import" href="mat-ink-styles.html">
-
-</head><body><dom-module id="mat-divider">
-
-    <template strip-whitespace="">
-
-        <style include="mat-ink-styles">
-            :host {
-                display: block;
-                overflow: hidden;
-                padding: 7px 0 8px 0;
-            }
-
-            :host([baseline]) {
-                bottom: 0;
-                left: 0;
-                padding: 0;
-                position: absolute;
-                right: 0;
-            }
-
-            :host([cap]) {
-                left: 0;
-                padding: 0;
-                position: absolute;
-                right: 0;
-                top: 0;
-            }
-
-            :host .line {
-                border-top: 1px solid currentColor;
-            }
-        </style>
-
-        <div class="line"></div>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="mat-ink-behavior.html"><link rel="import" href="mat-ink-styles.html"></head><body><dom-module id="mat-divider"><template strip-whitespace=""><style include="mat-ink-styles">:host{display:block;overflow:hidden;padding:7px 0 8px 0;}:host([baseline]){bottom:0;left:0;padding:0;position:absolute;right:0;}:host([cap]){left:0;padding:0;position:absolute;right:0;top:0;}:host .line{border-top:1px solid currentColor;}</style><div class="line"></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -112,7 +71,4 @@
                 this.baseline = this.baseline && !post;
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

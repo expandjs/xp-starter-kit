@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-targeter-behavior.html">
-<link rel="import" href="xp-wrapper-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-targeter-behavior.html"><link rel="import" href="xp-wrapper-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPOverlayWrapperImp
+     */
     Polymer.XPOverlayWrapperImp = {
 
         // CLASSES
@@ -177,10 +176,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPOverlayWrapper
+     */
     Polymer.XPOverlayWrapper = [
         Polymer.XPTargeterBehavior,
         Polymer.XPWrapperBehavior,
         Polymer.XPOverlayWrapperImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

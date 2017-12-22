@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-base-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-base-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPInputBehaviorImp
+     */
     Polymer.XPInputBehaviorImp = {
 
         // CLASSES
@@ -37,7 +37,6 @@
          *
          * @method _commitFrom
          * @abstract
-         * @private
          */
         _commitFrom() {},
 
@@ -47,63 +46,57 @@
          * @method _commitIndex
          * @param {number} index
          * @abstract
-         * @private
          */
-        _commitIndex() {},
+        _commitIndex(index) {},
 
         /**
          * Must be redefined to reflect the element's `value` onto the native input.
          *
          * @method _commitTo
          * @abstract
-         * @private
          */
         _commitTo() {},
 
         /**
-         * Must be redefined to inject the native input.
+         * Must be redefined to `inject` the native input.
          *
          * @method _inject
          * @abstract
-         * @private
          */
         _inject() {},
 
         /**
-         * Must be redefined to sanitize the native input's `value`.
+         * Must be redefined to `sanitize` the native input's `value`.
          *
          * @method _sanitize
          * @param {boolean} [native]
          * @abstract
-         * @private
          */
-        _sanitize() {},
+        _sanitize(native) {},
 
         /**
-         * Must be redefined to update the native input's attributes.
+         * Must be redefined to `update` the native input's attributes.
          *
          * @method _update
          * @abstract
-         * @private
          */
         _update() {},
 
         /**
-         * Must be redefined to validate the native input's `value`.
+         * Must be redefined to `validate` the native input's `value`.
          *
          * @method _validate
          * @param {string} [invalidMessage]
          * @abstract
-         * @private
          */
-        _validate() {},
+        _validate(invalidMessage) {},
 
         /*********************************************************************/
 
         /**
          * Blurs the input.
          *
-         * @method focus
+         * @method blur
          */
         blur() {
 
@@ -184,6 +177,7 @@
             // Sanitizing
             if (this.input) { this._sanitize(native); }
 
+            // Returning
             return this.value;
         },
 
@@ -323,26 +317,11 @@
              *
              * @attribute hidden
              * @type boolean
-             * @default false
              */
             hidden: {
                 observer: '__hiddenChanged',
                 reflectToAttribute: true,
-                type: Boolean,
-                value: false
-            },
-
-            /**
-             * The input's memento.
-             *
-             * @attribute memento
-             * @type Object
-             * @readonly
-             */
-            memento: {
-                readOnly: true,
-                type: Object,
-                value() { return {}; }
+                type: Boolean
             },
 
             /**
@@ -413,6 +392,19 @@
                 reflectToAttribute: true,
                 type: String,
                 value: null
+            },
+
+            /**
+             * The input's memento.
+             *
+             * @attribute memento
+             * @type Object
+             * @readonly
+             */
+            memento: {
+                readOnly: true,
+                type: Object,
+                value() { return {}; }
             },
 
             /**
@@ -561,7 +553,7 @@
             // Ensuring
             this.ensure('form', null);
 
-            // Unlistening
+            // Removing listeners
             if (this.scrollIntoViewIfNeeded) { this.unlisten(window, 'resize', '__handleResize'); }
         },
 
@@ -587,14 +579,21 @@
         // LISTENER
         ready() {
 
-            // Memoizing
-            this.async(() => this.memoize());
+            // Waiting
+            this.async(() => {
 
-            // Injecting
-            this.async(() => this._inject());
+                // Preventing
+                if (this.input) { return; }
 
-            // Committing
-            this.async(() => this._commitTo());
+                // Memoizing
+                this.memoize();
+
+                // Injecting
+                this._inject();
+
+                // Committing
+                this._commitTo();
+            });
         },
 
         /*********************************************************************/
@@ -651,9 +650,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPInputBehavior
+     */
     Polymer.XPInputBehavior = [
         Polymer.XPBaseBehavior,
         Polymer.XPInputBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

@@ -1,28 +1,4 @@
-<html><head><link rel="import" href="../bower_components/app-behaviors/app-route.html">
-<link rel="import" href="../bower_components/app-behaviors/app-router.html">
-<link rel="import" href="../bower_components/app-behaviors/app-store-behavior.html">
-<link rel="import" href="kit-behaviors/kit-base-behavior.html">
-
-</head><body><dom-module id="kit-store">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                display: none !important;
-            }
-        </style>
-
-
-        <app-router>
-            <template is="dom-repeat" items="[[app.meta.routes]]">
-                <app-route path="[[item.path]]" data-name$="[[item.name]]" data-view$="[[item.view]]"></app-route>
-            </template>
-        </app-router>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../bower_components/app-behaviors/app-route.html"><link rel="import" href="../bower_components/app-behaviors/app-router.html"><link rel="import" href="../bower_components/app-behaviors/app-store-behavior.html"><link rel="import" href="../src/kit-behaviors/kit-base-behavior.html"></head><body><dom-module id="kit-store"><template strip-whitespace=""><style>:host{display:none !important;}</style><app-router><app-route path="/" data-view="home"></app-route><app-route path="/topic-one" data-view="page"></app-route><app-route path="/topic-two" data-view="page"></app-route><app-route path="*" data-view="not-found"></app-route></app-router></template><script>
         Polymer({
 
             // ELEMENT
@@ -36,22 +12,11 @@
 
             /*********************************************************************/
 
-            // OBSERVERS
-            observers: [
-                '_routeChanged(app.route)'
-            ],
-
-            /*********************************************************************/
-
-            /**
-             * Initializes the application's store.
-             *
-             * @method initialize
-             */
+            // ACTION
             initialize() {
 
                 // Registering
-                if (navigator.serviceWorker) { navigator.serviceWorker.register('service-worker.js'); }
+                this.serviceWorker('/service-worker.js');
 
                 // Ensuring
                 this.ensure('app.theme', 'light');
@@ -59,14 +24,39 @@
 
             /*********************************************************************/
 
+            // OBSERVERS
+            observers: [
+                '_paramsChanger(app.meta, app.route)',
+                '_topicChanger(app.meta, app.params)'
+            ],
+
+            /*********************************************************************/
+
             // OBSERVER
-            _routeChanged(route) {
+            _paramsChanger(meta, route) {
+
+                // Preventing
+                if (!meta || !route) { return; }
+
+                // Let
+                let href  = route.pathname.match(/^(\/[^/]*)/)[1],
+                    topic = meta.topics.find(topic => topic.href === href);
 
                 // Ensuring
-                this.ensure('app.view', route && route.view || null);
+                this.ensure('app.params', {
+                    topic: topic && topic.name || 'notFound',
+                    view: route.view || 'page'
+                });
+            },
+
+            // OBSERVER
+            _topicChanger(meta, params) {
+
+                // Preventing
+                if (!meta || !params) { return; }
+
+                // Ensuring
+                this.ensure('app.topic', meta.topics.find(topic => topic.name === params.topic) || null);
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

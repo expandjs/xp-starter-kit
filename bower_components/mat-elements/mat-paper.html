@@ -1,33 +1,31 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="mat-spacing.html">
-<link rel="import" href="mat-paper-behavior.html">
-<link rel="import" href="mat-paper-styles.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="mat-spacing.html"><link rel="import" href="mat-paper-behavior.html"><link rel="import" href="mat-paper-styles.html"></head><body><dom-module id="mat-paper"><template strip-whitespace=""><style include="mat-paper-styles">:host([padding]){@apply --mat-padding;}@media (max-width: 960px){:host([padding]){@apply --mat-padding-mobile;}}</style><slot></slot></template><script>
+        Polymer({
 
-</head><body><dom-module id="mat-paper">
+            // ELEMENT
+            is: 'mat-paper',
 
-    <template strip-whitespace="">
+            // BEHAVIORS
+            behaviors: [
+                Polymer.MATPaperBehavior
+            ],
 
-        <style include="mat-paper-styles">
-            :host([padding]) {
-                @apply --mat-padding;
-            }
+            /*********************************************************************/
 
-            /* TABLET */
+            // PROPERTIES
+            properties: {
 
-            @media (max-width: 960px) {
-
-                :host([padding]) {
-                    @apply --mat-padding-mobile;
+                /**
+                 * If set to true, the material spacing rules are applied.
+                 *
+                 * @attribute padding
+                 * @type boolean
+                 * @default false
+                 */
+                padding: {
+                    reflectToAttribute: true,
+                    type: Boolean,
+                    value: false
                 }
             }
-        </style>
-
-        <slot></slot>
-
-    </template>
-
-    <script>Polymer({is:"mat-paper",behaviors:[Polymer.MATPaperBehavior],properties:{padding:{reflectToAttribute:!0,type:Boolean,value:!1}}});</script>
-
-</dom-module>
-</body></html>
+        });
+    </script></dom-module></body></html>

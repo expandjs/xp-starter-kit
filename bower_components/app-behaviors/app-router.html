@@ -1,23 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
-<link rel="import" href="app-route.html">
-
-</head><body><dom-module id="app-router">
-
-    <template strip-whitespace="">
-
-        <style>
-            :host {
-                display: none !important;
-            }
-        </style>
-
-        <slot></slot>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-master-slave-behavior.html"><link rel="import" href="app-route.html"></head><body><dom-module id="app-router"><template strip-whitespace=""><style>:host{display:none !important;}</style><slot></slot></template><script>
         Polymer({
 
             // ELEMENT
@@ -44,10 +25,17 @@
              */
 
             /**
+             * Fired when a redirect has been performed.
+             *
+             * @event app-redirect
+             * @param {string} href
+             * @bubbles
+             */
+
+            /**
              * Fired when the active route changes.
              *
              * @event app-route
-             * @param {string} namespace
              * @param {Object} query
              * @param {Object} route
              * @bubbles
@@ -61,30 +49,37 @@
              *
              * @method redirect
              * @param {string} href
+             * @param {Function} [callback]
              */
-            redirect(href) {
+            redirect(href, callback) {
+
+                // Preparing
+                if (XP.isVoid(callback)) { callback = function () {}; }
 
                 // Asserting
                 XP.assertArgument(XP.isString(href, true), 1, 'string');
+                XP.assertArgument(XP.isFunction(callback), 2, 'Function');
 
                 // Let
-                let ts  = this.redirectTs,
-                    url = new URL(href, document.baseURI);
+                let ts = this.routeTs;
 
-                // Redirecting
-                if (url.origin !== location.origin) { location.href = url.href; return; }
+                // Preparing
+                let url = new URL(href, document.baseURI);
 
-                // Checking
-                if (url.href === location.href) { return; }
+                // Preventing
+                if (url.href === location.href) { callback(); return; }
 
-                // Setting
-                this.redirectTs = Date.now();
+                // Redirecting (internal)
+                if (url.origin === location.origin) { history[Date.now() - ts <= 250 ? 'replaceState' : 'pushState']({}, '', url.href); }
 
-                // Changing state
-                history[this.redirectTs - ts <= 250 ? 'replaceState' : 'pushState']({}, '', url.href);
+                // Redirecting (external)
+                if (url.origin !== location.origin) { location.href = url.href; }
 
                 // Firing
                 this.fire('app-redirect', {href: url.href});
+
+                // Callback
+                callback();
             },
 
             /*********************************************************************/
@@ -147,7 +142,6 @@
                 routes: {
                     readOnly: true,
                     slaves: '.route',
-                    type: Array,
                     value() { return []; }
                 },
 
@@ -177,24 +171,17 @@
                 }
             },
 
+            /*********************************************************************/
+
             /**
-             * The last redirect timestamp.
+             * The last route timestamp.
              *
-             * @property redirectTs
+             * @property routeTs
              * @type number
              * @default 0
              * @readonly
              */
-            redirectTs: 0,
-
-            /**
-             * The application's namespace.
-             *
-             * @property namespace
-             * @type string
-             * @readonly
-             */
-            get namespace() { return this.shell && this.shell.namespace; },
+            routeTs: 0,
 
             /*********************************************************************/
 
@@ -222,7 +209,7 @@
             // HANDLER
             _handleClick(event) {
 
-                // Checking
+                // Preventing
                 if (event.button !== 0 || event.defaultPrevented || event.metaKey || event.ctrlKey) { return; }
 
                 // Let
@@ -252,14 +239,14 @@
                 this.routes.find(element => {
 
                     // Let
-                    let params = XP.parsePath(location.pathname, `${this.shell.baseRoute || ''}${element.path}`),
+                    let params = XP.parsePath(location.pathname, `${this.shell.pathname || ''}${element.path}`),
                         query  = XP.parseQueryString(location.search.slice(1)),
-                        data   = params && {basename: this.shell.baseRoute || '', params: XP.freezeDeep(params), pathname: location.pathname.replace(this.shell.baseRoute || '', '')},
+                        data   = params && {basename: this.shell.pathname || '', params: XP.freezeDeep(params), pathname: location.pathname.replace(this.shell.pathname || '', '')},
                         route  = params && this.get('route.pathname') !== data.pathname && Object.assign({}, XP.mapValues(element.dataset, val => XP.parsePrimitive(val)), data),
-                        event  = params && this.fire('app-route', {namespace: this.namespace, query: query, route: route || this.route}, {cancelable: true});
+                        event  = params && this.fire('app-route', {query: query, route: route || this.route}, {cancelable: true});
 
-                    // Checking
-                    if (!params) { return; }
+                    // Timing
+                    if (params) { this.routeTs = Date.now() } else { return; }
 
                     // Preparing
                     if (event) { this.ensure('rollback', event.defaultPrevented); }
@@ -268,17 +255,15 @@
                     if (this.rollback) { history.forward(); this.wait(() => !this.rollback || history.back(), 3, true); return true; }
 
                     // Redirecting
-                    if (element.redirect) { this.redirect(`${this.shell.baseRoute || ''}${element.redirect}`); return true; }
+                    if (element.redirect) { this.redirect(`${this.shell.pathname || ''}${element.redirect}`); return true; }
 
                     // Ensuring
                     if (route) { this.ensure('route', route); }
                     if (query) { this.ensure('query', query); }
 
+                    // Break
                     return true;
                 });
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

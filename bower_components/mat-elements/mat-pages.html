@@ -1,42 +1,4 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../xp-elements/xp-pages-behavior.html">
-<link rel="import" href="../xp-elements/xp-pages-styles.html">
-<link rel="import" href="mat-page.html">
-
-</head><body><dom-module id="mat-pages">
-
-    <template strip-whitespace="">
-
-        <style include="xp-pages-styles">
-            :host .slider {
-                @apply --layout-horizontal;
-                @apply --layout-fit;
-                right: auto;
-                transition: transform 0.330s;
-            }
-
-            /* SLOTTED */
-
-            :host .slider ::slotted(.page) {
-                @apply --layout-flex;
-                box-sizing: border-box;
-                height: 100%;
-            }
-
-            :host([sliding]) .slider ::slotted(.page) {
-                display: block !important;
-            }
-        </style>
-
-        <div class="slider">
-            <slot></slot>
-        </div>
-
-    </template>
-
-    <script>
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../iron-flex-layout/iron-flex-layout.html"><link rel="import" href="../xp-elements/xp-pages-behavior.html"><link rel="import" href="../xp-elements/xp-pages-styles.html"><link rel="import" href="mat-page.html"></head><body><dom-module id="mat-pages"><template strip-whitespace=""><style include="xp-pages-styles">:host .slider{@apply --layout-horizontal;@apply --layout-fit;right:auto;transition:transform 0.330s;}:host .slider ::slotted(.page){@apply --layout-flex;box-sizing:border-box;height:100%;}:host([sliding]) .slider ::slotted(.page){display:block !important;}</style><div class="slider"><slot></slot></div></template><script>
         Polymer({
 
             // ELEMENT
@@ -155,7 +117,4 @@
 
             }
         });
-    </script>
-
-</dom-module>
-</body></html>
+    </script></dom-module></body></html>

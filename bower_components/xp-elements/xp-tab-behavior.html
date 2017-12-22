@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-master-slave-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-master-slave-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPTabBehaviorImp
+     */
     Polymer.XPTabBehaviorImp = {
 
         // CLASSES
@@ -133,9 +133,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPTabBehavior
+     */
     Polymer.XPTabBehavior = [
         Polymer.XPMasterSlaveBehavior,
         Polymer.XPTabBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

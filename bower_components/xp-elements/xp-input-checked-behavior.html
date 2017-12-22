@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-input-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-input-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPInputCheckedBehaviorImp
+     */
     Polymer.XPInputCheckedBehaviorImp = {
 
         /**
@@ -64,7 +64,7 @@
          * @private
          */
         _toValue(bindValue) {
-            return XP.isPrimitive(bindValue) ? !!bindValue : false;
+            return XP.isPrimitive(bindValue) ? Boolean(bindValue) : false;
         },
 
         /*********************************************************************/
@@ -113,8 +113,11 @@
             // Casting
             this.checked = this._toValue(this.bindValue);
 
+            // Let
+            let memoized = XP.isDefined(this.get('memento.bindValue'));
+
             // Firing
-            this.fire('xp-input-change', {id: this.id, name: this.name, value: this.bindValue});
+            if (memoized) { this.async(() => this.fire('xp-input-change', {id: this.id, name: this.name, value: this.bindValue})); }
         },
 
         // OBSERVER
@@ -150,9 +153,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPInputCheckedBehavior
+     */
     Polymer.XPInputCheckedBehavior = [
         Polymer.XPInputBehavior,
         Polymer.XPInputCheckedBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

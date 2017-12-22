@@ -1,0 +1,898 @@
+{
+  "src/kit-shell.html": {
+    "bower_components/mat-elements/mat-divider.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-mini.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-micro.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/expandjs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/dist/expand.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-master-slave-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-palette.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-typography.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/font-roboto/roboto.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-drawer-panel.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-drawer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-flex-layout/iron-flex-layout.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-media-query.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-spacing.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-shadow.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-motion.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-header-panel.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-header.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-item.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-anchor-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-anchor-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-overlay-injector.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-ink-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pressed-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-focused-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-targeter-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pressed-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-focused-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-list.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-list-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-selector-multi-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-selector-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-finder-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-list-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-page.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-page-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-page-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pages.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pages-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pages-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-shell-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-shell-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-tab.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-tab-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-tab-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-icon.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-icon-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-iconset-finder.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-icon-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-icon-button.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-ink-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-icons.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-iconset.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-tabs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-tabs-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-tabs-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-shell-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-locale-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-view.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-receiver-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-dialogs/kit-dialog-settings.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-selector.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-button.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-dialog.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-dialog-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-overlay-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-dialog-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-overlay-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-dropdown.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-input-value-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-input-value-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-input-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-input-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-input-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-menu.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-menu-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-menu-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-option.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-label.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-label-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-label-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-radio.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-input-checked-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-input-checked-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-dialog-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-dialog-wrapper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-overlay-wrapper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-wrapper-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-styles/kit-base-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-icons.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-menus/kit-menu-more.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-menu-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-menu-wrapper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-meta.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-meta/kit-meta-locales.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-meta.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-meta-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-meta/kit-meta-topics.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-store.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-route.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-router.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-store-behavior.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/kit-i18n/kit-i18n-de_DE.html": {
+    "bower_components/app-behaviors/app-i18n.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-mini.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-micro.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/expandjs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/dist/expand.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-meta-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/kit-i18n/kit-i18n-en_US.html": {
+    "bower_components/app-behaviors/app-i18n.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-mini.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-micro.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/expandjs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/dist/expand.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-meta-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/kit-i18n/kit-i18n-it_IT.html": {
+    "bower_components/app-behaviors/app-i18n.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-mini.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-micro.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/expandjs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/dist/expand.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-meta-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/kit-views/kit-view-home.html": {
+    "bower_components/mat-elements/mat-fab.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-mini.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-micro.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/expandjs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/dist/expand.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/iron-flex-layout/iron-flex-layout.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-anchor-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-anchor-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-overlay-injector.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-icon.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-icon-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-iconset-finder.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-icon-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-master-slave-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-palette.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-typography.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/font-roboto/roboto.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-paper-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pressed-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-focused-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-targeter-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-paper-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-shadow.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-motion.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pressed-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-focused-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-spacing.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-view-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-receiver-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-locale-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-styles/kit-view-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-styles/kit-base-styles.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/kit-views/kit-view-page.html": {
+    "bower_components/mat-elements/mat-fab.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-mini.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/polymer/polymer-micro.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/expandjs.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/expandjs/dist/expand.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/iron-flex-layout/iron-flex-layout.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-anchor-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-anchor-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-overlay-injector.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-icon.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-icon-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-iconset-finder.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-icon-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-master-slave-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-palette.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-ink-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-typography.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/font-roboto/roboto.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-paper-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pressed-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-focused-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-targeter-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-paper-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-shadow.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-motion.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-pressed-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-pressed-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/xp-elements/xp-focused-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-paper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/mat-elements/mat-spacing.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-view-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-receiver-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/app-behaviors/app-locale-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-behaviors/kit-base-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-styles/kit-view-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/kit-styles/kit-base-styles.html": {
+      "type": "document",
+      "weight": 1
+    }
+  }
+}

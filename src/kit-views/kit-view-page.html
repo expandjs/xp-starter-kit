@@ -1,28 +1,12 @@
-<html><head><link rel="import" href="../../bower_components/mat-elements/mat-fab.html">
-<link rel="import" href="../../bower_components/mat-elements/mat-paper.html">
-<link rel="import" href="../kit-behaviors/kit-view-behavior.html">
-<link rel="import" href="../kit-styles/kit-view-styles.html">
+<html><head><link rel="import" href="../../bower_components/mat-elements/mat-fab.html"><link rel="import" href="../../bower_components/mat-elements/mat-paper.html"><link rel="import" href="../../src/kit-behaviors/kit-view-behavior.html"><link rel="import" href="../../src/kit-styles/kit-view-styles.html"></head><body><dom-module id="kit-view-page"><template strip-whitespace=""><style include="kit-view-styles"></style><mat-fab icon="kit:add"></mat-fab></template><script>
+        Polymer({
 
-</head><body><dom-module id="kit-view-page">
+            // ELEMENT
+            is: 'kit-view-page',
 
-    <template strip-whitespace="">
-
-        <style include="kit-view-styles"></style>
-
-        
-        <mat-paper class="wrapper" z="2">
-
-            
-            <span class="message">[[localize(app.route.name)]]</span>
-
-        </mat-paper>
-
-        
-        <mat-fab icon="kit:add"></mat-fab>
-
-    </template>
-
-    <script>Polymer({is:"kit-view-page",behaviors:[Polymer.KITViewBehavior]});</script>
-
-</dom-module>
-</body></html>
+            // BEHAVIORS
+            behaviors: [
+                Polymer.KITViewBehavior
+            ]
+        });
+    </script></dom-module></body></html>

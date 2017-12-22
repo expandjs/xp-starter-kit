@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-base-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-base-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPOverlayInjectorImp
+     */
     Polymer.XPOverlayInjectorImp = {
 
         /**
@@ -30,15 +30,15 @@
                 remover  = XP.once(remove),
                 injected = XP.isString(element) ? document.createElement(element.toLowerCase()) : element,
                 shell    = XP.matches(this, '.shell') ? this : XP.findParentElement(this, '.shell') || document.body,
-                handler1 = event => this.firer(event) === injected && requestAnimationFrame(() => injected.show()),
-                handler2 = event => this.firer(event) === injected && showed && !event.detail.value ? this.wait(remover, 500) : showed = event.detail.value;
+                handler1 = event => { if (this.firer(event) === injected) { requestAnimationFrame(() => injected.show()); } },
+                handler2 = event => { if (this.firer(event) === injected) { showed && !event.detail.value ? this.wait(remover, 500) : showed = event.detail.value; } };
 
             // Function
             function remove() {
 
-                // Unlistening
-                XP.unlisten(injected, 'xp-overlay', handler1);
-                XP.unlisten(injected, 'showed-changed', handler2);
+                // Removing listeners
+                injected.removeEventListener('xp-overlay', handler1);
+                injected.removeEventListener('showed-changed', handler2);
 
                 // Removing
                 Polymer.dom(Polymer.dom(injected).parentNode).removeChild(injected);
@@ -51,8 +51,8 @@
             if (callback) { this.ensure('callback', callback, injected); }
 
             // Listening
-            XP.listen(injected, 'xp-overlay', handler1);
-            XP.listen(injected, 'showed-changed', handler2);
+            if (injected) { injected.addEventListener('xp-overlay', handler1); }
+            if (injected) { injected.addEventListener('showed-changed', handler2); }
 
             // Appending
             Polymer.dom(shell.root || shell).appendChild(injected);
@@ -62,9 +62,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPOverlayInjector
+     */
     Polymer.XPOverlayInjector = [
         Polymer.XPBaseBehavior,
         Polymer.XPOverlayInjectorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

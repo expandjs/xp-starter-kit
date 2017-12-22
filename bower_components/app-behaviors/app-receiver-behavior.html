@@ -1,20 +1,9 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
-<link rel="import" href="app-locale-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-master-slave-behavior.html"><link rel="import" href="app-locale-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.APPReceiverBehaviorImp
+     */
     Polymer.APPReceiverBehaviorImp = {
-
-        /**
-         * Should be redefined to setup the receiver.
-         *
-         * @method initialize
-         * @abstract
-         */
-        initialize() {},
-
-        /*********************************************************************/
 
         /**
          * Invokes an application's command.
@@ -26,11 +15,17 @@
          */
         invoke(command, options, callback) {
 
+            // Preparing
+            if (XP.isFunction(options)) { callback = options; options = undefined; }
+            if (XP.isVoid(callback)) { callback = function () {}; }
+
             // Asserting
             XP.assertArgument(XP.isString(command, true), 1, 'string');
+            XP.assertArgument(XP.isVoid(options) || XP.isObject(options), 2, 'Object');
+            XP.assertArgument(XP.isFunction(callback), 3, 'Function');
 
             // Invoking
-            return XP.apply(this.shell, 'forward', arguments);
+            if (this.shell) { return this.shell.invoke(command, options, callback); }
         },
 
         /*********************************************************************/
@@ -53,7 +48,7 @@
             },
 
             /**
-             * The application's auth.
+             * The authentication's state.
              *
              * @attribute auth
              * @type Object
@@ -67,18 +62,17 @@
             },
 
             /**
-             * If set to true, the client is offline.
+             * The application's namespace.
              *
-             * @attribute offline
-             * @type boolean
-             * @notifies
+             * @attribute namespace
+             * @type string
+             * @default ""
              * @readonly
              */
-            offline: {
-                notify: true,
-                reflectToAttribute: true,
-                type: Boolean,
-                value: !navigator.onLine
+            namespace: {
+                computed: 'computeValue(shell, "namespace")',
+                type: String,
+                value: ''
             },
 
             /**
@@ -107,19 +101,14 @@
             }
         },
 
-        /**
-         * The application's namespace.
-         *
-         * @property namespace
-         * @type string
-         * @readonly
-         */
-        get namespace() { return this.shell && this.shell.namespace; },
-
         /*********************************************************************/
 
         // OBSERVER
         __shellChanged(post) {
+
+            // Listening
+            this[post ? 'listen' : 'unlisten'](window, 'offline', '__handleOffline');
+            this[post ? 'listen' : 'unlisten'](window, 'online', '__handleOffline');
 
             // Ensuring
             this.async(() => this.ensure('store', post && post.store));
@@ -135,28 +124,17 @@
             if (post) { this.linkProperties('auth', 'auth', post); }
 
             // Ensuring
-            this.ensure('app', post && post.app);
-            this.ensure('auth', post && post.auth);
-
-            // Initializing
-            if (post) { this.initialize(); }
-        },
-
-        /*********************************************************************/
-
-        // LISTENER
-        ready() {
-
-            // Listening
-            window.addEventListener('offline', () => this.ensure('offline', true));
-            window.addEventListener('online', () => this.ensure('offline', false));
+            if (post) { this.ensure('app', post.app); }
+            if (post) { this.ensure('auth', post.auth); }
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.APPReceiverBehavior
+     */
     Polymer.APPReceiverBehavior = [
         Polymer.XPMasterSlaveBehavior,
         Polymer.APPLocaleBehavior,
         Polymer.APPReceiverBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

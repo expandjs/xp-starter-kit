@@ -1,7 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPBaseBehavior
+     */
     Polymer.XPBaseBehavior = {
 
         /**
@@ -45,18 +46,19 @@
             XP.assertArgument(XP.isVoid(target) || XP.isElement(target), 3, 'Element');
 
             // Let
-            let element = target || this,
-                current = XP.get(element, path),
-                setter  = `_set${XP.capitalize(path)}`;
+            let element  = target || this,
+                polished = path.replace(/#/g, ''),
+                current  = XP.get(element, polished),
+                setter   = `_set${XP.capitalize(polished)}`;
 
             // Preventing
             if (value === current || (value !== value && current !== current)) { return; }
 
             // Setting
-            if (!element[setter]) { XP.set(element, path, value); } else { return element[setter](value); }
+            if (!element[setter]) { XP.set(element, polished, value); } else { return element[setter](value); }
 
             // Notifying
-            if (element.notifyPath) { element.notifyPath(path, value); }
+            if (element.notifyPath) { element.notifyPath(polished, value); }
         },
 
         /**
@@ -87,8 +89,8 @@
 
             // Defaults
             options.node       = options.node || this;
-            options.bubbles    = XP.isDefined(options.bubbles) ? !!options.bubbles : true;
-            options.cancelable = XP.isDefined(options.cancelable) ? !!options.cancelable : false;
+            options.bubbles    = XP.isDefined(options.bubbles) ? Boolean(options.bubbles) : true;
+            options.cancelable = XP.isDefined(options.cancelable) ? Boolean(options.cancelable) : false;
 
             // Let
             let event = Object.assign(new Event(type, options), {detail: detail});
@@ -353,7 +355,7 @@
             // Splicing
             if (link) { this._boundProperties.splice(index, 1); } else { return; }
 
-            // Unlistening
+            // Removing listeners
             this.removeEventListener(`${XP.kebabCase(to)}-changed`, link.handleTo);
             element.removeEventListener(`${XP.kebabCase(from)}-changed`, link.handleFrom);
         },
@@ -422,52 +424,94 @@
         /*********************************************************************/
 
         /**
-         * Returns the provided `value`. Useful to setup a direct computation.
+         * Returns the provided `value`.
          *
-         * @method _computeFrom
+         * @method computeFrom
          * @param {*} value
-         * @return {*} value
-         * @private
+         * @returns {*}
          */
-        _computeFrom(value) {
+        computeFrom(value) {
             return value;
+        },
+
+        /**
+         * Returns an uuid.
+         *
+         * @method computeUUID
+         * @returns {string}
+         */
+        computeUUID() {
+            return XP.uuid();
+        },
+
+        /**
+         * Returns the value of `key` from `object`.
+         *
+         * @method computeValue
+         * @param {Object} object
+         * @param {string} key
+         * @returns {*}
+         */
+        computeValue(object, key) {
+            return object ? XP.toDefined(object[key]) : null;
         },
 
         /**
          * Returns `true` if the provided `value` is empty.
          *
-         * @method _isEmpty
+         * @method isEmpty
          * @param {*} value
          * @returns {boolean}
-         * @private
          */
-        _isEmpty(value) {
+        isEmpty(value) {
             return XP.isEmpty(value);
         },
 
         /**
          * Returns `true` if the provided values are equal.
          *
-         * @method _isEqual
+         * @method isEqual
          * @param {*} value1
          * @param {*} value2
          * @returns {boolean}
-         * @private
          */
-        _isEqual(value1, value2) {
+        isEqual(value1, value2) {
             return XP.isEqual(value1, value2);
+        },
+
+        /**
+         * Returns `true` if `value` is included in `values`.
+         *
+         * @method isIncluded
+         * @param {*} value
+         * @param {Array} values
+         * @returns {boolean}
+         */
+        isIncluded(value, values) {
+            return Array.from(values || []).includes(value);
+        },
+
+        /**
+         * Returns `true` if the provided values are not equivalent.
+         *
+         * @method isModified
+         * @param {*} value1
+         * @param {*} value2
+         * @returns {boolean}
+         */
+        isModified(value1, value2) {
+            return !XP.isEquivalent(value1, value2);
         },
 
         /**
          * Returns `true` if the provided `value` is truthy.
          *
-         * @method _isTruthy
+         * @method isTruthy
          * @param {*} value
-         * @return {boolean}
-         * @private
+         * @returns {boolean}
          */
-        _isTruthy(value) {
-            return !!value;
+        isTruthy(value) {
+            return XP.isTruthy(value);
         },
 
         /*********************************************************************/
@@ -489,5 +533,4 @@
             });
         }
     };
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

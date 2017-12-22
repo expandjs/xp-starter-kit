@@ -1,10 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-finder-behavior.html">
-<link rel="import" href="xp-master-slave-behavior.html">
-<link rel="import" href="xp-overlay-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-finder-behavior.html"><link rel="import" href="xp-master-slave-behavior.html"><link rel="import" href="xp-overlay-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPMenuBehaviorImp
+     */
     Polymer.XPMenuBehaviorImp = {
 
         // CLASSES
@@ -102,7 +100,7 @@
             Polymer.XPOverlayBehaviorImp.__showedChanged.apply(this, arguments);
 
             // Checking
-            if (this.showed) { return this.async(() => this.found || this.hide()); }
+            if (this.showed) { return this.wait(() => this.found || this.hide()); }
 
             // Hiding
             Array.from(this.submenus || []).forEach(submenu => submenu.hide());
@@ -131,11 +129,13 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPMenuBehavior
+     */
     Polymer.XPMenuBehavior = [
         Polymer.XPFinderBehavior,
         Polymer.XPMasterSlaveBehavior,
         Polymer.XPOverlayBehavior,
         Polymer.XPMenuBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

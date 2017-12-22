@@ -1,8 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-overlay-wrapper.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-overlay-wrapper.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPMenuWrapperImp
+     */
     Polymer.XPMenuWrapperImp = {
 
         // CLASSES
@@ -37,9 +37,11 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPMenuWrapper
+     */
     Polymer.XPMenuWrapper = [
         Polymer.XPOverlayWrapper,
         Polymer.XPMenuWrapperImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

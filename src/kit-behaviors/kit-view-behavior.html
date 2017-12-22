@@ -1,5 +1,18 @@
-<html><head><link rel="import" href="../../bower_components/app-behaviors/app-receiver-behavior.html">
-<link rel="import" href="kit-base-behavior.html">
+<html><head><link rel="import" href="../../bower_components/app-behaviors/app-receiver-behavior.html"><link rel="import" href="../../src/kit-behaviors/kit-base-behavior.html"><script>
 
-<script>Polymer.KITViewBehaviorImp={},Polymer.KITViewBehavior=[Polymer.APPReceiverBehavior,Polymer.KITBaseBehavior,Polymer.KITViewBehaviorImp];</script>
-</head><body></body></html>
+    /**
+     * @polymerBehavior Polymer.KITViewBehaviorImp
+     */
+    Polymer.KITViewBehaviorImp = {
+
+    };
+
+    /**
+     * @polymerBehavior Polymer.KITViewBehavior
+     */
+    Polymer.KITViewBehavior = [
+        Polymer.APPReceiverBehavior,
+        Polymer.KITBaseBehavior,
+        Polymer.KITViewBehaviorImp
+    ];
+</script></head><body></body></html>

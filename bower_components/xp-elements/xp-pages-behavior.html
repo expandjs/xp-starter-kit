@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-master-slave-behavior.html">
-<link rel="import" href="xp-selector-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-master-slave-behavior.html"><link rel="import" href="xp-selector-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPPagesBehaviorImp
+     */
     Polymer.XPPagesBehaviorImp = {
 
         // CLASSES
@@ -40,7 +39,7 @@
             if (!item || !item.closable) { return null; }
 
             // Firing
-            if (item.fire('xp-page-close', {index: index, isActive: !!item.active}, {cancelable: true}).defaultPrevented) { return null; }
+            if (item.fire('xp-page-close', {index: index, isActive: Boolean(item.active)}, {cancelable: true}).defaultPrevented) { return null; }
 
             // Removing
             return Polymer.dom(Polymer.dom(item).parentNode).removeChild(item);
@@ -118,10 +117,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPPagesBehavior
+     */
     Polymer.XPPagesBehavior = [
         Polymer.XPMasterSlaveBehavior,
         Polymer.XPSelectorBehavior,
         Polymer.XPPagesBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

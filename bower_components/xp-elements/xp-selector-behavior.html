@@ -1,9 +1,8 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="xp-finder-behavior.html">
-<link rel="import" href="xp-targeter-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="xp-finder-behavior.html"><link rel="import" href="xp-targeter-behavior.html"><script>
 
-<script>
+    /**
+     * @polymerBehavior Polymer.XPSelectorBehaviorImp
+     */
     Polymer.XPSelectorBehaviorImp = {
 
         // CLASSES
@@ -39,7 +38,7 @@
             let item = this.findItem(identity, safe);
 
             // Checking
-            return !!this.items && this.items.includes(item) && !item.disabled && !this.isSelected(item, true);
+            return Boolean(this.items && this.items.includes(item) && !item.disabled && !this.isSelected(item, true));
         },
 
         /**
@@ -60,7 +59,7 @@
             if (XP.isVoid(index) || !this.selectedItem) { return false; }
 
             // Checking
-            return this.multi ? !!this.selectedIndex && this.selectedIndex.includes(index) : this.selectedIndex === index;
+            return Boolean(this.multi ? this.selectedIndex && this.selectedIndex.includes(index) : this.selectedIndex === index);
         },
 
         /**
@@ -78,7 +77,7 @@
             let item = this.findItem(identity, safe);
 
             // Checking
-            return !!this.items && this.items.includes(item) && this.isSelected(item) && (!!force || this.multi || this.toggleable);
+            return Boolean(this.items && this.items.includes(item) && this.isSelected(item) && (force || this.multi || this.toggleable));
         },
 
         /**
@@ -361,7 +360,8 @@
              */
             selectedData: {
                 notify: true,
-                readOnly: true
+                readOnly: true,
+                value: null
             },
 
             /**
@@ -429,7 +429,7 @@
 
         // COMPUTER
         _computeSelected() {
-            return !!this.selectedItem && !XP.isArray(this.selectedItem, false);
+            return Boolean(this.selectedItem && !XP.isArray(this.selectedItem, false));
         },
 
         /*********************************************************************/
@@ -465,10 +465,11 @@
                     this.ensure('selecting', false);
                 }
 
+                // Refreshing
+                if (this.selectedItem === item) { this.refreshSelection(); }
+
                 // Selecting
-                if (this.autoSelect && this.found && !this.selectedItem) {
-                    this.selectDefault();
-                }
+                if (this.autoSelect && this.found && !this.selectedItem) { this.selectDefault(); }
             });
         },
 
@@ -528,10 +529,12 @@
         }
     };
 
+    /**
+     * @polymerBehavior Polymer.XPSelectorBehavior
+     */
     Polymer.XPSelectorBehavior = [
         Polymer.XPFinderBehavior,
         Polymer.XPTargeterBehavior,
         Polymer.XPSelectorBehaviorImp
     ];
-</script>
-</head><body></body></html>
+</script></head><body></body></html>

@@ -1,39 +1,45 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-menu-behavior.html">
-<link rel="import" href="../xp-elements/xp-menu-styles.html">
-<link rel="import" href="mat-option.html">
-<link rel="import" href="mat-paper-behavior.html">
-<link rel="import" href="mat-paper-styles.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-menu-behavior.html"><link rel="import" href="../xp-elements/xp-menu-styles.html"><link rel="import" href="mat-option.html"><link rel="import" href="mat-paper-behavior.html"><link rel="import" href="mat-paper-styles.html"></head><body><dom-module id="mat-menu"><template strip-whitespace=""><style include="mat-paper-styles xp-menu-styles">:host .body{padding:8px 0;position:relative;}:host-context([cascade]) .body{padding:16px 0;}:host(:not([found])) .body{padding:0;}</style><div class="wrapper"><div class="body"><slot></slot></div></div></template><script>
+        Polymer({
 
-</head><body><dom-module id="mat-menu">
+            // ELEMENT
+            is: 'mat-menu',
 
-    <template strip-whitespace="">
+            // BEHAVIORS
+            behaviors: [
+                Polymer.MATPaperBehavior,
+                Polymer.XPMenuBehavior
+            ],
 
-        <style include="mat-paper-styles xp-menu-styles">
-            :host .body {
-                padding: 8px 0;
-                position: relative;
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The menu's brightness.
+                 *
+                 * @attribute brightness
+                 * @type string
+                 * @default "overlay"
+                 */
+                brightness: {
+                    reflectToAttribute: true,
+                    type: String,
+                    value: 'overlay'
+                },
+
+                /**
+                 * The menu's z-axis position.
+                 *
+                 * @attribute z
+                 * @type number
+                 * @default 8
+                 */
+                z: {
+                    reflectToAttribute: true,
+                    type: Number,
+                    value: 8
+                }
             }
-
-            :host-context([cascade]) .body {
-                padding: 16px 0;
-            }
-
-            :host(:not([found])) .body {
-                padding: 0;
-            }
-        </style>
-
-        <div class="wrapper">
-            <div class="body">
-                <slot></slot>
-            </div>
-        </div>
-
-    </template>
-
-    <script>Polymer({is:"mat-menu",behaviors:[Polymer.MATPaperBehavior,Polymer.XPMenuBehavior],properties:{brightness:{reflectToAttribute:!0,type:String,value:"overlay"},z:{reflectToAttribute:!0,type:Number,value:8}}});</script>
-
-</dom-module>
-</body></html>
+        });
+    </script></dom-module></body></html>

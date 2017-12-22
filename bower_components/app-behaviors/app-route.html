@@ -1,20 +1,55 @@
-<html><head><link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../expandjs/expandjs.html">
-<link rel="import" href="../xp-elements/xp-master-slave-behavior.html">
+<html><head><link rel="import" href="../polymer/polymer.html"><link rel="import" href="../expandjs/expandjs.html"><link rel="import" href="../xp-elements/xp-master-slave-behavior.html"></head><body><dom-module id="app-route"><template strip-whitespace=""><style>:host{display:none !important;}</style></template><script>
+        Polymer({
 
-</head><body><dom-module id="app-route">
+            // ELEMENT
+            is: 'app-route',
 
-    <template strip-whitespace="">
+            // BEHAVIORS
+            behaviors: [
+                Polymer.XPMasterSlaveBehavior
+            ],
 
-        <style>
-            :host {
-                display: none !important;
+            // CLASSES
+            classes: ['route'],
+
+            /*********************************************************************/
+
+            // PROPERTIES
+            properties: {
+
+                /**
+                 * The path that has to be matched against the URL hash to activate the route.
+                 *
+                 * @attribute path
+                 * @type string
+                 */
+                path: {
+                    reflectToAttribute: true,
+                    type: String
+                },
+
+                /**
+                 * The path to be redirected at if the route becomes active.
+                 *
+                 * @attribute redirect
+                 * @type string
+                 */
+                redirect: {
+                    reflectToAttribute: true,
+                    type: String
+                },
+
+                /**
+                 * The application's router.
+                 *
+                 * @attribute router
+                 * @type Element
+                 * @readonly
+                 */
+                router: {
+                    master: '.router',
+                    readOnly: true
+                }
             }
-        </style>
-
-    </template>
-
-    <script>Polymer({is:"app-route",behaviors:[Polymer.XPMasterSlaveBehavior],classes:["route"],properties:{path:{reflectToAttribute:!0,type:String},redirect:{reflectToAttribute:!0,type:String},router:{master:".router",readOnly:!0}}});</script>
-
-</dom-module>
-</body></html>
+        });
+    </script></dom-module></body></html>
