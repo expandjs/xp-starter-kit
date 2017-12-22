@@ -11,7 +11,13 @@
     "src/kit-views/kit-view-page.html"
   ],
 
-  "includeDependencies": [
-    "bower_components/webcomponentsjs/webcomponents.js"
-  ]
+  "extraDependencies": [
+    "bower_components/webcomponentsjs/webcomponents.js",
+    "manifest.json"
+  ],
+
+  "builds": [{
+    "preset": "es6-unbundled",
+    "js": {"minify": false}
+  }]
 }

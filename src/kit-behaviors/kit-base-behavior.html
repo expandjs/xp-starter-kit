@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/xp-elements/xp-base-behavior.html">
+<link rel="import" href="../../bower_components/xp-elements/xp-overlay-injector.html">
 
 <script>
 
@@ -16,7 +17,7 @@
              * @readonly
              */
             view: {
-                computed: 'computeFrom(app.view)',
+                computed: 'computeFrom(app.params.view)',
                 reflectToAttribute: true,
                 type: String
             }
@@ -28,6 +29,7 @@
      */
     Polymer.KITBaseBehavior = [
         Polymer.XPBaseBehavior,
+        Polymer.XPOverlayInjector,
         Polymer.KITBaseBehaviorImp
     ];
 </script>

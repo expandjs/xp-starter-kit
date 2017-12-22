@@ -1,21 +1,13 @@
 <link rel="import" href="../../bower_components/mat-elements/mat-fab.html">
 <link rel="import" href="../../bower_components/mat-elements/mat-paper.html">
-<link rel="import" href="../kit-behaviors/kit-view-behavior.html">
-<link rel="import" href="../kit-styles/kit-view-styles.html">
+<link rel="import" href="../../src/kit-behaviors/kit-view-behavior.html">
+<link rel="import" href="../../src/kit-styles/kit-view-styles.html">
 
 <dom-module id="kit-view-home">
 
     <template strip-whitespace>
 
         <style include="kit-view-styles"></style>
-
-        <!-- WRAPPER -->
-        <mat-paper class="wrapper" z="2">
-
-            <!-- MESSAGE -->
-            <span class="message">[[localize(app.route.name)]]</span>
-
-        </mat-paper>
 
         <!-- FAB -->
         <mat-fab icon="kit:add"></mat-fab>
