@@ -2,6 +2,8 @@
 /* PROCESS */
 /*********************************************************************/
 process.chdir(__dirname);
+
+// Environment
 process.env.NODE_ENV = process.env.NODE_ENV === 'production' ? process.env.NODE_ENV : 'development';
 process.env.NODE_PLT = process.env.NODE_PLT === 'local' ? process.env.NODE_ENV : 'cloud';
 
