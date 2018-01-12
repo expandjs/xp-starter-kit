@@ -48,7 +48,7 @@
         </style>
 
         <!-- POLYFILL -->
-        <script type="text/javascript" src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+        <script type="text/javascript">if(!("registerElement"in document&&"import"in document.createElement("link")&&"content"in document.createElement("template"))){let e=document.createElement("script");e.src="/bower_components/webcomponentsjs/webcomponents-lite.min.js",document.body.appendChild(e)}</script>
         <script type="text/javascript">Polymer = {dom: 'shadow', lazyRegister: true, useNativeCSSProperties: true};</script>
 
         <!-- LINKS -->
